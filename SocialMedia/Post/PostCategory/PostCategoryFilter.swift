@@ -1,11 +1,11 @@
 //
-//  CategoryFilter.swift
+//  PostCategoryFilter.swift
 //  SocialMedia
 //
 
 import SwiftUI
 
-struct CategoryFilter: View {
+struct PostCategoryFilter: View {
     @Binding private var currentFilter: CategoryExploreFilter
     var action: (CategoryExploreFilter) -> Void
     @Namespace var animation
@@ -54,6 +54,6 @@ struct CategoryFilter: View {
 
 struct CategoryFilter_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryFilter(filter: .constant(.hot), action: { _ in })
+        PostCategoryFilter(filter: .constant(.hot), action: { _ in })
     }
 }

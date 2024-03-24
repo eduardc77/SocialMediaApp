@@ -72,7 +72,7 @@ struct ProfileTabsContentView<Content: View>: View {
                                     }
                                     .buttonStyle(.plain)
                                     
-                                    ContentGridItem(contentType: .post(post), profileImageSize: profileImageSize)
+                                    PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
                                 }
                                 .contentShape(.containerRelative)
                                 .containerShape(.rect(cornerRadius: 8))
@@ -119,7 +119,7 @@ struct ProfileTabsContentView<Content: View>: View {
                                     }
                                     .buttonStyle(.plain)
                                     
-                                    ContentGridItem(contentType: .post(post), profileImageSize: profileImageSize)
+                                    PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
                                 }
                                 .contentShape(.containerRelative)
                                 .containerShape(.rect(cornerRadius: 8))
@@ -151,7 +151,7 @@ struct ProfileTabsContentView<Content: View>: View {
                                     }
                                     .buttonStyle(.plain)
                                     
-                                    ContentGridItem(contentType: .post(post), profileImageSize: profileImageSize)
+                                    PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
                                 }
                                 .contentShape(.containerRelative)
                                 .containerShape(.rect(cornerRadius: 8))

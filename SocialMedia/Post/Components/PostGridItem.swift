@@ -1,25 +1,25 @@
 //
-//  ContentGridItem.swift
+//  PostGridItem.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
 
-enum ContentType {
+enum PostType {
     case post(Post)
     case reply(PostReply)
 }
 
-struct ContentGridItem: View {
-    let contentType: ContentType
+struct PostGridItem: View {
+    let postType: PostType
     var profileImageSize: ImageSize = .small
     
     @State private var userSelectedPostAction: UserPostActionSheetOptions?
     @State private var selectedPostAction: PostActionSheetOptions?
     
     private var user: User? {
-        switch contentType {
+        switch postType {
             case .post(let post):
                 return post.user
             case .reply(let postReply):
@@ -28,7 +28,7 @@ struct ContentGridItem: View {
     }
     
     private var post: Post? {
-        switch contentType {
+        switch postType {
             case .post(let post):
                 return post
             case .reply(_):
@@ -37,7 +37,7 @@ struct ContentGridItem: View {
     }
     
     private var caption: String {
-        switch contentType {
+        switch postType {
             case .post(let post):
                 return post.caption
             case .reply(let postReply):
@@ -46,7 +46,7 @@ struct ContentGridItem: View {
     }
 
     private var timestampString: String {
-        switch contentType {
+        switch postType {
             case .post(let post):
                 return post.timestamp.timestampString()
             case .reply(let postReply):
@@ -73,12 +73,12 @@ struct ContentGridItem: View {
             }
             
             VStack(alignment: .trailing, spacing: 10) {
-                if case .post(let post) = contentType {
+                if case .post(let post) = postType {
                     categoryView(category: post.category)
                 }
                 VStack(spacing: 2) {
                     Divider()
-                    ContentButtonsView(model: ContentButtonsViewModel(contentType: contentType))
+                    PostButtonGroupView(model: PostButtonGroupViewModel(postType: postType))
                 }
             }
         }
@@ -88,7 +88,7 @@ struct ContentGridItem: View {
 }
     // MARK: - Subviews
 
-private extension ContentGridItem {
+private extension PostGridItem {
     func profileView(user: User?) -> some View {
         NavigationLink(value: user) {
             HStack(alignment: .top) {
@@ -126,12 +126,12 @@ private extension ContentGridItem {
     
     var ellipsisView: some View {
         Menu {
-            switch contentType {
+            switch postType {
                 case .post(let post):
                     if post.user?.isCurrentUser ?? false {
                         UserPostActionSheetView(post: post, onDeleteHandler: {
                             Task {
-                                try await ContentButtonsViewModel.deletePost(post)
+                                try await PostButtonGroupViewModel.deletePost(post)
                             }
                         }, selectedAction: $userSelectedPostAction)
                     } else {
@@ -158,6 +158,6 @@ private extension ContentGridItem {
 
 struct FeedCell_Previews: PreviewProvider {
     static var previews: some View {
-        ContentGridItem(contentType: .post(preview.post))
+        PostGridItem(postType: .post(preview.post))
     }
 }

@@ -8,21 +8,34 @@ import Firebase
 import FirebaseFirestoreSwift
 
 public struct PostService {
+    private static var feedListener: ListenerRegistration? = nil
+    
+    public static var feedListenerRemoved: Bool {
+        PostService.feedListener == nil
+    }
+    
     public static func uploadPost(_ post: Post) async throws {
         guard let postData = try? Firestore.Encoder().encode(post) else { return }
         _ = try await FirestoreConstants.posts.addDocument(data: postData)
     }
     
-    public static func addListenerForFeed(countLimit: Int, lastDocument: DocumentSnapshot?, descending: Bool = true) -> (listener: ListenerRegistration, publisher: AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
+    public static func addListenerForFeed(countLimit: Int, lastDocument: DocumentSnapshot?, descending: Bool = false) -> (AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
         let (publisher, listener) =
         FirestoreConstants
             .posts
             .order(by: "timestamp", descending: descending)
-            .limit(to: countLimit)
-            .startOptionally(afterDocument: lastDocument)
+           // .limit(to: countLimit)
+//            .startOptionally(afterDocument: lastDocument)
             .addSnapshotListener(as: Post.self)
         
-        return (listener, publisher)
+        self.feedListener = listener
+        return publisher
+    }
+    
+    public static func removeListenerForFeed() {
+        guard !feedListenerRemoved else { return }
+        PostService.feedListener?.remove()
+        PostService.feedListener = nil
     }
     
     public static func fetchPosts(countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (posts: [Post], lastDocument: DocumentSnapshot?) {
@@ -131,7 +144,6 @@ public extension PostService {
     }
     
     static func unlikePost(_ post: Post) async throws {
-        guard post.likes > 0 else { return }
         guard let uid = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         
         try await FirestoreConstants.posts.document(postID).collection("postLikes").document(uid).delete()

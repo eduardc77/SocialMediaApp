@@ -43,7 +43,7 @@ struct ActivityView: View {
                 ProfileView(user: user)
             })
             .navigationDestination(for: PostCategory.self, destination: { category in
-                CategoryDetailView(category: category)
+                PostCategoryDetailView(category: category)
             })
         }
     }

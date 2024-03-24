@@ -26,7 +26,7 @@ struct FeedView: View {
                 PostDetailsView(post: post)
             })
             .navigationDestination(for: PostCategory.self, destination: { category in
-                CategoryDetailView(category: category)
+                PostCategoryDetailView(category: category)
             })
             .navigationTitle("Posts")
             .navigationBarTitleDisplayMode(.inline)
@@ -64,8 +64,11 @@ private extension FeedView {
     var postsTabView: some View {
         TabView(selection: $model.currentFilter) {
             ScrollView {
-                ContentGrid(contentGridType: .posts(model.forYouPosts), pageCount: $model.pageCount, isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
-                        model.addListenersForFeed()
+                PostGrid(postGridType: .posts(model.forYouPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
+                    try await model.fetchFeedForCurrentFilter()
+//                    if PostService.feedListenerRemoved {
+//                        model.addListenersForFeed()
+//                    }
                 })
             }
             .tag(FeedFilter.forYou)
@@ -73,13 +76,15 @@ private extension FeedView {
                 if model.isLoading { ProgressView() }
             }
             .onAppear {
-                model.addListenersForFeed()
+                Task {
+                    try await model.fetchFeedForCurrentFilter()
+                }
             }
             .onDisappear {
-                model.removeListeners()
+                model.removeListener()
             }
             ScrollView {
-                ContentGrid(contentGridType: .posts(model.followingPosts), pageCount: $model.pageCount, isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
+                PostGrid(postGridType: .posts(model.followingPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
                     if model.lastForYouPostDocument != nil {
                         Task {
                             try await model.fetchFeedForCurrentFilter()

@@ -33,7 +33,7 @@ struct PostReplyRow: View {
                         }
                         .font(.footnote)
                         
-                        ContentButtonsView(model: ContentButtonsViewModel(contentType: .post(post)))
+                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)))
                             .frame(height: 20)
                         
                         Spacer()
@@ -50,7 +50,7 @@ struct PostReplyRow: View {
                             Text(reply.replyText)
                                 .lineLimit(10)
                         }
-                        ContentButtonsView(model: ContentButtonsViewModel(contentType: .reply(reply)))
+                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)))
                             .frame(height: 20)
                         
                         Spacer()

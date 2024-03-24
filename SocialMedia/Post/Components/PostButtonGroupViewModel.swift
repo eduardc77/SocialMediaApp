@@ -1,5 +1,5 @@
 //
-//  ContentButtonsViewModel.swift
+//  PostButtonGroupViewModel.swift
 //  SocialMedia
 //
 
@@ -7,7 +7,7 @@ import Foundation
 import SocialMediaNetwork
 
 @MainActor
-final class ContentButtonsViewModel: ObservableObject {
+final class PostButtonGroupViewModel: ObservableObject {
     @Published var post: Post?
     @Published var reply: PostReply?
 
@@ -21,8 +21,8 @@ final class ContentButtonsViewModel: ObservableObject {
         return post?.didSave ?? false
     }
     
-    init(contentType: ContentType) {
-        switch contentType {
+    init(postType: PostType) {
+        switch postType {
         case .post(let post):
             self.post = post
             Task {
@@ -37,18 +37,14 @@ final class ContentButtonsViewModel: ObservableObject {
     
     func likePost() async throws {
         guard let post = post else { return }
-        
+        print(post.likes)
         try await PostService.likePost(post)
-        self.post?.didLike = true
-        self.post?.likes += 1
     }
     
     func unlikePost() async throws {
         guard let post = post else { return }
-
+        print(post.likes)
         try await PostService.unlikePost(post)
-        self.post?.didLike = false
-        self.post?.likes -= 1
     }
     
     func savePost() async throws {

@@ -54,6 +54,7 @@ public struct AsyncImageView<Content: View>: View where Content: View {
                         .resizable()
                         .aspectRatio(aspectRatio, contentMode: contentMode)
                         .frame(maxWidth: size.value.width, maxHeight: size.value.height)
+                    
                 } else {
                     AsyncImage(url: url,
                                scale: scale,

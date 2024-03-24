@@ -1,19 +1,18 @@
 //
-//  ContentGrid.swift
+//  PostGrid.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
 
-enum ContentGridType {
+enum PostGridType {
     case posts([Post])
     case replies([PostReply])
 }
 
-struct ContentGrid: View {
-    let contentGridType: ContentGridType
-    @Binding var pageCount: Int
+struct PostGrid: View {
+    let postGridType: PostGridType
     @Binding var isLoading: Bool
     var itemsPerPage: Int = 10
  
@@ -67,7 +66,8 @@ struct ContentGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridItems) {
-            switch contentGridType {
+            Spacer()
+            switch postGridType {
                 case .posts(let posts):
                     ForEach(Array(posts.enumerated()), id: \.element) { index, post in
                         ZStack {
@@ -76,7 +76,7 @@ struct ContentGrid: View {
                             }
                             .buttonStyle(.plain)
                             
-                            ContentGridItem(contentType: .post(post), profileImageSize: profileImageSize)
+                            PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
                         }
                         .contentShape(.containerRelative)
                         .containerShape(.rect(cornerRadius: 8))
@@ -84,7 +84,7 @@ struct ContentGrid: View {
                             if let fetchNewPage = fetchNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
                                 isLoading = true
                                 
-                                Task(priority: .background) { @MainActor in
+                                Task {
                                     try await fetchNewPage()
                                     isLoading = false 
                                 }
@@ -100,28 +100,28 @@ struct ContentGrid: View {
                             }
                             .buttonStyle(.plain)
                             
-                            ContentGridItem(contentType: .reply(reply), profileImageSize: profileImageSize)
+                            PostGridItem(postType: .reply(reply), profileImageSize: profileImageSize)
                         }
                         .contentShape(.containerRelative)
                         .containerShape(.rect(cornerRadius: 8))
                         .onAppear {
-                            if let fetchNewPage = fetchNewPage, !isLoading, replies.count >= itemsPerPage * pageCount, !replies.isEmpty, index == replies.count - 2 {
+                            if let fetchNewPage = fetchNewPage, !isLoading, !replies.isEmpty, index == replies.count - 2 {
                                 isLoading = true
                                 
                                 Task(priority: .background) { @MainActor in
                                     try await fetchNewPage()
                                     isLoading = false
-                                    pageCount += 1
                                 }
                             }
                         }
                     }
             }
+            Spacer()
         }
         .padding(10)
     }
 }
 
 //#Preview {
-//    ContentGrid(contentGridType: .posts([Post(id: "", ownerUid: "", caption: "", timestamp: <#T##Timestamp#>, likes: <#T##Int#>, replyCount: <#T##Int#>, imageUrl: <#T##String?#>, user: <#T##User?#>, didLike: <#T##Bool?#>, didSave: <#T##Bool?#>)]), fetchNewPage: <#T##() async throws -> Void#>: [], fetchNewPage: {})
+//    PostGrid(postGridType: .posts([Post(id: "", ownerUid: "", caption: "", timestamp: <#T##Timestamp#>, likes: <#T##Int#>, replyCount: <#T##Int#>, imageUrl: <#T##String?#>, user: <#T##User?#>, didLike: <#T##Bool?#>, didSave: <#T##Bool?#>)]), fetchNewPage: <#T##() async throws -> Void#>: [], fetchNewPage: {})
 //}

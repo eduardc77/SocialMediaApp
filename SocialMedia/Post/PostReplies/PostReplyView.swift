@@ -53,6 +53,7 @@ struct PostReplyView: View {
                                     .fontWeight(.semibold)
                                 
                                 TextField("Add your reply...", text: $model.replyText, axis: .vertical)
+                                    .autocorrectionDisabled()
                                     .tint(.primary)
                                     .padding(2)
                                     .multilineTextAlignment(.leading)

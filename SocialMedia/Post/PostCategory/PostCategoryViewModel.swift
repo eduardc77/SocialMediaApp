@@ -1,12 +1,12 @@
 //
-//  CategoryViewModel.swift
+//  PostCategoryViewModel.swift
 //  SocialMedia
 //
 
 import Foundation
 import SocialMediaNetwork
 
-final class CategoryViewModel: ObservableObject {
+final class PostCategoryViewModel: ObservableObject {
     let category: PostCategory
     
     @Published var posts: [Post] = []

@@ -44,6 +44,7 @@ struct PostEditorView: View {
                         }
                     }
                     TextField("Start a post...", text: $model.caption, axis: .vertical)
+                        .autocorrectionDisabled()
                         .font(.footnote)
                     
                     SelectedPhotoPickerImage(imageState: imageData.imageState, size: .custom(height: 300))

@@ -48,7 +48,7 @@ struct PostDetailsView: View {
                     Text(model.post.caption)
                         .font(.subheadline)
                     
-                    ContentButtonsView(model: ContentButtonsViewModel(contentType: .post(model.post)))
+                    PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(model.post)))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -56,7 +56,7 @@ struct PostDetailsView: View {
             
             Divider()
             
-            ContentGrid(contentGridType: .replies(model.replies), pageCount: .constant(0), isLoading: .constant(false), itemsPerPage: 10, fetchNewPage: {
+            PostGrid(postGridType: .replies(model.replies), isLoading: .constant(false), itemsPerPage: 10, fetchNewPage: {
                 
             })
         }

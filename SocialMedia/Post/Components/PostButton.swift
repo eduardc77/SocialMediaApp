@@ -1,11 +1,11 @@
 //
-//  ContentButton.swift
+//  PostButton.swift
 //  SocialMedia
 //
 
 import SwiftUI
 
-struct ContentButton: View {
+struct PostButton: View {
     var count: Int
     let buttonType: PostButtonType
     var isActive: Bool = false
@@ -27,18 +27,20 @@ struct ContentButton: View {
                         .animation(.default, value: count)
                 }
             }
+           
             .font(.footnote)
             .padding(.top, 6)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity)
             .foregroundStyle(!isActive ? Color.secondary : buttonType.color)
+           
         }
         .hapticFeedback(trigger: count)
     }
 }
 
 #Preview {
-    ContentButton(count: 2,
+    PostButton(count: 2,
                buttonType: .like,
                isActive: true,
                action: {})

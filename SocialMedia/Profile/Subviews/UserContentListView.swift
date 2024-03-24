@@ -26,7 +26,7 @@ struct UserContentListView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {
-                            ContentGrid(contentGridType: .posts(viewModel.posts), pageCount: .constant(0), isLoading: .constant(false), fetchNewPage: {})
+                            PostGrid(postGridType: .posts(viewModel.posts), isLoading: .constant(false), fetchNewPage: {})
                                 .transition(.move(edge: .leading))
                         }
                     } else {

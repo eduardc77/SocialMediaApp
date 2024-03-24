@@ -46,30 +46,18 @@ public extension Query {
                 return
             }
             var documentChangeType: DocChangeType<T> = .none
-           
-            var newDocuments: [T] = []
-            var newDocumentsAdded: Bool = false
-            var postGotRemoved: Bool = false
+            
             querySnapshot?.documentChanges.forEach { documentChange in
                 if documentChange.type == .modified, let postModified = try? documentChange.document.data(as: T.self) {
                     documentChangeType = .modified(post: postModified)
                 }
                 if documentChange.type == .removed, let postRemoved = try? documentChange.document.data(as: T.self) {
                     documentChangeType = .removed(post: postRemoved)
-                    postGotRemoved = true
                 }
-                if documentChange.type == .added, let postAdded = try? documentChange.document.data(as: T.self), !postGotRemoved {
-              
-                    if !newDocumentsAdded {
-                        newDocuments = documents.compactMap({ try? $0.data(as: T.self) })
-                        print(newDocuments.count)
-                        documentChangeType = .added(posts: newDocuments)
-                        newDocumentsAdded = true
-                    }
+                if documentChange.type == .added, let postAdded = try? documentChange.document.data(as: T.self) {
+                    documentChangeType = .added(post: postAdded)
                 }
             }
-            
-            
             publisher.send((documentChangeType, documents.last))
         }
         return (publisher.eraseToAnyPublisher(), listener)
@@ -78,7 +66,7 @@ public extension Query {
 
 public enum DocChangeType<T> {
     case none
-    case added(posts: [T])
+    case added(post: T)
     case modified(post: T)
     case removed(post: T)
 }

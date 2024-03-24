@@ -1,12 +1,12 @@
 //
-//  ContentButtonsView.swift
+//  PostButtonGroupView.swift
 //  SocialMedia
 //
 
 import SwiftUI
 
-struct ContentButtonsView: View {
-    @ObservedObject var model: ContentButtonsViewModel
+struct PostButtonGroupView: View {
+    @ObservedObject var model: PostButtonGroupViewModel
     
     @EnvironmentObject var modalRouter: ModalScreenRouter
     
@@ -15,14 +15,14 @@ struct ContentButtonsView: View {
             ForEach(PostButtonType.allCases, id: \.self) { buttonType in
                 switch buttonType {
                 case .like:
-                    ContentButton(count: model.post?.likes ?? 0,
+                    PostButton(count: model.post?.likes ?? 0,
                                   buttonType: buttonType,
                                   isActive: model.didLike) {
                         likeButtonTapped()
                     }
                     Divider().padding(.vertical, 5)
                 case .reply:
-                    ContentButton(count: model.post?.replies ?? 0,
+                    PostButton(count: model.post?.replies ?? 0,
                                   buttonType: buttonType) {
                         if let post = model.post {
                             modalRouter.presentSheet(destination: PostSheetDestination.reply(post: post))
@@ -30,7 +30,7 @@ struct ContentButtonsView: View {
                     }
                     Divider().padding(.vertical, 5)
                 case .repost:
-                    ContentButton(count: model.temporaryRepostCount,
+                    PostButton(count: model.temporaryRepostCount,
                                   buttonType: buttonType,
                                   isActive: model.temporaryRepostCount > 0) {
                         if model.temporaryRepostCount == 0 {
@@ -41,7 +41,7 @@ struct ContentButtonsView: View {
                     }
                     Divider().padding(.vertical, 5)
                 case .save:
-                    ContentButton(count: model.didSave ? 1 : 0,
+                    PostButton(count: model.didSave ? 1 : 0,
                                   buttonType: buttonType,
                                   isActive: model.didSave) {
                         saveButtonTapped()
@@ -73,8 +73,8 @@ struct ContentButtonsView: View {
     }
 }
 
-struct PostButtonsView_Previews: PreviewProvider {
+struct PostButtonGroupView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentButtonsView(model: ContentButtonsViewModel(contentType: .post(preview.post)))
+        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(preview.post)))
     }
 }

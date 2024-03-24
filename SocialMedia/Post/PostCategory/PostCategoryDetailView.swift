@@ -1,21 +1,21 @@
 //
-//  CategoryDetailView.swift
+//  PostCategoryDetailView.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
 
-struct CategoryDetailView: View {
-    @StateObject var viewModel: CategoryViewModel
+struct PostCategoryDetailView: View {
+    @StateObject var viewModel: PostCategoryViewModel
     
     init(category: PostCategory) {
-        _viewModel = StateObject(wrappedValue: CategoryViewModel(category: category))
+        _viewModel = StateObject(wrappedValue: PostCategoryViewModel(category: category))
     }
     
     var body: some View {
         VStack {
-            CategoryFilter(filter: $viewModel.currentFilter) { newFilter in
+            PostCategoryFilter(filter: $viewModel.currentFilter) { newFilter in
                 viewModel.currentFilter = newFilter
                 viewModel.sortPosts()
             }
@@ -28,12 +28,12 @@ struct CategoryDetailView: View {
 
 // MARK: - Subviews
 
-private extension CategoryDetailView {
+private extension PostCategoryDetailView {
     
     var postsTabView: some View {
         TabView(selection: $viewModel.currentFilter) {
             ScrollView {
-                ContentGrid(contentGridType: .posts(viewModel.posts), pageCount: .constant(0), isLoading: $viewModel.isLoading)
+                PostGrid(postGridType: .posts(viewModel.posts), isLoading: $viewModel.isLoading)
             }
             .tag(CategoryExploreFilter.hot)
             .overlay {
@@ -41,7 +41,7 @@ private extension CategoryDetailView {
             }
             
             ScrollView {
-                ContentGrid(contentGridType: .posts(viewModel.posts), pageCount: .constant(0), isLoading: $viewModel.isLoading)
+                PostGrid(postGridType: .posts(viewModel.posts), isLoading: $viewModel.isLoading)
             }
             .tag(CategoryExploreFilter.new)
             .overlay {
@@ -56,7 +56,7 @@ private extension CategoryDetailView {
 struct CategoryView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            CategoryDetailView(category: .affirmations)
+            PostCategoryDetailView(category: .affirmations)
         }
     }
 }
