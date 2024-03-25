@@ -137,7 +137,7 @@ public extension PostService {
         guard let uid = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         
         try await FirestoreConstants.posts.document(postID).collection("postLikes").document(uid).setData([:])
-        try await FirestoreConstants.posts.document(postID).updateData(["likes": post.likes + 1])
+        try await FirestoreConstants.posts.document(postID).updateData(["likes": post.likes])
         try await FirestoreConstants.users.document(uid).collection("userLikes").document(postID).setData([:])
         
         ActivityService.uploadNotification(toUID: post.ownerUID, type: .like, postID: postID)
@@ -147,8 +147,9 @@ public extension PostService {
         guard let uid = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         
         try await FirestoreConstants.posts.document(postID).collection("postLikes").document(uid).delete()
+        try await FirestoreConstants.posts.document(postID).updateData(["likes": post.likes])
         try await FirestoreConstants.users.document(uid).collection("userLikes").document(postID).delete()
-        try await FirestoreConstants.posts.document(postID).updateData(["likes": post.likes - 1])
+    
         
         try await ActivityService.deleteNotification(toUID: post.ownerUID, type: .like, postID: postID)
     }

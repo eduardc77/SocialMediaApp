@@ -129,6 +129,7 @@
 		88A64BC22BA632380048259D /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC12BA632380048259D /* SettingsOption.swift */; };
 		88A64BC42BA632B50048259D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC32BA632B50048259D /* AppSettings.swift */; };
 		88A64BC92BA640680048259D /* PostReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC82BA640680048259D /* PostReplyView.swift */; };
+		88B50ADF2BB1286B000B1081 /* PostButtonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B50ADE2BB1286B000B1081 /* PostButtonType.swift */; };
 		88D20A652BB0ADB700E62054 /* AppSidebarList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A642BB0ADB600E62054 /* AppSidebarList.swift */; };
 		88D20A672BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */; };
 		88D20A692BB0AECC00E62054 /* AppDetailColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */; };
@@ -290,6 +291,7 @@
 		88A64BC12BA632380048259D /* SettingsOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		88A64BC32BA632B50048259D /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		88A64BC82BA640680048259D /* PostReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostReplyView.swift; sourceTree = "<group>"; };
+		88B50ADE2BB1286B000B1081 /* PostButtonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostButtonType.swift; sourceTree = "<group>"; };
 		88D20A642BB0ADB600E62054 /* AppSidebarList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSidebarList.swift; sourceTree = "<group>"; };
 		88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefersTabNavigationEnvironmentKey.swift; sourceTree = "<group>"; };
 		88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailColumn.swift; sourceTree = "<group>"; };
@@ -414,8 +416,6 @@
 			children = (
 				88D20A6A2BB0D60B00E62054 /* SocialMedia.entitlements */,
 				8895C4DE2BA5F10000F7C28A /* SocialMediaApp.swift */,
-				8895C4E02BA5F10000F7C28A /* ContentView.swift */,
-				8895C5FB2BA6127200F7C28A /* ContentViewModel.swift */,
 				8895C5FA2BA6126A00F7C28A /* Navigation */,
 				8895C5EE2BA6121500F7C28A /* Authentication */,
 				8895C6022BA612A400F7C28A /* Feed */,
@@ -597,7 +597,6 @@
 		8895C58A2BA6091700F7C28A /* General */ = {
 			isa = PBXGroup;
 			children = (
-				88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */,
 				8895C5962BA60D5D00F7C28A /* Users */,
 				8895C58B2BA6093300F7C28A /* Components */,
 				8848261D2BAB8DE6000D3E95 /* PhotoPicker */,
@@ -658,6 +657,7 @@
 			isa = PBXGroup;
 			children = (
 				8895C59F2BA60D5D00F7C28A /* PostButton.swift */,
+				88B50ADE2BB1286B000B1081 /* PostButtonType.swift */,
 				8895C5A02BA60D5D00F7C28A /* PostButtonGroupView.swift */,
 				8895C5A12BA60D5D00F7C28A /* PostButtonGroupViewModel.swift */,
 				8895C5A22BA60D5D00F7C28A /* PostGrid.swift */,
@@ -777,12 +777,15 @@
 		8895C5FA2BA6126A00F7C28A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				8895C4E02BA5F10000F7C28A /* ContentView.swift */,
+				8895C5FB2BA6127200F7C28A /* ContentViewModel.swift */,
 				884826382BABAA6C000D3E95 /* AppScreen.swift */,
 				8848263A2BABACEB000D3E95 /* AppRouter.swift */,
 				88D20A642BB0ADB600E62054 /* AppSidebarList.swift */,
 				88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */,
 				8895C5FD2BA6128500F7C28A /* AppTabView.swift */,
 				8848263C2BABAD07000D3E95 /* ModalScreenRouter.swift */,
+				88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -1048,6 +1051,7 @@
 				8895C5CA2BA60EDC00F7C28A /* Colors.swift in Sources */,
 				8895C61C2BA612B000F7C28A /* PostEditorViewModel.swift in Sources */,
 				8895C5852BA6091200F7C28A /* UserProfileViewModel.swift in Sources */,
+				88B50ADF2BB1286B000B1081 /* PostButtonType.swift in Sources */,
 				88A64BBF2BA630F80048259D /* FeedbackView.swift in Sources */,
 				88A64BBE2BA630F80048259D /* AboutView.swift in Sources */,
 				8895C5352BA5F18200F7C28A /* HeaderStyle.swift in Sources */,

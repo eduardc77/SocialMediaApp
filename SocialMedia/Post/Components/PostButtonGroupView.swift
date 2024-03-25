@@ -7,7 +7,6 @@ import SwiftUI
 
 struct PostButtonGroupView: View {
     @ObservedObject var model: PostButtonGroupViewModel
-    
     @EnvironmentObject var modalRouter: ModalScreenRouter
     
     var body: some View {
@@ -15,12 +14,13 @@ struct PostButtonGroupView: View {
             ForEach(PostButtonType.allCases, id: \.self) { buttonType in
                 switch buttonType {
                 case .like:
-                    PostButton(count: model.post?.likes ?? 0,
+                    PostButton(count: model.postLikes,
                                   buttonType: buttonType,
                                   isActive: model.didLike) {
-                        likeButtonTapped()
+                            likeButtonTapped()
                     }
                     Divider().padding(.vertical, 5)
+                    
                 case .reply:
                     PostButton(count: model.post?.replies ?? 0,
                                   buttonType: buttonType) {
@@ -29,6 +29,7 @@ struct PostButtonGroupView: View {
                         }
                     }
                     Divider().padding(.vertical, 5)
+                    
                 case .repost:
                     PostButton(count: model.temporaryRepostCount,
                                   buttonType: buttonType,
@@ -40,6 +41,7 @@ struct PostButtonGroupView: View {
                         }
                     }
                     Divider().padding(.vertical, 5)
+                    
                 case .save:
                     PostButton(count: model.didSave ? 1 : 0,
                                   buttonType: buttonType,
@@ -50,6 +52,13 @@ struct PostButtonGroupView: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
+        .onFirstAppear {
+            Task {
+                try await model.checkIfUserLikedPost()
+                try await model.checkIfUserSavedPost()
+            }
+            
+        }
     }
     
     private func likeButtonTapped() {

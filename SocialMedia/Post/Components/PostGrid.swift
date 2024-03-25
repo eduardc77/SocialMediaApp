@@ -52,10 +52,10 @@ struct PostGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridItems) {
-            Spacer()
+            
             switch postGridType {
             case .posts(let posts):
-                ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
+                ForEach(Array(posts.enumerated()), id: \.element) { index, post in
                     ZStack(alignment: .top) {
                         NavigationLink(value: post) {
                             Color.secondaryGroupedBackground.clipShape(.containerRelative)
@@ -103,7 +103,7 @@ struct PostGrid: View {
                     }
                 }
             }
-            Spacer()
+        
         }
         .padding(10)
     }

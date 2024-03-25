@@ -25,7 +25,6 @@ final class FeedViewModel: ObservableObject {
     @Published var pageCount: Int = 0
     
     func addListenersForFeed() {
-        
         if !PostService.feedListenerRemoved {
             removeListener()
         }
@@ -36,32 +35,19 @@ final class FeedViewModel: ObservableObject {
             } receiveValue: { [weak self] documentChangeType, lastDocument in
                 guard let self = self else { return }
                 
-                Task { @MainActor in
-                    self.isLoading = true
-                    
+                Task {
                     switch documentChangeType {
                     case .added(let post):
-                        if !self.forYouPosts.contains(where: { $0.id == post.id }),
-                           let index = self.forYouPosts.firstIndex(where: { $0.id != post.id }) {
-                            let userDataPost = try await self.fetchPostUserData(post: post)
-                            withAnimation {
-                                self.forYouPosts.insert(userDataPost, at: index)
-                            }
-                        }
+                        try await self.add(post)
                         
                     case .modified(let post):
-                        if let index = self.forYouPosts.firstIndex(where: { $0.id == post.id }) {
-                            try await self.modify(post, at: index)
-                        }
+                        try await self.modify(post)
                         
                     case .removed(let post):
-                        withAnimation {
-                            self.delete(post)
-                        }
+                        self.remove(post)
                         
                     case .none: break
                     }
-                    self.isLoading = false
                 }
             }
             .store(in: &cancellables)
@@ -91,18 +77,37 @@ final class FeedViewModel: ObservableObject {
 }
 
 private extension FeedViewModel {
-    func add(_ post: Post) {
+    func add(_ post: Post) async throws {
+        guard !self.forYouPosts.contains(where: { $0.id == post.id }),
+              let index = self.forYouPosts.firstIndex(where: { $0.id != post.id }) else { return }
         
-    }
-    
-    func modify(_ post: Post, at index: Int) async throws {
-        if forYouPosts[index].id == post.id, forYouPosts[index] != post {
-            forYouPosts[index] = try await fetchPostUserData(post: post)
+        let userDataPost = try await self.fetchPostUserData(post: post)
+        withAnimation {
+            self.forYouPosts.insert(userDataPost, at: index)
         }
     }
     
-    func delete(_ post: Post) {
-        forYouPosts.removeAll(where: { $0.id == post.id })
+    func modify(_ post: Post) async throws {
+        guard let index = self.forYouPosts.firstIndex(where: { $0.id == post.id }) else { return }
+        var forYouPost = forYouPosts[index]
+        
+        guard forYouPost.id == post.id, forYouPost != post else { return }
+       
+        if forYouPost.likes != post.likes {
+            forYouPosts[index].likes = post.likes
+        }
+        if forYouPost.replies != post.replies {
+            forYouPosts[index].replies = post.replies
+        }
+        if forYouPost.reposts != post.reposts {
+            forYouPosts[index].reposts = post.reposts
+        }
+    }
+    
+    func remove(_ post: Post) {
+        withAnimation {
+            forYouPosts.removeAll(where: { $0.id == post.id })
+        }
     }
     
     func refreshForYouFeed() async throws {

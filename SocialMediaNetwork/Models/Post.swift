@@ -37,3 +37,9 @@ public struct Post: Identifiable, Codable, Hashable {
         self.didSave = didSave
     }
 }
+
+extension Post: Equatable {
+    public static func ==(lhs: Post, rhs: Post) -> Bool {
+        return lhs.id == rhs.id && lhs.ownerUID == rhs.ownerUID && lhs.caption == rhs.caption && lhs.category == rhs.category && lhs.imageUrl == rhs.imageUrl && lhs.likes == rhs.likes && lhs.replies == rhs.replies && lhs.reposts == rhs.reposts
+    }
+}
