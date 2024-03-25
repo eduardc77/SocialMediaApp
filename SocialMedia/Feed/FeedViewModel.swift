@@ -15,7 +15,7 @@ final class FeedViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var currentFilter: FeedFilter = .forYou
     
-    var itemsPerPage: Int = 10
+    var itemsPerPage: Int = 20
     
     private var noMoreItemsToFetch: Bool = false
     var lastForYouPostDocument: DocumentSnapshot?
@@ -59,8 +59,7 @@ final class FeedViewModel: ObservableObject {
                             self.delete(post)
                         }
                         
-                    case .none:
-                        print("NONE")
+                    case .none: break
                     }
                     self.isLoading = false
                 }
@@ -111,6 +110,7 @@ private extension FeedViewModel {
         noMoreItemsToFetch = false
         lastForYouPostDocument = nil
         pageCount = 0
+        cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
         try await fetchForYouPosts()
     }
@@ -170,7 +170,6 @@ private extension FeedViewModel {
                 self.lastFollowingPostDocument = nil
             }
             self.forYouPosts.append(contentsOf: forYouPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
-            
             self.isLoading = false
             
             if PostService.feedListenerRemoved {

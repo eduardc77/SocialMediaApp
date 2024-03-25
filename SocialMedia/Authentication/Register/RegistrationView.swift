@@ -15,6 +15,7 @@ struct RegistrationView: View {
             textfieldsSection
             registerButton
         }
+        .formStyle(.grouped)
         .navigationTitle(AuthScreen.register.navigationTitle)
         .alert(isPresented: $viewModel.showAlert) {
             Alert(title: Text("Error"),
@@ -47,7 +48,10 @@ private extension RegistrationView {
                     .multilineTextAlignment(.leading)
             }
             .toggleStyle(.checkboxStyle)
-            .listRowInsets(.init(top: 10, leading: 5, bottom: 10, trailing: 0))
+            .frame(maxWidth: .infinity, alignment: .leading)
+#if os(iOS)
+            .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
+#endif
         }
     }
     

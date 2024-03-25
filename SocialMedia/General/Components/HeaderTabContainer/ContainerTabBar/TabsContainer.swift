@@ -157,7 +157,9 @@ where HeaderTitle: View, HeaderTabBar: View, HeaderBackground: View, Content: Vi
                             TabView {
                                 content()
                             }
+#if os(iOS)
                             .tabViewStyle(.page(indexDisplayMode: .never))
+#endif
                             .frame(height: 0)
                         }
                     }

@@ -29,10 +29,12 @@ struct FeedView: View {
                 PostCategoryDetailView(category: category)
             })
             .navigationTitle("Posts")
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .background(Color.groupedBackground)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button {
                         Task {
                             try await model.refreshFeedForCurrentFilter()
@@ -66,9 +68,6 @@ private extension FeedView {
             ScrollView {
                 PostGrid(postGridType: .posts(model.forYouPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
                     try await model.fetchFeedForCurrentFilter()
-//                    if PostService.feedListenerRemoved {
-//                        model.addListenersForFeed()
-//                    }
                 })
             }
             .tag(FeedFilter.forYou)
@@ -97,7 +96,9 @@ private extension FeedView {
                 if model.isLoading { ProgressView() }
             }
         }
+#if os(iOS)
         .tabViewStyle(.page(indexDisplayMode: .never))
+#endif
     }
 }
 

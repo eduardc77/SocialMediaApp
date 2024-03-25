@@ -7,21 +7,21 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct PostCategoryDetailView: View {
-    @StateObject var viewModel: PostCategoryViewModel
+    @StateObject var model: PostCategoryViewModel
     
     init(category: PostCategory) {
-        _viewModel = StateObject(wrappedValue: PostCategoryViewModel(category: category))
+        _model = StateObject(wrappedValue: PostCategoryViewModel(category: category))
     }
     
     var body: some View {
         VStack {
-            PostCategoryFilter(filter: $viewModel.currentFilter) { newFilter in
-                viewModel.currentFilter = newFilter
-                viewModel.sortPosts()
+            PostCategoryFilter(filter: $model.currentFilter) { newFilter in
+                model.currentFilter = newFilter
+                model.sortPosts()
             }
-                        postsTabView
+            postsTabView
         }
-        .navigationBar(title: "\(viewModel.category.icon) \(viewModel.category.rawValue.capitalized)")
+        .navigationBar(title: "\(model.category.icon) \(model.category.rawValue.capitalized)")
         .background(Color.groupedBackground)
     }
 }
@@ -31,24 +31,26 @@ struct PostCategoryDetailView: View {
 private extension PostCategoryDetailView {
     
     var postsTabView: some View {
-        TabView(selection: $viewModel.currentFilter) {
+        TabView(selection: $model.currentFilter) {
             ScrollView {
-                PostGrid(postGridType: .posts(viewModel.posts), isLoading: $viewModel.isLoading)
+                PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
             }
             .tag(CategoryExploreFilter.hot)
             .overlay {
-                if viewModel.isLoading { ProgressView() }
+                if model.isLoading { ProgressView() }
             }
             
             ScrollView {
-                PostGrid(postGridType: .posts(viewModel.posts), isLoading: $viewModel.isLoading)
+                PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
             }
             .tag(CategoryExploreFilter.new)
             .overlay {
-                if viewModel.isLoading { ProgressView() }
+                if model.isLoading { ProgressView() }
             }
         }
+#if os(iOS)
         .tabViewStyle(.page(indexDisplayMode: .never))
+#endif
     }
     
 }

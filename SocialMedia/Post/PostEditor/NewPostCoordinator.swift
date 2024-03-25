@@ -6,16 +6,21 @@
 import SwiftUI
 
 struct NewPostCoordinator: View {
-    @EnvironmentObject private var tabRouter: AppTabRouter
+    @EnvironmentObject private var tabRouter: AppRouter
     @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     var body: some View {
-        Color.clear
-            .onChange(of: tabRouter.selection) { oldValue, newValue in
-                if tabRouter.selection == .newPost {
-                    modalRouter.presentSheet(destination: PostSheetDestination.newPost)
-                    self.tabRouter.selection = oldValue
+        if prefersTabNavigation {
+            Color.clear
+                .onChange(of: tabRouter.selection) { oldValue, newValue in
+                    if tabRouter.selection == .newPost {
+                        modalRouter.presentSheet(destination: PostSheetDestination.newPost)
+                        self.tabRouter.selection = oldValue
+                    }
                 }
-            }
+        } else {
+            PostEditorView()
+        }
     }
 }

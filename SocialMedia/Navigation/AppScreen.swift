@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-enum AppScreen: Codable, Hashable, Identifiable, CaseIterable {
+enum AppScreen: String, Codable, Hashable, Identifiable, CaseIterable {
     case home
     case search
     case newPost
@@ -16,20 +16,33 @@ enum AppScreen: Codable, Hashable, Identifiable, CaseIterable {
 }
 
 extension AppScreen {
- 
+    var title: String {
+        switch self {
+        case .newPost:
+            "New Post"
+        default:
+            self.rawValue.capitalized
+        }
+    }
+    
     var icon: String {
         switch self {
         case .home:
             "house"
         case .search:
-           "magnifyingglass"
+            "magnifyingglass"
         case .newPost:
             "plus"
         case .activity:
-           "heart"
+            "heart"
         case .profile:
             "person"
         }
+    }
+    
+    @ViewBuilder
+    var label: some View {
+        Label(title, systemImage: icon)
     }
     
     @ViewBuilder

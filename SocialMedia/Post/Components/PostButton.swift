@@ -27,15 +27,16 @@ struct PostButton: View {
                         .animation(.default, value: count)
                 }
             }
-           
             .font(.footnote)
             .padding(.top, 6)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity)
             .foregroundStyle(!isActive ? Color.secondary : buttonType.color)
-           
         }
+        .buttonStyle(.plain)
+#if os(iOS)
         .hapticFeedback(trigger: count)
+#endif
     }
 }
 

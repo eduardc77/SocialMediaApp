@@ -8,14 +8,6 @@ import PhotosUI
 
 @MainActor
 class ImageData: ObservableObject {
-    
-    enum ImageState {
-        case empty
-        case loading
-        case success(UIImage)
-        case failure(Error)
-    }
-
     @Published var image: Image?
     @Published var imageState: ImageState = .empty
     @Published var newImageSet: Bool = false
@@ -32,6 +24,13 @@ class ImageData: ObservableObject {
         }
     }
     
+    enum ImageState {
+        case empty
+        case loading
+        case success(Data)
+        case failure(Error)
+    }
+
     func loadTransferable(from imageSelection: PhotosPickerItem) async {
         guard imageSelection == self.imageSelection else {
             print("Failed to get the selected item.")
@@ -41,9 +40,14 @@ class ImageData: ObservableObject {
         
         do {
             if let data = try await imageSelection.loadTransferable(type: Data.self) {
+                imageState = .success(data)
+#if os(iOS)
                 guard let uiImage = UIImage(data: data) else { return }
-                imageState = .success(uiImage)
                 image = Image(uiImage: uiImage)
+#elseif os(macOS)
+                guard let nsImage = NSImage(data: data) else { return }
+                image = Image(nsImage: nsImage)
+#endif
                 newImageSet = true
             } else {
                 imageState = .empty

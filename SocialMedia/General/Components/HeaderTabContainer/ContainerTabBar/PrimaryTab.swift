@@ -138,6 +138,7 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
                     .padding(activeConfig.contentPadding)
                     .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .background(alignment: .bottom) {
                     if let underlineShape {
                         underlineShape

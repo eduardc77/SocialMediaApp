@@ -12,28 +12,23 @@ struct ProfileTabsContentView<Content: View>: View {
     private let tab: ProfilePostFilter
     @ViewBuilder private let info: () -> Content
     
-#if os(iOS)
+
     @Environment(\.horizontalSizeClass) private var sizeClass
-#endif
-    private var useProfileImageSize: Bool {
-#if os(iOS)
+
+    private var isCompact: Bool {
+
         if sizeClass == .compact {
             return true
         } else {
             return false
         }
-#endif
-        //        if dynamicTypeSize >= .xxxLarge {
-        //            return true
-        //        }
-        //        return false
     }
     
     private var profileImageSize: ImageSize {
 #if os(iOS)
-        return useProfileImageSize ? .small : .large
+        return isCompact ? .small : .large
 #else
-        return useProfileImageSize ? .xSmall : .medium
+        return isCompact ? .xSmall : .medium
 #endif
     }
     

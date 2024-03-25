@@ -13,6 +13,7 @@ final class UserContentListViewModel: ObservableObject {
     @Published var replies = [PostReply]()
     @Published var liked = [Post]()
     @Published var saved = [Post]()
+    @Published var itemsPerPage: Int = 10
     
     var likedPostsListener: ListenerRegistration?
     var savedPostsListener: ListenerRegistration?

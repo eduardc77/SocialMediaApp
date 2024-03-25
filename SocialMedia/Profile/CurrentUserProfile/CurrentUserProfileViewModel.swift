@@ -18,7 +18,7 @@ final class CurrentUserProfileViewModel: ObservableObject {
     
     @Published var profileInputData = ProfileInputData()
     @Published var updatingProfile: Bool = false
-
+    
     private var cancellables = Set<AnyCancellable>()
     
     var isProfileEdited: Bool {
@@ -69,7 +69,7 @@ extension CurrentUserProfileViewModel {
             currentUser?.fullName = profileInputData.fullName
             data["fullName"] = profileInputData.fullName
         }
-
+        
         if profileInputData.aboutMe != user.aboutMe {
             currentUser?.aboutMe = profileInputData.aboutMe
             data["aboutMe"] = profileInputData.aboutMe
@@ -85,9 +85,9 @@ extension CurrentUserProfileViewModel {
             data["privateProfile"] = profileInputData.privateProfile
         }
         
-        if profileInputData.profileImageURL != user.profileImageURL || newImageSet, case let .success(profileImage) = imageState {
-                try await updateProfileImage(profileImage)
-                data["profileImageURL"] = currentUser?.profileImageURL
+        if profileInputData.profileImageURL != user.profileImageURL || newImageSet, case let .success(profileImageData) = imageState {
+            try await updateProfileImage(profileImageData)
+            data["profileImageURL"] = currentUser?.profileImageURL
         }
         try await FirestoreConstants.users.document(userID).updateData(data)
         newImageSet = false
@@ -112,8 +112,8 @@ extension CurrentUserProfileViewModel {
 
 private extension CurrentUserProfileViewModel {
     
-    func updateProfileImage(_ uiImage: UIImage) async throws {
-        guard let userID = currentUser?.id, let imageUrl = try? await StorageService.uploadImage(image: uiImage, type: .profile(userID: userID)) else { return }
+    func updateProfileImage(_ imageData: Data) async throws {
+        guard let userID = currentUser?.id, let imageUrl = try? await StorageService.uploadImage(imageData: imageData, type: .profile(userID: userID)) else { return }
         currentUser?.profileImageURL = imageUrl
         profileInputData.profileImageURL = imageUrl
     }

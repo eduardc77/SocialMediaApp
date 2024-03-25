@@ -67,7 +67,7 @@ struct PostGridItem: View {
                 .allowsHitTesting(false)
             
             if let imageURLString = post?.imageUrl, let postImageURL = URL(string: imageURLString) {
-                AsyncImageView(url: postImageURL, size: .custom(height: 300))
+                AsyncImageView(url: postImageURL, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .allowsHitTesting(false)
             }
@@ -82,7 +82,11 @@ struct PostGridItem: View {
                 }
             }
         }
+#if !os(macOS)
         .padding([.horizontal, .top], 10)
+#else
+        .padding([.horizontal, .top])
+#endif
         .redacted(reason: user == nil ? .placeholder : [])
     }
 }
@@ -107,6 +111,7 @@ private extension PostGridItem {
                 }
             }
         }
+        .buttonStyle(.plain)
     }
     
     func categoryView(category: PostCategory) -> some View {
@@ -122,6 +127,7 @@ private extension PostGridItem {
             .background(in: RoundedRectangle(cornerRadius: 5, style: .continuous))
             .backgroundStyle(.regularMaterial)
         }
+        .buttonStyle(.plain)
     }
     
     var ellipsisView: some View {
@@ -152,6 +158,11 @@ private extension PostGridItem {
                 .padding(10)
                 .contentShape(.rect)
         }
+#if os(macOS)
+        .frame(maxWidth: 30)
+        .menuIndicator(.hidden)
+        .menuStyle(.borderlessButton)
+#endif
     }
 }
 

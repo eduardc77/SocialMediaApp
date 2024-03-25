@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct FeedbackView: View {   
+struct FeedbackView: View {
     @State private var email = ""
     @State private var message = ""
     
@@ -26,14 +26,17 @@ struct FeedbackView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             Section {
                 TextField("Email", text: $email, prompt: Text("Email (Optional)"), axis: .vertical)
                     .focused($focusedField, equals: .email)
+#if os(iOS)
                     .keyboardType(.emailAddress)
-                    .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.never)
+#endif
+                    .autocorrectionDisabled(true)
             }
             
             Section {
@@ -41,22 +44,24 @@ struct FeedbackView: View {
                     .focused($focusedField, equals: .message)
                     .lineLimit(10, reservesSpace: true)
                     .autocorrectionDisabled(true)
+#if os(iOS)
                     .textInputAutocapitalization(.sentences)
+#endif
             }
         }
+        .formStyle(.grouped)
         .onTapGesture {
             focusedField = nil
         }
         .navigationBar(title: "Feedback")
         .background(Color.groupedBackground)
-        
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .confirmationAction) {
                 Button {
                     email = ""
                     message = ""
                 } label: {
-                    Image(systemName: SettingsOption.feedback.icon + ".fill")
+                    Image(systemName: SettingsOption.feedback.icon)
                 }
             }
         }

@@ -6,11 +6,6 @@
 import SwiftUI
 
 public enum Metric {
-    
-    // MARK: - Screen Size
-    
-    public static let screenWidth: CGFloat = UIScreen.main.bounds.size.width
-    public static let screenHeight: CGFloat = UIScreen.main.bounds.size.height
 
 }
 

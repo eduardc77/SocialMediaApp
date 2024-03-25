@@ -44,6 +44,7 @@ public struct StorageService {
         try await storage.child(path).data(maxSize: 3 * 1024 * 1024)
     }
     
+#if canImport(UIKit)
     public static func getImage(userId: String, path: String) async throws -> UIImage {
         let data = try await getData(userId: userId, path: path)
         
@@ -52,18 +53,25 @@ public struct StorageService {
         }
         return image
     }
+#elseif canImport(AppKit)
     
-    public static func uploadImage(image: UIImage, type: UploadType) async throws -> String {
-        guard let data = image.jpegData(compressionQuality: 0.6) else {
-            throw URLError(.backgroundSessionWasDisconnected)
-        }
+    public static func getImage(userId: String, path: String) async throws -> NSImage {
+        let data = try await getData(userId: userId, path: path)
         
+        guard let image = NSImage(data: data) else {
+            throw URLError(.badServerResponse)
+        }
+        return image
+    }
+#endif
+
+    public static func uploadImage(imageData: Data, type: UploadType) async throws -> String {
         do {
             let storageReference = type.filePath
             let meta = StorageMetadata()
             meta.contentType = "image/jpeg"
             
-            let returnedMetaData = try await storageReference.putDataAsync(data, metadata: meta)
+            let returnedMetaData = try await storageReference.putDataAsync(imageData, metadata: meta)
             
             guard let returnedPath = returnedMetaData.path else {
                 throw URLError(.badServerResponse)
@@ -75,7 +83,7 @@ public struct StorageService {
             throw URLError(.badServerResponse)
         }
     }
-    
+
     public static func deleteImage(path: String) async throws {
         try await getPathForImage(path: path).delete()
     }

@@ -22,8 +22,12 @@ struct UserListView: View {
             .navigationTitle("Search")
             .padding(.top)
         }
+#if os(iOS)
         .searchable(text: $model.searchText, placement: .navigationBarDrawer)
-        .background(Color.groupedBackground)
+#elseif os(macOS)
+        .searchable(text: $model.searchText, placement: .automatic)
+#endif
+        .background(Color.groupedBackground)   
     }
 }
 

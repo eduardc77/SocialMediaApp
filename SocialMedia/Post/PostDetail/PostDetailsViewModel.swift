@@ -11,6 +11,7 @@ import SocialMediaNetwork
 final class PostDetailsViewModel: ObservableObject {
     @Published var post: Post
     @Published var replies = [PostReply]()
+    @Published var itemsPerPage: Int = 10
     
     init(post: Post) {
         self.post = post

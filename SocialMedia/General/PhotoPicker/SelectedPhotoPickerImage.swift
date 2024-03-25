@@ -12,9 +12,18 @@ struct SelectedPhotoPickerImage: View {
     var body: some View {
         Group {
             switch imageState {
-            case .success(let image):
-                Image(uiImage: image)
-                    .resizable()
+            case .success(let imageData):
+#if os(iOS)
+                if let uiImage = UIImage(data: imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                }
+#elseif os(macOS)
+                if let uiImage = NSImage(data: imageData) {
+                    Image(nsImage: uiImage)
+                        .resizable()
+                }
+#endif
             case .loading:
                 ProgressView()
             case .empty:

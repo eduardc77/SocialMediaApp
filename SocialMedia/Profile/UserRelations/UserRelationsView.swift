@@ -10,6 +10,7 @@ struct UserRelationsView: View {
     @StateObject var viewModel: UserRelationsViewModel
     @State private var searchText = ""
     @Namespace var animation
+    @Environment(\.dismiss) private var dismiss
     
     init(user: User) {
         self._viewModel = StateObject(wrappedValue: UserRelationsViewModel(user: user))
@@ -57,6 +58,16 @@ struct UserRelationsView: View {
             }
         }
         .padding()
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+        }
+#if os(macOS)
+        .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity)
+#endif
     }
 }
 

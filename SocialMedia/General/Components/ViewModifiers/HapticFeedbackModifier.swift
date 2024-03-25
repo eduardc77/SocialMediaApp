@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+#if canImport(UIKit)
 struct HapticFeedbackModifier<T: Equatable>: ViewModifier {
     private let generator: UIImpactFeedbackGenerator
     private let intensity: CGFloat
@@ -30,3 +31,4 @@ extension View {
         modifier(HapticFeedbackModifier(feedbackStyle: feedbackStyle, intensity: intensity, trigger: trigger))
     }
 }
+#endif

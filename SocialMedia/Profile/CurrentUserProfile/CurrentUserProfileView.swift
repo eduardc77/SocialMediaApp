@@ -12,18 +12,14 @@ struct CurrentUserProfileView: View {
     
     @EnvironmentObject private var modalRouter: ModalScreenRouter
     
-#if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
-#endif
     
     private var isCompact: Bool {
-#if os(iOS)
         if sizeClass == .compact {
             return true
         } else {
             return false
         }
-#endif
     }
     
     @State private var selectedTab: ProfilePostFilter = .posts
@@ -51,6 +47,7 @@ struct CurrentUserProfileView: View {
                         .padding(.top, isCompact ? 0 : 20)
                         .padding([.bottom, .horizontal], isCompact ? 10 : 20)
                     }
+                    
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 8) {
                             VStack(alignment: .leading, spacing: 4) {
@@ -92,6 +89,7 @@ struct CurrentUserProfileView: View {
                             .font(.subheadline)
                             .foregroundStyle(Color.accentColor)
                     }
+                    .buttonStyle(.borderless)
                     
                     HStack {
                         Button {
@@ -126,7 +124,7 @@ struct CurrentUserProfileView: View {
      
             },
             headerBackground: { context in
-                Rectangle().fill(Color.groupedBackground)
+               Color.groupedBackground
             },
             content: {
                 if let user = model.currentUser {

@@ -16,6 +16,7 @@ struct LoginView: View {
                 textfieldsSection
                 loginButton
             }
+            .formStyle(.grouped)
             .navigationTitle(AuthScreen.login.navigationTitle)
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(title: Text("Error"),
@@ -56,15 +57,16 @@ private extension LoginView {
                     RegistrationView()
                 }
             }
-            .listRowInsets(.init(top: 10, leading: 5, bottom: 10, trailing: 5))
+            .frame(maxWidth: .infinity, alignment: .leading)
+#if os(iOS)
+            .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
+#endif   
         }
     }
     
     var loginButton: some View {
-        Button {
+        Button(AuthScreen.login.buttonTitle) {
             Task { try await viewModel.login() }
-        } label: {
-            Text("Login")
         }
         .buttonStyle(.main(isLoading: $viewModel.isAuthenticating))
         .disabled(viewModel.isAuthenticating || !viewModel.validForm)

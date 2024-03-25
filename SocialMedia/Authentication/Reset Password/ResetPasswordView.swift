@@ -17,12 +17,15 @@ struct ResetPasswordView: View {
                     .focused($focusedField)
             } footer: {
                 Text(viewModel.footerText)
-                    .listRowInsets(.init(top: 10, leading: 5, bottom: 10, trailing: 5))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+#if os(iOS)
+                    .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
+#endif
             }
-
+            
             Button(AuthScreen.resetPassword.buttonTitle) {
                 focusedField = false
-                Task { 
+                Task {
                     try await viewModel.sendPasswordResetEmail()
                     viewModel.showAlert = true
                 }
@@ -32,6 +35,7 @@ struct ResetPasswordView: View {
             .listRowInsets(.init())
             .listRowBackground(Color.clear)
         }
+        .formStyle(.grouped)
         .navigationTitle(AuthScreen.resetPassword.navigationTitle)
         .alert(isPresented: $viewModel.didSendEmail) {
             Alert(title: Text(viewModel.emailSentAlertTitle),

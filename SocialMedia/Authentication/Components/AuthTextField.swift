@@ -24,6 +24,7 @@ struct AuthTextField: View {
 #if !os(macOS)
                     .keyboardType(type == .email ? .emailAddress : .default)
                     .textInputAutocapitalization(type == .name ? .words : .never)
+                    .autocorrectionDisabled()
 #endif
             } else {
                 SecureField(type.rawValue.capitalized, text: $text)

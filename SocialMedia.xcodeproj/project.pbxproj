@@ -14,7 +14,7 @@
 		8848262E2BAB90E7000D3E95 /* CTAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884826252BAB90E7000D3E95 /* CTAButton.swift */; };
 		884826372BABA4B9000D3E95 /* FeedFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884826362BABA4B9000D3E95 /* FeedFilter.swift */; };
 		884826392BABAA6C000D3E95 /* AppScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884826382BABAA6C000D3E95 /* AppScreen.swift */; };
-		8848263B2BABACEC000D3E95 /* AppTabRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8848263A2BABACEB000D3E95 /* AppTabRouter.swift */; };
+		8848263B2BABACEC000D3E95 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8848263A2BABACEB000D3E95 /* AppRouter.swift */; };
 		8848263D2BABAD08000D3E95 /* ModalScreenRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8848263C2BABAD07000D3E95 /* ModalScreenRouter.swift */; };
 		8848263F2BABB559000D3E95 /* NewPostCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8848263E2BABB559000D3E95 /* NewPostCoordinator.swift */; };
 		8886282D2BAA3FD500646616 /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8886282C2BAA3FD500646616 /* ImageData.swift */; };
@@ -129,6 +129,9 @@
 		88A64BC22BA632380048259D /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC12BA632380048259D /* SettingsOption.swift */; };
 		88A64BC42BA632B50048259D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC32BA632B50048259D /* AppSettings.swift */; };
 		88A64BC92BA640680048259D /* PostReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC82BA640680048259D /* PostReplyView.swift */; };
+		88D20A652BB0ADB700E62054 /* AppSidebarList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A642BB0ADB600E62054 /* AppSidebarList.swift */; };
+		88D20A672BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */; };
+		88D20A692BB0AECC00E62054 /* AppDetailColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,7 +173,7 @@
 		884826252BAB90E7000D3E95 /* CTAButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTAButton.swift; sourceTree = "<group>"; };
 		884826362BABA4B9000D3E95 /* FeedFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedFilter.swift; sourceTree = "<group>"; };
 		884826382BABAA6C000D3E95 /* AppScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppScreen.swift; sourceTree = "<group>"; };
-		8848263A2BABACEB000D3E95 /* AppTabRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTabRouter.swift; sourceTree = "<group>"; };
+		8848263A2BABACEB000D3E95 /* AppRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		8848263C2BABAD07000D3E95 /* ModalScreenRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalScreenRouter.swift; sourceTree = "<group>"; };
 		8848263E2BABB559000D3E95 /* NewPostCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostCoordinator.swift; sourceTree = "<group>"; };
 		8886282C2BAA3FD500646616 /* ImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
@@ -287,6 +290,10 @@
 		88A64BC12BA632380048259D /* SettingsOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		88A64BC32BA632B50048259D /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		88A64BC82BA640680048259D /* PostReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostReplyView.swift; sourceTree = "<group>"; };
+		88D20A642BB0ADB600E62054 /* AppSidebarList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSidebarList.swift; sourceTree = "<group>"; };
+		88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefersTabNavigationEnvironmentKey.swift; sourceTree = "<group>"; };
+		88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailColumn.swift; sourceTree = "<group>"; };
+		88D20A6A2BB0D60B00E62054 /* SocialMedia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SocialMedia.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -405,12 +412,15 @@
 		8895C4DD2BA5F10000F7C28A /* SocialMedia */ = {
 			isa = PBXGroup;
 			children = (
+				88D20A6A2BB0D60B00E62054 /* SocialMedia.entitlements */,
 				8895C4DE2BA5F10000F7C28A /* SocialMediaApp.swift */,
+				8895C4E02BA5F10000F7C28A /* ContentView.swift */,
+				8895C5FB2BA6127200F7C28A /* ContentViewModel.swift */,
 				8895C5FA2BA6126A00F7C28A /* Navigation */,
 				8895C5EE2BA6121500F7C28A /* Authentication */,
 				8895C6022BA612A400F7C28A /* Feed */,
-				8895C5CF2BA60FB200F7C28A /* Search */,
 				8895C5D22BA6102100F7C28A /* Post */,
+				8895C5CF2BA60FB200F7C28A /* Search */,
 				8895C6292BA6161600F7C28A /* Activity */,
 				8895C5782BA6091200F7C28A /* Profile */,
 				8895C63A2BA6247500F7C28A /* Settings */,
@@ -587,6 +597,7 @@
 		8895C58A2BA6091700F7C28A /* General */ = {
 			isa = PBXGroup;
 			children = (
+				88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */,
 				8895C5962BA60D5D00F7C28A /* Users */,
 				8895C58B2BA6093300F7C28A /* Components */,
 				8848261D2BAB8DE6000D3E95 /* PhotoPicker */,
@@ -767,11 +778,11 @@
 			isa = PBXGroup;
 			children = (
 				884826382BABAA6C000D3E95 /* AppScreen.swift */,
+				8848263A2BABACEB000D3E95 /* AppRouter.swift */,
+				88D20A642BB0ADB600E62054 /* AppSidebarList.swift */,
+				88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */,
 				8895C5FD2BA6128500F7C28A /* AppTabView.swift */,
-				8848263A2BABACEB000D3E95 /* AppTabRouter.swift */,
-				8895C5FB2BA6127200F7C28A /* ContentViewModel.swift */,
 				8848263C2BABAD07000D3E95 /* ModalScreenRouter.swift */,
-				8895C4E02BA5F10000F7C28A /* ContentView.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -998,11 +1009,12 @@
 				8895C5FE2BA6128500F7C28A /* AppTabView.swift in Sources */,
 				8895C5AF2BA60D5D00F7C28A /* PostCategoryDetailView.swift in Sources */,
 				8895C5362BA5F18200F7C28A /* HeaderStyleModifier.swift in Sources */,
+				88D20A652BB0ADB700E62054 /* AppSidebarList.swift in Sources */,
 				8895C61B2BA612B000F7C28A /* PostEditorView.swift in Sources */,
 				8895C5392BA5F18200F7C28A /* ParallaxHeaderStyle.swift in Sources */,
 				8895C57D2BA6091200F7C28A /* PostReplyRow.swift in Sources */,
 				8895C6312BA6161600F7C28A /* ActivityViewModel.swift in Sources */,
-				8848263B2BABACEC000D3E95 /* AppTabRouter.swift in Sources */,
+				8848263B2BABACEC000D3E95 /* AppRouter.swift in Sources */,
 				8895C57A2BA6091200F7C28A /* CurrentUserProfileCoordinator.swift in Sources */,
 				8895C54F2BA5F18200F7C28A /* PrimaryTab.swift in Sources */,
 				8895C5892BA6091200F7C28A /* CurrentUserProfileViewModel.swift in Sources */,
@@ -1046,6 +1058,7 @@
 				8895C5372BA5F18200F7C28A /* MinTitleHeightModifier.swift in Sources */,
 				8895C5832BA6091200F7C28A /* ProfilePostFilter.swift in Sources */,
 				8895C5532BA5F18200F7C28A /* StickyHeaderScroll.swift in Sources */,
+				88D20A692BB0AECC00E62054 /* AppDetailColumn.swift in Sources */,
 				8895C5B42BA60D5D00F7C28A /* SecondaryButtonStyle.swift in Sources */,
 				8895C5412BA5F18200F7C28A /* HeaderModel.swift in Sources */,
 				8895C5AE2BA60D5D00F7C28A /* UserListView.swift in Sources */,
@@ -1082,6 +1095,7 @@
 				8895C5402BA5F18200F7C28A /* HeaderContext.swift in Sources */,
 				8895C5842BA6091200F7C28A /* ProfileView.swift in Sources */,
 				8848261F2BAB8E5E000D3E95 /* Metric.swift in Sources */,
+				88D20A672BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift in Sources */,
 				8895C60D2BA612A400F7C28A /* FeedFilterView.swift in Sources */,
 				8848262E2BAB90E7000D3E95 /* CTAButton.swift in Sources */,
 				88A64BBD2BA630F80048259D /* SettingsView.swift in Sources */,
@@ -1254,10 +1268,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SocialMedia/SocialMedia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SocialMedia/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ZU8DL4JP3R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
@@ -1271,12 +1286,17 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.team.SocialMedia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -1285,10 +1305,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SocialMedia/SocialMedia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SocialMedia/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ZU8DL4JP3R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
@@ -1302,12 +1323,17 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.team.SocialMedia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -1323,9 +1349,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.team.SocialMediaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,4,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SocialMedia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SocialMedia";
 			};
 			name = Debug;
@@ -1342,9 +1372,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.team.SocialMediaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,4,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SocialMedia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SocialMedia";
 			};
 			name = Release;
@@ -1359,9 +1393,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.team.SocialMediaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,4,7";
 				TEST_TARGET_NAME = SocialMedia;
 			};
 			name = Debug;
@@ -1376,9 +1414,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.team.SocialMediaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,4,7";
 				TEST_TARGET_NAME = SocialMedia;
 			};
 			name = Release;

@@ -66,10 +66,14 @@ struct PostReplyView: View {
                 
                 Spacer().layoutPriority(1)
             }
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+#else
+            .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity)
+#endif
             .navigationTitle("Reply")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
                     }
@@ -77,7 +81,7 @@ struct PostReplyView: View {
                     .foregroundStyle(Color.primary)
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button("Post") {
                         Task {
                             try await model.uploadPostReply(toPost: model.post, replyText: model.replyText)

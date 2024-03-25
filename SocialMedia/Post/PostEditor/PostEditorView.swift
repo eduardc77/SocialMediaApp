@@ -10,7 +10,7 @@ struct PostEditorView: View {
     @StateObject var model = PostEditorViewModel()
     @StateObject var imageData = ImageData()
     
-    @EnvironmentObject private var tabRouter: AppTabRouter
+    @EnvironmentObject private var tabRouter: AppRouter
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) var dismiss
     
@@ -43,7 +43,7 @@ struct PostEditorView: View {
                             }
                         }
                     }
-                    TextField("Start a post...", text: $model.caption, axis: .vertical)
+                    TextField("Write a post...", text: $model.caption, axis: .vertical)
                         .autocorrectionDisabled()
                         .font(.footnote)
                     
@@ -80,20 +80,23 @@ struct PostEditorView: View {
             .padding(10)
             .background(Color.groupedBackground)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+#if !os(macOS)
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
                     }
                     .font(.subheadline)
                     .foregroundStyle(Color.primary)
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
+#endif
+                ToolbarItem(placement: .confirmationAction) {
                     Button("Post") {
                         Task {
                             try await model.uploadPost()
                             tabRouter.selection = .home
+#if !os(macOS)
                             dismiss()
+#endif
                         }
                     }
                     .opacity(model.caption.isEmpty ? 0.5 : 1.0)
@@ -103,7 +106,9 @@ struct PostEditorView: View {
                     .foregroundStyle(Color.primary)
                 }
             }
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .navigationTitle("New Post")
         }
         .onReceive(imageData.$imageState) { newValue in
@@ -140,6 +145,11 @@ private extension PostEditorView {
         .background(in: RoundedRectangle(cornerRadius: 6, style: .continuous))
         .backgroundStyle(.regularMaterial)
         .contentShape(.rect)
+#if os(macOS)
+        .frame(maxWidth: 200)
+        .menuIndicator(.hidden)
+        .menuStyle(.borderlessButton)
+#endif
     }
     
 }

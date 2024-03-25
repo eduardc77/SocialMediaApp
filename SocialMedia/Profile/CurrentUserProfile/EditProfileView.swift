@@ -9,7 +9,7 @@ import PhotosUI
 struct EditProfileView: View {
     @ObservedObject var model: CurrentUserProfileViewModel
     @ObservedObject var imageData: ImageData
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -32,11 +32,11 @@ struct EditProfileView: View {
                     
                     Section("Name") {
                         TextField("Display Name", text: $model.profileInputData.fullName)
+                            .disableAutocorrection(true)
+                            .textContentType(.name)
 #if os(iOS)
                             .textInputAutocapitalization(.words)
 #endif
-                            .disableAutocorrection(true)
-                            .textContentType(.name)
                     }
                     
                     Section("Username") {
@@ -67,7 +67,8 @@ struct EditProfileView: View {
                                 try await model.updateUserData()
                             }
                             dismiss()
-                        }.disabled(!model.isProfileEdited)
+                        }
+                        .disabled(!model.isProfileEdited)
                     }
                     
                     ToolbarItem(placement: .cancellationAction) {
@@ -76,9 +77,6 @@ struct EditProfileView: View {
                         }
                     }
                 }
-#if !os(iOS)
-                .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity)
-#endif
                 .onReceive(imageData.$newImageSet) { newValue in
                     model.newImageSet = newValue
                 }
