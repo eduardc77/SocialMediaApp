@@ -111,7 +111,7 @@ private extension PostGridItem {
                 }
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
     }
     
     func categoryView(category: PostCategory) -> some View {
@@ -127,7 +127,7 @@ private extension PostGridItem {
             .background(in: RoundedRectangle(cornerRadius: 5, style: .continuous))
             .backgroundStyle(.regularMaterial)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
     }
     
     var ellipsisView: some View {

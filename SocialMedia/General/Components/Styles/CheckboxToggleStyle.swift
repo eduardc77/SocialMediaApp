@@ -17,7 +17,7 @@ struct CheckboxToggleStyle: ToggleStyle {
                 configuration.label
             }
         })
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
     }
 }
 

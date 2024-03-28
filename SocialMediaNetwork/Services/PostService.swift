@@ -8,70 +8,94 @@ import Firebase
 import FirebaseFirestoreSwift
 
 public struct PostService {
-    private static var feedListener: ListenerRegistration? = nil
-    
-    public static var feedListenerRemoved: Bool {
-        PostService.feedListener == nil
-    }
     
     public static func uploadPost(_ post: Post) async throws {
         guard let postData = try? Firestore.Encoder().encode(post) else { return }
         _ = try await FirestoreConstants.posts.addDocument(data: postData)
     }
     
-    public static func addListenerForFeed(countLimit: Int, lastDocument: DocumentSnapshot?, descending: Bool = false) -> (AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
+    public static func fetchPost(postID: String) async throws -> Post {
+        let snapshot = try await FirestoreConstants.posts.document(postID).getDocument()
+        return try snapshot.data(as: Post.self)
+    }
+    
+    // MARK: - For You Feed
+    
+    private static var currentListener: ListenerRegistration? = nil
+    
+    static var currentListenerRemoved: Bool {
+        PostService.currentListener == nil
+    }
+    
+    public static func addListenerForFeed() -> (AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
         let (publisher, listener) =
-        FirestoreConstants
-            .posts
-            .order(by: "timestamp", descending: descending)
-           // .limit(to: countLimit)
-//            .startOptionally(afterDocument: lastDocument)
+        FirestoreConstants.posts
+            .order(by: "timestamp", descending: false)
             .addSnapshotListener(as: Post.self)
         
-        self.feedListener = listener
+        removeCurrentListener()
+        self.currentListener = listener
+        
         return publisher
     }
     
-    public static func removeListenerForFeed() {
-        guard !feedListenerRemoved else { return }
-        PostService.feedListener?.remove()
-        PostService.feedListener = nil
+    public static func removeCurrentListener() {
+        guard !currentListenerRemoved else { return }
+        PostService.currentListener?.remove()
+        PostService.currentListener = nil
     }
     
-    public static func fetchPosts(countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (posts: [Post], lastDocument: DocumentSnapshot?) {
-        let snapshotQuery = try await FirestoreConstants
-            .posts
+    public static func fetchForYouPosts(countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Post], lastDocument: DocumentSnapshot?) {
+        let querySnapshot = try await FirestoreConstants.posts
             .order(by: "timestamp", descending: descending)
             .limit(to: countLimit)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentsWithSnapshot(as: Post.self)
         
-        return snapshotQuery
+        return querySnapshot
     }
     
-    public static func fetchPostIDs(countLimit: Int, lastDocument: DocumentSnapshot?) async throws -> (postIDs: [String], lastDocument: DocumentSnapshot?) {
-        guard let userID = Auth.auth().currentUser?.uid else { return (postIDs: [], lastDocument: nil) }
-        let snapshotQuery = try await FirestoreConstants
-            .users
+    // MARK: - Following Feed
+    
+    public static func fetchUserFollowingPosts(countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
+        guard let userID = Auth.auth().currentUser?.uid else { return (documentIDs: [], lastDocument: nil) }
+
+        let querySnapshot = try await FirestoreConstants.users
             .document(userID)
             .collection("userFeed")
             .limit(to: countLimit)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentIDsWithSnapshot()
+
+        return querySnapshot
+    }
+
+    public static func addListenerForUserFollowingFeed(forUserID userID: String) -> (AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
+        let (publisher, listener) =
+        FirestoreConstants.users
+            .document(userID)
+            .collection("userFeed")
+            .addSnapshotListener(as: Post.self)
         
-        return snapshotQuery
+        removeCurrentListener()
+        self.currentListener = listener
+        
+        return publisher
     }
     
-    public static func fetchUserPosts(uid: String) async throws -> [Post] {
-        let query = FirestoreConstants.posts.whereField("ownerUID", isEqualTo: uid)
-        let snapshot = try await query.getDocuments()
-        return snapshot.documents.compactMap({ try? $0.data(as: Post.self) })
+    // MARK: - User Posts
+    
+    public static func fetchUserPosts(userID: String, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Post], lastDocument: DocumentSnapshot?) {
+        let querySnapshot = try await FirestoreConstants.posts
+            .whereField("ownerUID", isEqualTo: userID)
+            .limit(to: countLimit)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: Post.self)
+        
+        return querySnapshot
     }
     
-    public static func fetchPost(postID: String) async throws -> Post {
-        let snapshot = try await FirestoreConstants.posts.document(postID).getDocument()
-        return try snapshot.data(as: Post.self)
-    }
+    // MARK: - Category Posts
     
     public static func fetchPosts(by category: PostCategory) async throws -> [Post] {
         let querySnapshot = try await FirestoreConstants
@@ -104,29 +128,43 @@ public extension PostService {
         ActivityService.uploadNotification(toUID: post.ownerUID, type: .reply, postID: postID)
     }
     
-    static func fetchPostReplies(forPost post: Post) async throws -> [PostReply] {
-        guard let postID = post.id else { return [] }
-        let snapshot = try await FirestoreConstants
-            .replies
+    static func fetchPostReplies(forPost post: Post, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [PostReply], lastDocument: DocumentSnapshot?) {
+        guard let postID = post.id else { return ([], nil) }
+        
+        let snapshotQuery = try await FirestoreConstants.replies
             .whereField("postID", isEqualTo: postID)
-            .order(by: "timestamp", descending: false)
-            .getDocuments()
-        return snapshot.documents.compactMap({ try? $0.data(as: PostReply.self) })
+            .order(by: "timestamp", descending: descending)
+            .limit(to: countLimit)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: PostReply.self)
+        return snapshotQuery
     }
     
-    static func fetchPostReplies(forUser user: User) async throws -> [PostReply] {
-        guard let userID = user.id else { return [] }
-        let snapshot = try await FirestoreConstants
-            .replies
+    static func fetchPostReplies(forUser user: User, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [PostReply], lastDocument: DocumentSnapshot?) {
+        guard let userID = user.id else { return ([], nil) }
+        
+        var snapshotQuery = try await FirestoreConstants.replies
             .whereField("postReplyOwnerUID", isEqualTo: userID)
-            .getDocuments()
+            .limit(to: countLimit)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: PostReply.self)
         
-        var replies = snapshot.documents.compactMap({ try? $0.data(as: PostReply.self) })
-        
-        for i in 0 ..< replies.count {
-            replies[i].replyUser = user
+        for i in 0 ..< snapshotQuery.documents.count {
+            snapshotQuery.documents[i].replyUser = user
         }
-        return replies
+        return snapshotQuery
+    }
+  
+    static func addListenerForPostReplies(forUserID userID: String) -> (AnyPublisher<(DocChangeType<PostReply>, DocumentSnapshot?), Error>) {
+        let (publisher, listener) =
+        FirestoreConstants.replies
+            .whereField("postReplyOwnerUID", isEqualTo: userID)
+            .addSnapshotListener(as: PostReply.self)
+        
+        removeCurrentListener()
+        self.currentListener = listener
+        
+        return publisher
     }
 }
 
@@ -149,8 +187,7 @@ public extension PostService {
         try await FirestoreConstants.posts.document(postID).collection("postLikes").document(uid).delete()
         try await FirestoreConstants.posts.document(postID).updateData(["likes": post.likes])
         try await FirestoreConstants.users.document(uid).collection("userLikes").document(postID).delete()
-    
-        
+
         try await ActivityService.deleteNotification(toUID: post.ownerUID, type: .like, postID: postID)
     }
     
@@ -161,33 +198,29 @@ public extension PostService {
         return snapshot.exists
     }
     
-    static func fetchLikedPosts(forUserID userID: String) async throws -> [Post] {
-        var likedPosts: [Post] = []
+    static func fetchUserLikedPosts(userID: String, countLimit: Int, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
         
         let querySnapshot = try await FirestoreConstants.users
             .document(userID)
             .collection("userLikes")
-            .getDocuments()
+            .limit(to: countLimit)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentIDsWithSnapshot()
         
-        for doc in querySnapshot.documents {
-            let postID = doc.documentID
-            let documentSnapshot = try await FirestoreConstants.posts.document(postID).getDocument()
-            
-            if let quote = try? documentSnapshot.data(as: Post.self) {
-                likedPosts.append(quote)
-            }
-        }
-        return likedPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue()})
+        return querySnapshot
     }
     
-    static func addListenerForLikedPosts(forUserID userID: String) -> (listener: ListenerRegistration, publisher: AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
+    static func addListenerForLikedPosts(forUserID userID: String) -> (AnyPublisher<(DocChangeType<String>, DocumentSnapshot?), Error>) {
         let (publisher, listener) =
         FirestoreConstants.users
             .document(userID)
             .collection("userLikes")
-            .addSnapshotListener(as: Post.self)
+            .addSnapshotListener(as: String.self)
         
-        return (listener, publisher)
+        removeCurrentListener()
+        self.currentListener = listener
+        
+        return publisher
     }
 }
 
@@ -211,32 +244,29 @@ public extension PostService {
         return snapshot.exists
     }
     
-    static func fetchSavedPosts(forUserID userID: String) async throws -> [Post] {
-        var savedPosts: [Post] = []
-        
-        let snapshot = try await FirestoreConstants.users
+    static func fetchUserSavedPosts(userID: String, countLimit: Int, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
+    
+        let querySnapshot = try await FirestoreConstants.users
             .document(userID)
             .collection("userSaves")
-            .getDocuments()
+            .limit(to: countLimit)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentIDsWithSnapshot()
         
-        for doc in snapshot.documents {
-            let postID = doc.documentID
-            let snapshot = try await FirestoreConstants.posts.document(postID).getDocument()
-            if let quote = try? snapshot.data(as: Post.self) {
-                savedPosts.append(quote)
-            }
-        }
-        return savedPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue()})
+        return querySnapshot
     }
     
-    static func addListenerForSavedPosts(forUserID userID: String) -> (listener: ListenerRegistration, publisher: AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
+    static func addListenerForSavedPosts(forUserID userID: String) -> (AnyPublisher<(DocChangeType<String>, DocumentSnapshot?), Error>) {
         let (publisher, listener) =
         FirestoreConstants.users
             .document(userID)
             .collection("userSaves")
-            .addSnapshotListener(as: Post.self)
+            .addSnapshotListener(as: String.self)
         
-        return (listener, publisher)
+        removeCurrentListener()
+        self.currentListener = listener
+        
+        return publisher
     }
 }
 

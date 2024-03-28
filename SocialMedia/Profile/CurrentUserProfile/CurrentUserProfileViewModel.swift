@@ -49,7 +49,7 @@ extension CurrentUserProfileViewModel {
         guard let currentUID = user.id else { return }
         
         Task {
-            UserService.shared.currentUser?.stats = try await UserService.fetchUserStats(uid: currentUID)
+            UserService.shared.currentUser?.stats = try await UserService.fetchUserStats(userID: currentUID)
         }
         
         profileInputData = ProfileInputData(fullName: user.fullName,

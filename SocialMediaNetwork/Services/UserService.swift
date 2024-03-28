@@ -20,20 +20,18 @@ public class UserService: UserServiceable {
         self.currentUser = user
     }
     
-    public static func fetchUser(withUID uid: String) async throws -> User {
-        if let nsData = userCache.object(forKey: uid as NSString) {
+    public static func fetchUser(userID: String) async throws -> User {
+        if let nsData = userCache.object(forKey: userID as NSString) {
             if let user = try? JSONDecoder().decode(User.self, from: nsData as Data) {
                 return user
             }
         }
-        
-        let snapshot = try await FirestoreConstants.users.document(uid).getDocument()
+        let snapshot = try await FirestoreConstants.users.document(userID).getDocument()
         let user = try snapshot.data(as: User.self)
         
         if let userData = try? JSONEncoder().encode(user) {
-            userCache.setObject(userData as NSData, forKey: uid as NSString)
+            userCache.setObject(userData as NSData, forKey: userID as NSString)
         }
-        
         return user
     }
     
@@ -49,53 +47,53 @@ public class UserService: UserServiceable {
 
 public extension UserService {
     @MainActor
-    func follow(uid: String) async throws {
+    func follow(userID: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
         
         async let _ = try await FirestoreConstants
             .following
             .document(currentUID)
             .collection("userFollowing")
-            .document(uid)
+            .document(userID)
             .setData([:])
         
         async let _ = try await FirestoreConstants
             .followers
-            .document(uid)
+            .document(userID)
             .collection("userFollowers")
             .document(currentUID)
             .setData([:])
         
-        ActivityService.uploadNotification(toUID: uid, type: .follow)
+        ActivityService.uploadNotification(toUID: userID, type: .follow)
         currentUser?.stats?.followingCount += 1
         
-        async let _ = try await UserService.updateUserFeedAfterFollow(followedUid: uid)
+        async let _ = try await UserService.updateUserFeedAfterFollowing(userID: userID)
     }
     
     @MainActor
-    func unfollow(uid: String) async throws {
+    func unfollow(userID: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
         
         async let _ = try await FirestoreConstants
             .following
             .document(currentUID)
             .collection("userFollowing")
-            .document(uid)
+            .document(userID)
             .delete()
 
         async let _ = try await FirestoreConstants
             .followers
-            .document(uid)
+            .document(userID)
             .collection("userFollowers")
             .document(currentUID)
             .delete()
         
         currentUser?.stats?.followingCount -= 1
-        async let _ = try await ActivityService.deleteNotification(toUID: uid, type: .follow)
-        async let _ = try await UserService.updateUserFeedAfterUnfollow(unfollowedUID: uid)
+        async let _ = try await ActivityService.deleteNotification(toUID: userID, type: .follow)
+        async let _ = try await UserService.updateUserFeedAfterUnfollowing(userID: userID)
     }
     
-    static func checkIfUserIsFollowedWithUID(_ uid: String) async -> Bool {
+    static func checkIfUserIsFollowed(userID uid: String) async -> Bool {
         guard let currentUID = Auth.auth().currentUser?.uid else { return false }
         let collection = FirestoreConstants.following.document(currentUID).collection("userFollowing")
         guard let snapshot = try? await collection.document(uid).getDocument() else { return false }
@@ -109,22 +107,22 @@ public extension UserService {
         return snapshot.exists
     }
     
-    static func fetchUserStats(uid: String) async throws -> UserStats {
-        async let followingSnapshot = try await FirestoreConstants.following.document(uid).collection("userFollowing").getDocuments()
+    static func fetchUserStats(userID: String) async throws -> UserStats {
+        async let followingSnapshot = try await FirestoreConstants.following.document(userID).collection("userFollowing").getDocuments()
 
-        async let followerSnapshot = try await FirestoreConstants.followers.document(uid).collection("userFollowers").getDocuments()
+        async let followerSnapshot = try await FirestoreConstants.followers.document(userID).collection("userFollowers").getDocuments()
  
-        async let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: uid).getDocuments()
+        async let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: userID).getDocuments()
 
         return .init(followersCount: try await followerSnapshot.count,
                      followingCount: try await followingSnapshot.count,
                      postsCount: try await postsSnapshot.count)
     }
         
-    static func fetchUserFollowers(uid: String) async throws -> [User] {
+    static func fetchUserFollowers(userID: String) async throws -> [User] {
         let snapshot = try await FirestoreConstants
             .followers
-            .document(uid)
+            .document(userID)
             .collection("userFollowers")
             .getDocuments()
         
@@ -132,10 +130,10 @@ public extension UserService {
 
     }
     
-    static func fetchUserFollowing(uid: String) async throws -> [User] {
+    static func fetchUserFollowing(userID: String) async throws -> [User] {
         let snapshot = try await FirestoreConstants
             .following
-            .document(uid)
+            .document(userID)
             .collection("userFollowing")
             .getDocuments()
         
@@ -146,23 +144,23 @@ public extension UserService {
 // MARK: Feed Updates
 
 public extension UserService {
-    static func updateUserFeedAfterFollow(followedUid: String) async throws {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: followedUid).getDocuments()
+    static func updateUserFeedAfterFollowing(userID: String) async throws {
+        guard let currentUID = Auth.auth().currentUser?.uid else { return }
+        let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: userID).getDocuments()
         
         for document in postsSnapshot.documents {
             try await FirestoreConstants
                 .users
-                .document(currentUid)
+                .document(currentUID)
                 .collection("userFeed")
                 .document(document.documentID)
                 .setData([:])
         }
     }
     
-    static func updateUserFeedAfterUnfollow(unfollowedUID: String) async throws {
+    static func updateUserFeedAfterUnfollowing(userID: String) async throws {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: unfollowedUID).getDocuments()
+        let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: userID).getDocuments()
         
         for document in postsSnapshot.documents {
             try await FirestoreConstants
@@ -183,7 +181,7 @@ public extension UserService {
         guard let documents = snapshot?.documents else { return [] }
         
         for doc in documents {
-            let user = try await UserService.fetchUser(withUID: doc.documentID)
+            let user = try await UserService.fetchUser(userID: doc.documentID)
             users.append(user)
         }
         

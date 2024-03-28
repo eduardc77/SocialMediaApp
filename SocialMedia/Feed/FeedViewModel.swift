@@ -15,21 +15,15 @@ final class FeedViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var currentFilter: FeedFilter = .forYou
     
-    var itemsPerPage: Int = 20
+    var itemsPerPage: Int = 10
     
     private var noMoreItemsToFetch: Bool = false
     var lastForYouPostDocument: DocumentSnapshot?
     private var lastFollowingPostDocument: DocumentSnapshot?
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var pageCount: Int = 0
-    
     func addListenersForFeed() {
-        if !PostService.feedListenerRemoved {
-            removeListener()
-        }
-        
-        PostService.addListenerForFeed(countLimit: itemsPerPage, lastDocument: lastForYouPostDocument)
+        PostService.addListenerForFeed()
             .sink { completion in
                 
             } receiveValue: { [weak self] documentChangeType, lastDocument in
@@ -70,10 +64,6 @@ final class FeedViewModel: ObservableObject {
             try await refreshFollowingFeed()
         }
     }
-    
-    func removeListener() {
-        PostService.removeListenerForFeed()
-    }
 }
 
 private extension FeedViewModel {
@@ -88,18 +78,17 @@ private extension FeedViewModel {
     }
     
     func modify(_ post: Post) async throws {
-        guard let index = self.forYouPosts.firstIndex(where: { $0.id == post.id }) else { return }
-        var forYouPost = forYouPosts[index]
+        guard let index = forYouPosts.firstIndex(where: { $0.id == post.id }) else { return }
         
-        guard forYouPost.id == post.id, forYouPost != post else { return }
-       
-        if forYouPost.likes != post.likes {
+        guard forYouPosts[index].id == post.id, forYouPosts[index] != post else { return }
+        
+        if forYouPosts[index].likes != post.likes {
             forYouPosts[index].likes = post.likes
         }
-        if forYouPost.replies != post.replies {
+        if forYouPosts[index].replies != post.replies {
             forYouPosts[index].replies = post.replies
         }
-        if forYouPost.reposts != post.reposts {
+        if forYouPosts[index].reposts != post.reposts {
             forYouPosts[index].reposts = post.reposts
         }
     }
@@ -114,7 +103,6 @@ private extension FeedViewModel {
         forYouPosts.removeAll()
         noMoreItemsToFetch = false
         lastForYouPostDocument = nil
-        pageCount = 0
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
         try await fetchForYouPosts()
@@ -129,57 +117,46 @@ private extension FeedViewModel {
     
     func fetchForYouPosts() async throws {
         guard !noMoreItemsToFetch else {
-            if PostService.feedListenerRemoved {
-                addListenersForFeed()
-            }
+            addListenersForFeed()
             return
         }
         isLoading = true
-        removeListener()
+
+        let (newPosts, lastPostDocument) = try await PostService.fetchForYouPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastForYouPostDocument)
         
-        let (newPosts, lastDocument) = try await PostService.fetchPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastForYouPostDocument)
-        
+        guard !newPosts.isEmpty else {
+            self.noMoreItemsToFetch = true
+            self.isLoading = false
+            self.lastForYouPostDocument = nil
+            self.addListenersForFeed()
+            return
+        }
         try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
             guard let self = self else {
-                isLoading = false
-                print("FeedViewModel object not found.")
-                if PostService.feedListenerRemoved {
-                    addListenersForFeed()
-                }
-                return }
-            
-            guard !newPosts.isEmpty else {
-                self.noMoreItemsToFetch = true
-                self.isLoading = false
-                self.lastFollowingPostDocument = nil
-                
-                if PostService.feedListenerRemoved {
-                    addListenersForFeed()
-                }
+                self?.isLoading = false
+                self?.addListenersForFeed()
                 return
             }
-            var forYouPosts = [Post]()
+            var userDataPosts = [Post]()
             
             for post in newPosts {
                 group.addTask { return try await self.fetchPostUserData(post: post) }
             }
             for try await post in group {
-                forYouPosts.append(post)
+                userDataPosts.append(post)
             }
             
-            if let lastDocument {
-                self.lastForYouPostDocument = lastDocument
+            if let lastPostDocument {
+                self.lastForYouPostDocument = lastPostDocument
                 self.noMoreItemsToFetch = false
             } else {
                 self.noMoreItemsToFetch = true
-                self.lastFollowingPostDocument = nil
+                self.lastForYouPostDocument = nil
             }
-            self.forYouPosts.append(contentsOf: forYouPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
-            self.isLoading = false
+            self.forYouPosts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
             
-            if PostService.feedListenerRemoved {
-                addListenersForFeed()
-            }
+            self.isLoading = false
+            self.addListenersForFeed()
         }
     }
     
@@ -187,7 +164,7 @@ private extension FeedViewModel {
         guard !noMoreItemsToFetch else { return }
         isLoading = true
         
-        let (newPostIDs, lastDocument) = try await PostService.fetchPostIDs(countLimit: itemsPerPage, lastDocument: lastFollowingPostDocument)
+        let (newPostIDs, lastDocument) = try await PostService.fetchUserFollowingPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastFollowingPostDocument)
         
         try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
             guard let self = self else { return }
@@ -219,7 +196,7 @@ private extension FeedViewModel {
     func fetchPostUserData(post: Post) async throws -> Post {
         var result = post
         
-        async let user = try await UserService.fetchUser(withUID: post.ownerUID)
+        async let user = try await UserService.fetchUser(userID: post.ownerUID)
         result.user = try await user
         
         return result

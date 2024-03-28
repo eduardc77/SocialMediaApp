@@ -8,12 +8,12 @@ import SocialMediaNetwork
 
 struct UserContentListView: View {
     @Binding var selectedFilter: ProfilePostFilter
-    @StateObject var viewModel: UserContentListViewModel
+    @StateObject var model: UserContentListViewModel
     @Namespace var animation
     
     init(selectedFilter: Binding<ProfilePostFilter>, user: User) {
         self._selectedFilter = selectedFilter
-        self._viewModel = StateObject(wrappedValue: UserContentListViewModel(user: user))
+        self._model = StateObject(wrappedValue: UserContentListViewModel(user: user))
     }
     
     var body: some View {
@@ -21,21 +21,21 @@ struct UserContentListView: View {
             Section(header: profileFilter) {
                 LazyVStack {
                     if selectedFilter == .posts {
-                        if viewModel.posts.isEmpty {
-                            Text(viewModel.noContentText(filter: .posts))
+                        if model.posts.isEmpty {
+                            Text(model.noContentText(filter: .posts))
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {
-                            PostGrid(postGridType: .posts(viewModel.posts), isLoading: .constant(false), fetchNewPage: {})
+                            PostGrid(postGridType: .posts(model.posts), isLoading: .constant(false), fetchNewPage: {})
                                 .transition(.move(edge: .leading))
                         }
                     } else {
-                        if viewModel.replies.isEmpty {
-                            Text(viewModel.noContentText(filter: .replies))
+                        if model.replies.isEmpty {
+                            Text(model.noContentText(filter: .replies))
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {
-                            ForEach(viewModel.replies) { reply in
+                            ForEach(model.replies) { reply in
                                 PostReplyRow(reply: reply)
                             }
                             .padding(.horizontal, 10)

@@ -49,11 +49,11 @@ class ActivityViewModel: ObservableObject {
     private func updateNotificationMetadata(notification: Activity) async throws {
         guard let indexOfNotification = notifications.firstIndex(where: { $0.id == notification.id }) else { return }
         
-        async let notificationUser = try await UserService.fetchUser(withUID: notification.senderUID)
+        async let notificationUser = try await UserService.fetchUser(userID: notification.senderUID)
         var user = try await notificationUser
         
         if notification.type == .follow {
-            async let isFollowed = await UserService.checkIfUserIsFollowedWithUID(notification.senderUID)
+            async let isFollowed = await UserService.checkIfUserIsFollowed(userID: notification.senderUID)
             user.isFollowed = await isFollowed
         }
 

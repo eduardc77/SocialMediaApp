@@ -42,10 +42,10 @@ class ImageData: ObservableObject {
             if let data = try await imageSelection.loadTransferable(type: Data.self) {
                 imageState = .success(data)
 #if os(iOS)
-                guard let uiImage = UIImage(data: data) else { return }
+                guard let imageData = UIImage(data: data)?.jpegData(compressionQuality: 0.35), let uiImage = UIImage(data: imageData) else { return }
                 image = Image(uiImage: uiImage)
 #elseif os(macOS)
-                guard let nsImage = NSImage(data: data) else { return }
+                guard let imageData = NSImage(data: data)?.jpegData(compressionQuality: 0.35), let nsImage = NSImage(data: imageData) else { return }
                 image = Image(nsImage: nsImage)
 #endif
                 newImageSet = true
@@ -57,3 +57,18 @@ class ImageData: ObservableObject {
         }
     }
 }
+
+#if os(macOS)
+extension NSImage {
+    func jpegData(compressionQuality: Double) -> Data? {
+        guard let tiff = tiffRepresentation else { return nil }
+        guard let imageRep = NSBitmapImageRep(data: tiff) else { return nil }
+
+        let options: [NSBitmapImageRep.PropertyKey: Any] = [
+            .compressionFactor: compressionQuality
+        ]
+
+        return imageRep.representation(using: .jpeg, properties: options)
+    }
+}
+#endif

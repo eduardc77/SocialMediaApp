@@ -26,7 +26,7 @@ final class UserProfileViewModel: ObservableObject {
         guard let userID = user.id else { return }
         Task {
             isLoading = true
-            async let stats = try await UserService.fetchUserStats(uid: userID)
+            async let stats = try await UserService.fetchUserStats(userID: userID)
             self.user.stats = try await stats
             
             async let isFollowed = await checkIfUserIsFollowed()
@@ -42,7 +42,7 @@ extension UserProfileViewModel {
     func follow() async throws {
         guard let userID = user.id else { return }
         isLoading = true
-        try await UserService.shared.follow(uid: userID)
+        try await UserService.shared.follow(userID: userID)
         self.user.isFollowed = true
         self.user.stats?.followersCount += 1
         isLoading = false
@@ -51,7 +51,7 @@ extension UserProfileViewModel {
     func unfollow() async throws {
         guard let userID = user.id else { return }
         isLoading = true
-        try await UserService.shared.unfollow(uid: userID)
+        try await UserService.shared.unfollow(userID: userID)
         self.user.isFollowed = false
         self.user.stats?.followersCount -= 1
         isLoading = false

@@ -11,7 +11,6 @@ struct ProfileTabsContentView<Content: View>: View {
     
     private let tab: ProfilePostFilter
     @ViewBuilder private let info: () -> Content
-    
 
     @Environment(\.horizontalSizeClass) private var sizeClass
 
@@ -52,33 +51,8 @@ struct ProfileTabsContentView<Content: View>: View {
                     .id(0)
                 switch tab {
                 case .posts:
-                    Group {
-                        if model.posts.isEmpty {
-                            VStack {
-                                Text("\(model.noContentText(filter: .posts))")
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        } else {
-                            ForEach(Array(model.posts.enumerated()), id: \.element) { index, post in
-                                ZStack {
-                                    NavigationLink(value: post) {
-                                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                                    }
-                                    .buttonStyle(.plain)
-                                    
-                                    PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
-                                }
-                                .contentShape(.containerRelative)
-                                .containerShape(.rect(cornerRadius: 8))
-                                .padding(.vertical, 5)
-                                .padding(.horizontal, 10)
-                            }
-                        }
-                    }
-                    .onFirstAppear {
-                        Task { try await model.fetchUserPosts() }
-                    }
+                    UserPostsView(user: model.user)
+                    
                 case .replies:
                     Group {
                         if model.replies.isEmpty {
@@ -95,75 +69,12 @@ struct ProfileTabsContentView<Content: View>: View {
                             }
                         }
                     }
-                    .onFirstAppear {
-                        Task { try await model.fetchUserReplies() }
-                    }
+          
                 case .liked:
-                    Group {
-                        if model.liked.isEmpty {
-                            VStack {
-                                Text(model.noContentText(filter: .liked))
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        } else {
-                            ForEach(Array(model.liked.enumerated()), id: \.element) { index, post in
-                                ZStack {
-                                    NavigationLink(value: post) {
-                                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                                    }
-                                    .buttonStyle(.plain)
-                                    
-                                    PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
-                                }
-                                .contentShape(.containerRelative)
-                                .containerShape(.rect(cornerRadius: 8))
-                                .padding(.vertical, 5)
-                                .padding(.horizontal, 10)
-                            }
-                        }
-                    }
-                    .onAppear {
-                        model.addListenerForLikedPosts()
-                    }
-                    .onDisappear {
-                        model.likedPostsListener?.remove()
-                    }
+                    UserLikedPostsView(user: model.user)
                     
                 case .saved:
-                    Group {
-                        if model.saved.isEmpty {
-                            VStack {
-                                Text(model.noContentText(filter: .saved))
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        } else {
-                            ForEach(Array(model.saved.enumerated()), id: \.element) { index, post in
-                                ZStack {
-                                    NavigationLink(value: post) {
-                                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                                    }
-                                    .buttonStyle(.plain)
-                                    
-                                    PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
-                                }
-                                .contentShape(.containerRelative)
-                                .containerShape(.rect(cornerRadius: 8))
-                                .padding(.vertical, 5)
-                                .padding(.horizontal, 10)
-                            }
-                        }
-                    }
-                    .onFirstAppear {
-                        Task { try await model.fetchUserSavedPosts() }
-                    }
-                    .onAppear {
-                        model.addListenerForSavedPosts()
-                    }
-                    .onDisappear {
-                        model.savedPostsListener?.remove()
-                    }
+                    UserSavedPostsView(user: model.user)
                 }
             }
             .padding(.vertical, 5)

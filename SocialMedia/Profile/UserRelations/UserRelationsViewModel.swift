@@ -26,14 +26,14 @@ final class UserRelationsViewModel: ObservableObject {
     
     private func fetchUserFollowers() async throws {
         guard let userID = user.id else { return }
-        let followers = try await UserService.fetchUserFollowers(uid: userID)
+        let followers = try await UserService.fetchUserFollowers(userID: userID)
         self.followers = await checkIfUsersAreFollowed(followers)
         self.updateRelationData()
     }
     
     private func fetchUserFollowing() async throws {
         guard let userID = user.id else { return }
-        var following = try await UserService.fetchUserFollowing(uid: userID)
+        var following = try await UserService.fetchUserFollowing(userID: userID)
         
         if user.isCurrentUser {
             for i in 0 ..< following.count {

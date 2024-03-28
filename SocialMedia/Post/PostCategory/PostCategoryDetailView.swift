@@ -34,6 +34,7 @@ private extension PostCategoryDetailView {
         TabView(selection: $model.currentFilter) {
             ScrollView {
                 PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
+
             }
             .tag(CategoryExploreFilter.hot)
             .overlay {
@@ -42,6 +43,7 @@ private extension PostCategoryDetailView {
             
             ScrollView {
                 PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
+
             }
             .tag(CategoryExploreFilter.new)
             .overlay {

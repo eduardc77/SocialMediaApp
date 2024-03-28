@@ -95,7 +95,7 @@ public struct SecondaryTab<Tab>: View where Tab: Hashable {
             }
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .background(alignment: .bottom) {
             ZStack {
                 Rectangle()

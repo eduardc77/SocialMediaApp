@@ -28,31 +28,11 @@ struct FeedView: View {
             .navigationDestination(for: PostCategory.self, destination: { category in
                 PostCategoryDetailView(category: category)
             })
-            .navigationTitle("Posts")
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
             .background(Color.groupedBackground)
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        Task {
-                            try await model.refreshFeedForCurrentFilter()
-                        }
-                    } label: {
-                        Image(systemName: "arrow.counterclockwise")
-                            .foregroundStyle(Color.primary)
-                    }
-                }
-            }
+           
             .refreshable {
                 Task {
                     try await model.refreshFeedForCurrentFilter()
-                }
-            }
-            .onChange(of: model.currentFilter) { _, _ in
-                Task {
-                    try await model.fetchFeedForCurrentFilter()
                 }
             }
         }
@@ -69,6 +49,7 @@ private extension FeedView {
                 PostGrid(postGridType: .posts(model.forYouPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
                     try await model.fetchFeedForCurrentFilter()
                 })
+
             }
             .tag(FeedFilter.forYou)
             .overlay {
@@ -79,22 +60,19 @@ private extension FeedView {
                     try await model.fetchFeedForCurrentFilter()
                 }
             }
-            .onDisappear {
-                model.removeListener()
-            }
+
             ScrollView {
                 PostGrid(postGridType: .posts(model.followingPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
-                    if model.lastForYouPostDocument != nil {
                         Task {
                             try await model.fetchFeedForCurrentFilter()
                         }
-                    }
                 })
             }
             .tag(FeedFilter.following)
             .overlay {
                 if model.isLoading { ProgressView() }
             }
+
         }
 #if os(iOS)
         .tabViewStyle(.page(indexDisplayMode: .never))

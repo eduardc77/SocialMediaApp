@@ -28,7 +28,7 @@ final class PostCategoryViewModel: ObservableObject {
         self.posts = fetchedPosts
         
         for index in posts.indices {
-            self.posts[index].user = try await UserService.fetchUser(withUID: fetchedPosts[index].ownerUID)
+            self.posts[index].user = try await UserService.fetchUser(userID: fetchedPosts[index].ownerUID)
         }
         sortPosts()
         isLoading = false

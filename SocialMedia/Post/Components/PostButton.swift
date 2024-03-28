@@ -12,15 +12,17 @@ struct PostButton: View {
     
     var action: () -> Void
     
+    @State private var tapped: Bool = false
+    
     var body: some View {
         Button {
+            tapped.toggle()
             action()
         } label: {
             HStack {
                 Label(buttonType.title, systemImage: buttonType.icon)
                     .labelStyle(.iconOnly)
                     .symbolVariant(isActive ? .fill : .none)
-                    
                 if count > 0, buttonType != .save {
                     Text("\(count)")
                         .fontWeight(.medium)
@@ -35,7 +37,7 @@ struct PostButton: View {
         }
         .buttonStyle(.borderless)
 #if os(iOS)
-        .hapticFeedback(trigger: count)
+        .hapticFeedback(trigger: tapped)
 #endif
     }
 }

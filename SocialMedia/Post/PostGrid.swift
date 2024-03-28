@@ -15,6 +15,7 @@ struct PostGrid: View {
     let postGridType: PostGridType
     @Binding var isLoading: Bool
     var itemsPerPage: Int = 20
+    var noContentText: String = "No Content"
     
     var fetchNewPage: (() async throws -> Void)? = nil
     
@@ -55,30 +56,42 @@ struct PostGrid: View {
             
             switch postGridType {
             case .posts(let posts):
-                ForEach(Array(posts.enumerated()), id: \.element) { index, post in
-                    ZStack(alignment: .top) {
-                        NavigationLink(value: post) {
-                            Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                Group {
+                    if posts.isEmpty, !isLoading {
+                        VStack {
+                            ContentUnavailableView(
+                                noContentText,
+                                systemImage: "doc.richtext",
+                                description: Text("")
+                            )
                         }
-                        .buttonStyle(.plain)
-                        
-                        PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
-                    .contentShape(.containerRelative)
-                    .containerShape(.rect(cornerRadius: 8))
-                    .onAppear {
-                        if let fetchNewPage = fetchNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
-                            isLoading = true
-                            
-                            Task {
-                                try await fetchNewPage()
-                                isLoading = false
+                    } else {
+                        ForEach(Array(posts.enumerated()), id: \.element) { index, post in
+                            ZStack(alignment: .top) {
+                                NavigationLink(value: post) {
+                                    Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                                }
+                                .buttonStyle(.plain)
+                                
+                                PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
+                            }
+                            .fixedSize(horizontal: false, vertical: true)
+                            .contentShape(.containerRelative)
+                            .containerShape(.rect(cornerRadius: 8))
+                            .onAppear {
+                                if let fetchNewPage = fetchNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
+                                    isLoading = true
+                                    
+                                    Task {
+                                        try await fetchNewPage()
+                                        isLoading = false
+                                    }
+                                }
                             }
                         }
                     }
                 }
-                
+                    
             case .replies(let replies):
                 ForEach(Array(replies.enumerated()), id: \.element) { index, reply in
                     ZStack {

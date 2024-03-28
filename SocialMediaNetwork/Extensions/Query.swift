@@ -9,10 +9,10 @@ import FirebaseFirestore
 public extension Query {
     
     func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable {
-        try await getDocumentsWithSnapshot(as: type).posts
+        try await getDocumentsWithSnapshot(as: type).documents
     }
     
-    func getDocumentsWithSnapshot<T>(as type: T.Type) async throws -> (posts: [T], lastDocument: DocumentSnapshot?) where T : Decodable {
+    func getDocumentsWithSnapshot<T>(as type: T.Type) async throws -> (documents: [T], lastDocument: DocumentSnapshot?) where T : Decodable {
         let snapshot = try await self.getDocuments()
         
         let posts = try snapshot.documents.map({ document in
@@ -21,7 +21,7 @@ public extension Query {
         return (posts, snapshot.documents.last)
     }
     
-    func getDocumentIDsWithSnapshot() async throws -> (postIDs: [String], lastDocument: DocumentSnapshot?) {
+    func getDocumentIDsWithSnapshot() async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
         let snapshot = try await self.getDocuments()
         let documentIds = snapshot.documents.map({ $0.documentID })
         return (documentIds, snapshot.documents.last)

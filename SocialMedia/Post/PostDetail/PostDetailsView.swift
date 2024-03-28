@@ -8,9 +8,9 @@ import SocialMediaNetwork
 
 struct PostDetailsView: View {
     @StateObject var model: PostDetailsViewModel
-
+    
     init(post: Post) {
-       _model = StateObject(wrappedValue: PostDetailsViewModel(post: post))
+        _model = StateObject(wrappedValue: PostDetailsViewModel(post: post))
     }
     
     var body: some View {
@@ -25,6 +25,7 @@ struct PostDetailsView: View {
                             .font(.footnote)
                             .fontWeight(.semibold)
                             .lineLimit(1)
+                        
                         Text(model.post.user?.username ?? "")
                             .font(.caption)
                             .foregroundStyle(Color.secondary)
@@ -56,12 +57,31 @@ struct PostDetailsView: View {
             
             Divider()
             
-            PostGrid(postGridType: .replies(model.replies), isLoading: .constant(false), itemsPerPage: 10, fetchNewPage: {
-                
-            })
+            if let user = model.post.user {
+                ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
+                    ZStack {
+                        NavigationLink(value: reply) {
+                            Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                        }
+                        .buttonStyle(.plain)
+                        
+                        PostGridItem(postType: .reply(reply), profileImageSize: .small)
+                    }
+                    .contentShape(.containerRelative)
+                    .containerShape(.rect(cornerRadius: 8))
+                }
+
+            }
         }
         .background(Color.groupedBackground)
         .navigationTitle("Post Details")
+        
+        .onFirstAppear {
+            Task {
+                try await model.loadMoreReplies()
+            }
+        }
+
     }
 }
 
