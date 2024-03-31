@@ -50,7 +50,7 @@ public struct ReplyService {
             timestamp: Timestamp()
         )
         guard let data = try? Firestore.Encoder().encode(reply) else { return }
-        try await FirestoreConstants.replies.document(reply.postID).collection("replyReplies").document().setData(data)
+        try await FirestoreConstants.replies.document(reply.postID).collection("replies").document().setData(data)
         try await FirestoreConstants.replies.document(replyID).updateData([
             "replies": reply.replies + 1
         ])
@@ -72,7 +72,7 @@ public struct ReplyService {
     public static func fetchReplyReplies(forReply reply: Reply, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Reply], lastDocument: DocumentSnapshot?) {
         guard let postID = reply.id else { return ([], nil) }
         
-        let snapshotQuery = try await FirestoreConstants.replies.document(postID).collection("replyReplies")
+        let snapshotQuery = try await FirestoreConstants.replies.document(postID).collection("replies")
             .whereField("postID", isEqualTo: postID)
             .order(by: "timestamp", descending: descending)
             .limit(to: countLimit)
