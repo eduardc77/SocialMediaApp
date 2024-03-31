@@ -16,9 +16,10 @@ public struct Activity: Identifiable, Codable, Hashable {
     
     public var user: User?
     public var post: Post?
+    public var reply: Reply?
     public var isFollowed: Bool?
     
-    public init(id: String? = nil, type: ActivityType, senderUID: String, timestamp: Timestamp, postID: String? = nil, user: User? = nil, post: Post? = nil, isFollowed: Bool? = nil) {
+    public init(id: String? = nil, type: ActivityType, senderUID: String, timestamp: Timestamp, postID: String? = nil, user: User? = nil, post: Post? = nil, reply: Reply? = nil, isFollowed: Bool? = nil) {
         self.id = id
         self.type = type
         self.senderUID = senderUID
@@ -26,6 +27,7 @@ public struct Activity: Identifiable, Codable, Hashable {
         self.postID = postID
         self.user = user
         self.post = post
+        self.reply = reply
         self.isFollowed = isFollowed
     }
 }

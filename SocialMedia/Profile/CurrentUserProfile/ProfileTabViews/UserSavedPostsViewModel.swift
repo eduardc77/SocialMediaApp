@@ -26,7 +26,9 @@ final class UserSavedPostsViewModel: ObservableObject {
     }
     
     func addListenerForUpdates() {
-        PostService.addListenerForFeed()
+        guard let userID = user.id else { return }
+        
+        PostService.addListenerForSavedPosts(forUserID: userID)
             .sink { completion in
                 
             } receiveValue: { [weak self] documentChangeType, lastDocument in
@@ -34,14 +36,14 @@ final class UserSavedPostsViewModel: ObservableObject {
                 
                 Task {
                     switch documentChangeType {
-                    case .added(let post):
-                        try await self.add(post)
+                    case .added(let postID):
+                        try await self.addPost(with: postID)
                         
-                    case .modified(let post):
-                        try await self.modify(post)
+                    case .modified(let postID):
+                        try await self.modifyPost(with: postID)
                         
-                    case .removed(let post):
-                        self.remove(post)
+                    case .removed(let postID):
+                        self.removePost(with: postID)
                         
                     case .none: break
                     }
@@ -67,51 +69,71 @@ final class UserSavedPostsViewModel: ObservableObject {
             return
         }
         
-        try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
-            guard let self = self else {
-                self?.isLoading = false
-                self?.addListenerForUpdates()
-                return
+        do {
+            try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
+                
+                guard let self = self else {
+                    self?.isLoading = false
+                    self?.addListenerForUpdates()
+                    return
+                }
+                var userDataPosts = [Post]()
+                
+                for postID in newPostIDs {
+                    group.addTask { try await PostService.fetchPost(postID: postID) }
+                }
+                for try await post in group {
+                    userDataPosts.append(try await fetchPostUserData(post: post))
+                }
+                
+                if let lastPostDocument {
+                    self.lastPostDocument = lastPostDocument
+                    self.noMoreItemsToFetch = false
+                } else {
+                    self.noMoreItemsToFetch = true
+                    self.lastPostDocument = nil
+                }
+                self.posts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
+                
+                self.isLoading = false
+                self.addListenerForUpdates()
+                
             }
-            var userDataPosts = [Post]()
-            
-            for postID in newPostIDs {
-                group.addTask { return try await PostService.fetchPost(postID: postID) }
-            }
-            for try await post in group {
-                userDataPosts.append(try await fetchPostUserData(post: post))
-            }
-            
-            if let lastPostDocument {
-                self.lastPostDocument = lastPostDocument
-                self.noMoreItemsToFetch = false
-            } else {
-                self.noMoreItemsToFetch = true
-                self.lastPostDocument = nil
-            }
-            self.posts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
-            
-            self.isLoading = false
-            self.addListenerForUpdates()
+        } catch {
+            print("Error fetching user saved posts: \(error)")
         }
+    }
+    
+    func refresh() async throws {
+        posts.removeAll()
+        noMoreItemsToFetch = false
+        lastPostDocument = nil
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        try await loadMorePosts()
     }
 }
 
 private extension UserSavedPostsViewModel {
-    func add(_ post: Post) async throws {
-        guard !self.posts.contains(where: { $0.id == post.id }),
-              let index = self.posts.firstIndex(where: { $0.id != post.id }) else { return }
+    
+    func addPost(with postID: String) async throws {
+        guard !self.posts.contains(where: { $0.id == postID }),
+              let index = self.posts.firstIndex(where: { $0.id != postID }) else { return }
         
+        let post = try await PostService.fetchPost(postID: postID)
         let userDataPost = try await self.fetchPostUserData(post: post)
         withAnimation {
             self.posts.insert(userDataPost, at: index)
         }
     }
     
-    func modify(_ post: Post) async throws {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
+    func modifyPost(with postID: String) async throws {
+        guard let index = posts.firstIndex(where: { $0.id == postID }), posts[index].id == postID else { return }
         
-        guard posts[index].id == post.id, posts[index] != post else { return }
+        let post = try await PostService.fetchPost(postID: postID)
+        let userDataPost = try await self.fetchPostUserData(post: post)
+        
+        guard posts[index] != userDataPost else { return }
         
         if posts[index].likes != post.likes {
             posts[index].likes = post.likes
@@ -124,22 +146,14 @@ private extension UserSavedPostsViewModel {
         }
     }
     
-    func remove(_ post: Post) {
+    func removePost(with postID: String) {
         withAnimation {
-            posts.removeAll(where: { $0.id == post.id })
+            posts.removeAll(where: { $0.id == postID })
         }
     }
     
-    func refresh() async throws {
-        posts.removeAll()
-        noMoreItemsToFetch = false
-        lastPostDocument = nil
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
-        try await loadMorePosts()
-    }
-    
     func fetchPostUserData(post: Post) async throws -> Post {
+        
         var result = post
         
         async let user = try await UserService.fetchUser(userID: post.ownerUID)

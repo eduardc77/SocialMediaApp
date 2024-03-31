@@ -5,15 +5,13 @@
 
 import Foundation
 
-enum ProfilePostFilter: String, Hashable, CaseIterable, Identifiable {
+enum ProfilePostFilter: String, Hashable, CaseIterable {
     case posts
     case replies
     case liked
     case saved
     
-    var id: String { rawValue }
-    
-    var title: String {rawValue.capitalized }
+    var title: String { rawValue.capitalized }
     
     var noContentFilterVerb: String {
         switch self {

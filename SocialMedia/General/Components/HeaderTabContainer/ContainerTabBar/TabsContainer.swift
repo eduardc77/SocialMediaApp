@@ -135,7 +135,7 @@ where HeaderTitle: View, HeaderTabBar: View, HeaderBackground: View, Content: Vi
                     }
                     .scrollTargetLayout()
                 }
-                .scrollPosition(id: $selectedTabScroll, anchor: .center)
+                .scrollPosition(id: $selectedTabScroll, anchor: .bottom)
                 .scrollTargetBehavior(.paging)
                 .scrollClipDisabled()
                 .scrollIndicators(.never)

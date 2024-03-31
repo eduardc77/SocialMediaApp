@@ -33,7 +33,7 @@ class ImageData: ObservableObject {
 
     func loadTransferable(from imageSelection: PhotosPickerItem) async {
         guard imageSelection == self.imageSelection else {
-            print("Failed to get the selected item.")
+            print("DEBUG: Failed to get the selected item.")
             return
         }
         imageState = .loading

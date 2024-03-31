@@ -57,17 +57,13 @@ struct ProfileView: View {
                 Button {
                     handleFollowTapped()
                 } label: {
-                    Text(model.isFollowed ? "Following" : "Follow")
-                    
+                    Text(model.isFollowed ? "Following" : "Follow")                    
                 }
                 .buttonStyle(.secondary(foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: $model.isLoading, isActive: model.isFollowed))
             }
             .padding(.horizontal)
             
-            UserContentListView(
-                selectedFilter: $model.selectedPostFilter,
-                user: model.user
-            )
+            
         }
         .background(Color.groupedBackground)
         .sheet(isPresented: $model.showUserRelationSheet) {

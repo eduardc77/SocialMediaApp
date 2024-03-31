@@ -112,7 +112,7 @@
 //        PostService.removeCurrentListener()
 //        
 //        var (newPosts, lastPostDocument): ([Post]?, DocumentSnapshot?)
-//        var (newReplies, lastReplyDocument): ([PostReply]?, DocumentSnapshot?)
+//        var (newReplies, lastReplyDocument): ([Reply]?, DocumentSnapshot?)
 //        
 //        switch postGridType {
 //        case .forYouPosts:
@@ -142,7 +142,7 @@
 //        try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
 //            guard let self = self else {
 //                self?.isLoading = false
-//                print("FeedViewModel object not found.")
+//                print("DEBUG: "FeedViewModel object not found.")
 //                self?.addListenerIfRemoved()
 //                return
 //            }

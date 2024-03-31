@@ -37,18 +37,13 @@ private extension PostCategoryDetailView {
 
             }
             .tag(CategoryExploreFilter.hot)
-            .overlay {
-                if model.isLoading { ProgressView() }
-            }
             
             ScrollView {
                 PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
 
             }
             .tag(CategoryExploreFilter.new)
-            .overlay {
-                if model.isLoading { ProgressView() }
-            }
+            
         }
 #if os(iOS)
         .tabViewStyle(.page(indexDisplayMode: .never))

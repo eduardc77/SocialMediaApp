@@ -28,6 +28,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
     /// `scrollTargetLayout()` to your content as needed.
     public init(
         tab: Tab,
+        refreshableAction: (() async throws -> Void)? = nil,
         @ViewBuilder content: @escaping (_ context: ContainerTabsScrollContext<Tab>) -> Content
     ) where Item == ScrollItem {
         self.init(
@@ -35,6 +36,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
             reservedItem: .item,
             scrollItem: .constant(nil),
             scrollUnitPoint: .constant(.top),
+            refreshableAction: refreshableAction,
             content: content
         )
     }
@@ -61,6 +63,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
         reservedItem: Item,
         scrollItem: Binding<Item?>,
         scrollUnitPoint: Binding<UnitPoint>,
+        refreshableAction: (() async throws -> Void)? = nil,
         @ViewBuilder content: @escaping (_ context: ContainerTabsScrollContext<Tab>) -> Content
     ) {
         self.tab = tab
@@ -73,6 +76,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
                 reservedItem: reservedItem
             )
         )
+        self.refreshableAction = refreshableAction
         self.content = content
     }
 
@@ -84,6 +88,8 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
     @StateObject private var scrollModel: ScrollModel<Item, Tab>
     @ViewBuilder private var content: (_ context: ContainerTabsScrollContext<Tab>) -> Content
     @EnvironmentObject private var headerModel: HeaderModel<Tab>
+    
+    var refreshableAction: (() async throws -> Void)? = nil
     
     // MARK: - Body
     
@@ -105,7 +111,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
                     }
                 ZStack(alignment: .top) {
                     Color.clear
-                        .frame(height: 1)
+                        .frame(height: 0.1)
                         .id(reservedItem)
                     content(
                         ContainerTabsScrollContext<Tab>(
@@ -116,13 +122,19 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
                 }
             }
         }
+      
+        .refreshable {
+            Task {
+                try await refreshableAction?()
+            }
+        }
         .coordinateSpace(name: coordinateSpaceName)
         .scrollPosition(id: $scrollModel.scrollItem, anchor: scrollModel.scrollUnitPoint)
         .transaction(value: scrollModel.scrollItem) { transaction in
             // Sometimes this happens in an animation context, but this prevents animation
             transaction.animation = nil
         }
-        .onAppear {
+        .onFirstAppear {
             // It is important not to attempt to adjust the scroll position until after the view has appeared
             // and this task seems to accomplish that.
             Task {

@@ -31,8 +31,10 @@ struct EditProfileView: View {
                     .listRowBackground(Color.clear)
                     
                     Section("Name") {
-                        TextField("Display Name", text: $model.profileInputData.fullName)
-                            .disableAutocorrection(true)
+                        TextField("Display Name", text: $model.profileInputData.fullName)  
+#if DEBUG
+                            .autocorrectionDisabled()
+#endif
                             .textContentType(.name)
 #if os(iOS)
                             .textInputAutocapitalization(.words)

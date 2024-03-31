@@ -39,12 +39,8 @@ public extension Query {
     
     func addSnapshotListener<T>(as type: T.Type) -> (AnyPublisher<(DocChangeType<T>, DocumentSnapshot?), Error>, ListenerRegistration) where T : Decodable {
         let publisher = PassthroughSubject<(DocChangeType<T>, DocumentSnapshot?), Error>()
-        
         let listener = self.addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
-            guard let documents = querySnapshot?.documents else {
-                print("No documents")
-                return
-            }
+           
             var documentChangeType: DocChangeType<T> = .none
             
             querySnapshot?.documentChanges.forEach { documentChange in
@@ -58,7 +54,8 @@ public extension Query {
                     documentChangeType = .added(post: postAdded)
                 }
             }
-            publisher.send((documentChangeType, documents.last))
+            let lastDocument = querySnapshot?.documents.last
+            publisher.send((documentChangeType, lastDocument))
         }
         return (publisher.eraseToAnyPublisher(), listener)
     }

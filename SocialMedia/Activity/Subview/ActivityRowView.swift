@@ -29,7 +29,7 @@ struct ActivityRowView: View {
             HStack(spacing: 16) {
                 NavigationLink(value: model.user) {
                     ZStack(alignment: .bottomTrailing) {
-                        CircularProfileImageView(profileImageURL: model.user?.profileImageURL, size: .medium)
+                        CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
                         ActivityBadgeView(type: model.type)
                             .offset(x: 8, y: 4)
                     }

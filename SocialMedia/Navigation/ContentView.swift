@@ -16,7 +16,7 @@ struct ContentView: View {
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     var body: some View {
-            if model.userSession == nil {
+        if model.userSession == nil || model.userSession?.uid == nil {
                 LoginView()
             } else {
                 Group {
@@ -49,8 +49,8 @@ struct ContentView: View {
             switch destination {
             case .newPost:
                 PostEditorView()
-            case .reply(let post):
-                PostReplyView(post: post)
+            case .reply(let postType):
+                ReplyView(postType: postType)
             }
         } else if let destination = content.destination as? ProfileSheetDestination {
             switch destination {
@@ -65,7 +65,7 @@ struct ContentView: View {
 
 enum PostSheetDestination: Identifiable {
     case newPost
-    case reply(post: Post)
+    case reply(postType: PostType)
     
     var id: String { UUID().uuidString }
 }

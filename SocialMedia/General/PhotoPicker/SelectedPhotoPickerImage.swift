@@ -8,6 +8,7 @@ import SwiftUI
 struct SelectedPhotoPickerImage: View {
     let imageState: ImageData.ImageState
     var size: ImageSize = .large
+    var contentMode: ContentMode = .fit
     
     var body: some View {
         Group {
@@ -17,11 +18,13 @@ struct SelectedPhotoPickerImage: View {
                 if let uiImage = UIImage(data: imageData) {
                     Image(uiImage: uiImage)
                         .resizable()
+                        .aspectRatio(contentMode: contentMode)
                 }
 #elseif os(macOS)
                 if let uiImage = NSImage(data: imageData) {
                     Image(nsImage: uiImage)
                         .resizable()
+                        .aspectRatio(contentMode: contentMode)
                 }
 #endif
             case .loading:

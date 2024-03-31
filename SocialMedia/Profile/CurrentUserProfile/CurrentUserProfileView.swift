@@ -71,7 +71,7 @@ struct CurrentUserProfileView: View {
                         if model.updatingProfile {
                             ProgressView().frame(width: 50, height: 50)
                         } else {
-                            CircularProfileImageView(profileImageURL: model.currentUser?.profileImageURL)
+                            CircularProfileImageView(profileImageURL: model.currentUser?.profileImageURL, size: .medium)
                         }
                     }
                     
@@ -113,7 +113,9 @@ struct CurrentUserProfileView: View {
                     }
                 }
                 .padding(.horizontal)
+                .padding(.bottom)
                 .headerStyle(OffsetHeaderStyle<ProfilePostFilter>(fade: true), context: context)
+                .minTitleHeight(.content(scale: 0.01))
             },
             headerTabBar: { context in
                 ContainerTabBar<ProfilePostFilter>(selectedTab: $selectedTab, sizing: .equalWidth, context: context)
@@ -121,14 +123,13 @@ struct CurrentUserProfileView: View {
                         Color.primary,
                         Color.primary.opacity(0.7)
                     )
-     
             },
             headerBackground: { context in
-               Color.groupedBackground
+                Color.clear.background(.bar.opacity(0.7))
             },
             content: {
                 if let user = model.currentUser {
-                    ForEach(ProfilePostFilter.allCases) { tab in
+                    ForEach(ProfilePostFilter.allCases, id: \.self) { tab in
                         ProfileTabsContentView(
                             user: user,
                             tab: tab

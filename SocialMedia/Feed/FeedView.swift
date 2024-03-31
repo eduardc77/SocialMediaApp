@@ -7,13 +7,19 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct FeedView: View {
-    @StateObject var model = FeedViewModel()
+    @StateObject private var model = FeedViewModel()
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 FeedFilterView(currentFilter: $model.currentFilter)
                 postsTabView
+            }
+            .background(Color.groupedBackground)
+            .refreshable {
+                Task {
+                    try await model.refreshFeedForCurrentFilter()
+                }
             }
             .navigationDestination(for: User.self, destination: { user in
                 if user.isCurrentUser {
@@ -22,19 +28,12 @@ struct FeedView: View {
                     ProfileView(user: user)
                 }
             })
-            .navigationDestination(for: Post.self, destination: { post in
-                PostDetailsView(post: post)
+            .navigationDestination(for: PostType.self, destination: { postType in
+                PostDetailsView(postType: postType)
             })
             .navigationDestination(for: PostCategory.self, destination: { category in
                 PostCategoryDetailView(category: category)
             })
-            .background(Color.groupedBackground)
-           
-            .refreshable {
-                Task {
-                    try await model.refreshFeedForCurrentFilter()
-                }
-            }
         }
     }
 }
@@ -46,33 +45,31 @@ private extension FeedView {
     var postsTabView: some View {
         TabView(selection: $model.currentFilter) {
             ScrollView {
-                PostGrid(postGridType: .posts(model.forYouPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
-                    try await model.fetchFeedForCurrentFilter()
-                })
-
+                PostGrid(postGridType: .posts(model.forYouPosts),
+                         isLoading: $model.isLoading,
+                         itemsPerPage: model.itemsPerPage,
+                         loadNewPage: model.fetchFeedForCurrentFilter)
             }
             .tag(FeedFilter.forYou)
-            .overlay {
-                if model.isLoading { ProgressView() }
-            }
-            .onAppear {
+            .onFirstAppear {
                 Task {
                     try await model.fetchFeedForCurrentFilter()
                 }
             }
-
+            
             ScrollView {
-                PostGrid(postGridType: .posts(model.followingPosts), isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage, fetchNewPage: {
-                        Task {
-                            try await model.fetchFeedForCurrentFilter()
-                        }
-                })
+                PostGrid(postGridType: .posts(model.followingPosts),
+                         isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage,
+                         noContentText: "You haven't followed any accounts yet.",
+                         loadNewPage: model.fetchFeedForCurrentFilter)
+                
             }
             .tag(FeedFilter.following)
-            .overlay {
-                if model.isLoading { ProgressView() }
+            .onFirstAppear {
+                Task {
+                    try await model.fetchFeedForCurrentFilter()
+                }
             }
-
         }
 #if os(iOS)
         .tabViewStyle(.page(indexDisplayMode: .never))

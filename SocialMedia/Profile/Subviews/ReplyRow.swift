@@ -1,13 +1,13 @@
 //
-//  PostReplyRow.swift
+//  ReplyRow.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
 
-struct PostReplyRow: View {
-    let reply: PostReply
+struct ReplyRow: View {
+    let reply: Reply
     @State private var showReplySheet = false
 
     var body: some View {
@@ -15,7 +15,7 @@ struct PostReplyRow: View {
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
                     VStack {
-                        CircularProfileImageView(profileImageURL: reply.post?.user?.profileImageURL, size: .small)
+                        CircularProfileImageView(profileImageURL: reply.post?.user?.profileImageURL)
                         
                         Rectangle()
                             .fill(Color.secondary)
@@ -40,11 +40,11 @@ struct PostReplyRow: View {
                     }
                 }
                 HStack(alignment: .top) {
-                    CircularProfileImageView(profileImageURL: reply.replyUser?.profileImageURL, size: .small)
+                    CircularProfileImageView(profileImageURL: reply.user?.profileImageURL)
                     
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(reply.replyUser?.username ?? "")
+                            Text(reply.user?.username ?? "")
                                 .fontWeight(.semibold)
                                 .lineLimit(1)
                             Text(reply.replyText)
@@ -65,9 +65,9 @@ struct PostReplyRow: View {
     }
 }
 
-struct PostReplyCell_Previews: PreviewProvider {
+struct ReplyRow_Previews: PreviewProvider {
     static var previews: some View {
-        PostReplyRow(reply: preview.reply)
+        ReplyRow(reply: preview.reply)
     }
 }
 

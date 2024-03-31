@@ -64,7 +64,7 @@
 		8895C5602BA600B100F7C28A /* PreferenceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C55F2BA600B100F7C28A /* PreferenceKeys.swift */; };
 		8895C57A2BA6091200F7C28A /* CurrentUserProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5622BA6091200F7C28A /* CurrentUserProfileCoordinator.swift */; };
 		8895C57B2BA6091200F7C28A /* ProfileInputData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5642BA6091200F7C28A /* ProfileInputData.swift */; };
-		8895C57D2BA6091200F7C28A /* PostReplyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5672BA6091200F7C28A /* PostReplyRow.swift */; };
+		8895C57D2BA6091200F7C28A /* ReplyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5672BA6091200F7C28A /* ReplyRow.swift */; };
 		8895C57E2BA6091200F7C28A /* UserContentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5682BA6091200F7C28A /* UserContentListView.swift */; };
 		8895C57F2BA6091200F7C28A /* UserContentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5692BA6091200F7C28A /* UserContentListViewModel.swift */; };
 		8895C5802BA6091200F7C28A /* EditableCircularProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C56B2BA6091200F7C28A /* EditableCircularProfileImage.swift */; };
@@ -102,7 +102,7 @@
 		8895C5CA2BA60EDC00F7C28A /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5C72BA60EDC00F7C28A /* Colors.swift */; };
 		8895C5D02BA60FB200F7C28A /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5CD2BA60FB200F7C28A /* SearchView.swift */; };
 		8895C5D12BA60FB200F7C28A /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5CE2BA60FB200F7C28A /* SearchViewModel.swift */; };
-		8895C5D72BA6102F00F7C28A /* PostReplyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5D42BA6102F00F7C28A /* PostReplyViewModel.swift */; };
+		8895C5D72BA6102F00F7C28A /* ReplyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5D42BA6102F00F7C28A /* ReplyViewModel.swift */; };
 		8895C5DB2BA6105200F7C28A /* PostActionSheetOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5D82BA6105200F7C28A /* PostActionSheetOptions.swift */; };
 		8895C5DC2BA6105200F7C28A /* PostActionSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5D92BA6105200F7C28A /* PostActionSheetView.swift */; };
 		8895C5EF2BA6121500F7C28A /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5DD2BA6121500F7C28A /* AuthTextField.swift */; };
@@ -134,7 +134,7 @@
 		88A64BC02BA630F80048259D /* AboutSocialMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BBA2BA630F80048259D /* AboutSocialMedia.swift */; };
 		88A64BC22BA632380048259D /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC12BA632380048259D /* SettingsOption.swift */; };
 		88A64BC42BA632B50048259D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC32BA632B50048259D /* AppSettings.swift */; };
-		88A64BC92BA640680048259D /* PostReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC82BA640680048259D /* PostReplyView.swift */; };
+		88A64BC92BA640680048259D /* ReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A64BC82BA640680048259D /* ReplyView.swift */; };
 		88AD32A12BB22ABD0041DFE3 /* PostGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD32A02BB22ABD0041DFE3 /* PostGridViewModel.swift */; };
 		88B50ADF2BB1286B000B1081 /* PostButtonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B50ADE2BB1286B000B1081 /* PostButtonType.swift */; };
 		88D20A652BB0ADB700E62054 /* AppSidebarList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A642BB0ADB600E62054 /* AppSidebarList.swift */; };
@@ -232,7 +232,7 @@
 		8895C55F2BA600B100F7C28A /* PreferenceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceKeys.swift; sourceTree = "<group>"; };
 		8895C5622BA6091200F7C28A /* CurrentUserProfileCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUserProfileCoordinator.swift; sourceTree = "<group>"; };
 		8895C5642BA6091200F7C28A /* ProfileInputData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileInputData.swift; sourceTree = "<group>"; };
-		8895C5672BA6091200F7C28A /* PostReplyRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostReplyRow.swift; sourceTree = "<group>"; };
+		8895C5672BA6091200F7C28A /* ReplyRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyRow.swift; sourceTree = "<group>"; };
 		8895C5682BA6091200F7C28A /* UserContentListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserContentListView.swift; sourceTree = "<group>"; };
 		8895C5692BA6091200F7C28A /* UserContentListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserContentListViewModel.swift; sourceTree = "<group>"; };
 		8895C56B2BA6091200F7C28A /* EditableCircularProfileImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableCircularProfileImage.swift; sourceTree = "<group>"; };
@@ -271,7 +271,7 @@
 		8895C5C72BA60EDC00F7C28A /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		8895C5CD2BA60FB200F7C28A /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		8895C5CE2BA60FB200F7C28A /* SearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		8895C5D42BA6102F00F7C28A /* PostReplyViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostReplyViewModel.swift; sourceTree = "<group>"; };
+		8895C5D42BA6102F00F7C28A /* ReplyViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyViewModel.swift; sourceTree = "<group>"; };
 		8895C5D82BA6105200F7C28A /* PostActionSheetOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostActionSheetOptions.swift; sourceTree = "<group>"; };
 		8895C5D92BA6105200F7C28A /* PostActionSheetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostActionSheetView.swift; sourceTree = "<group>"; };
 		8895C5DD2BA6121500F7C28A /* AuthTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
@@ -303,7 +303,7 @@
 		88A64BBA2BA630F80048259D /* AboutSocialMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutSocialMedia.swift; sourceTree = "<group>"; };
 		88A64BC12BA632380048259D /* SettingsOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		88A64BC32BA632B50048259D /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
-		88A64BC82BA640680048259D /* PostReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostReplyView.swift; sourceTree = "<group>"; };
+		88A64BC82BA640680048259D /* ReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyView.swift; sourceTree = "<group>"; };
 		88AD32A02BB22ABD0041DFE3 /* PostGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostGridViewModel.swift; sourceTree = "<group>"; };
 		88B50ADE2BB1286B000B1081 /* PostButtonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostButtonType.swift; sourceTree = "<group>"; };
 		88D20A642BB0ADB600E62054 /* AppSidebarList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSidebarList.swift; sourceTree = "<group>"; };
@@ -584,7 +584,7 @@
 			children = (
 				8895C56B2BA6091200F7C28A /* EditableCircularProfileImage.swift */,
 				8895C56C2BA6091200F7C28A /* CircularProfileImageView.swift */,
-				8895C5672BA6091200F7C28A /* PostReplyRow.swift */,
+				8895C5672BA6091200F7C28A /* ReplyRow.swift */,
 				8895C5682BA6091200F7C28A /* UserContentListView.swift */,
 				8895C5692BA6091200F7C28A /* UserContentListViewModel.swift */,
 			);
@@ -882,8 +882,8 @@
 		88A64BC52BA63F8D0048259D /* PostReplies */ = {
 			isa = PBXGroup;
 			children = (
-				88A64BC82BA640680048259D /* PostReplyView.swift */,
-				8895C5D42BA6102F00F7C28A /* PostReplyViewModel.swift */,
+				88A64BC82BA640680048259D /* ReplyView.swift */,
+				8895C5D42BA6102F00F7C28A /* ReplyViewModel.swift */,
 			);
 			path = PostReplies;
 			sourceTree = "<group>";
@@ -1029,7 +1029,7 @@
 				8895C55A2BA5F85600F7C28A /* ProfileTabsContentView.swift in Sources */,
 				8895C5B12BA60D5D00F7C28A /* PostCategoryViewModel.swift in Sources */,
 				8895C5BC2BA60D5D00F7C28A /* HapticFeedbackModifier.swift in Sources */,
-				8895C5D72BA6102F00F7C28A /* PostReplyViewModel.swift in Sources */,
+				8895C5D72BA6102F00F7C28A /* ReplyViewModel.swift in Sources */,
 				8895C5802BA6091200F7C28A /* EditableCircularProfileImage.swift in Sources */,
 				8895C62E2BA6161600F7C28A /* ActivityRowView.swift in Sources */,
 				8895C5D12BA60FB200F7C28A /* SearchViewModel.swift in Sources */,
@@ -1045,7 +1045,7 @@
 				883F64182BB4E5DB00C12811 /* UserLikedPostsViewModel.swift in Sources */,
 				8895C61B2BA612B000F7C28A /* PostEditorView.swift in Sources */,
 				8895C5392BA5F18200F7C28A /* ParallaxHeaderStyle.swift in Sources */,
-				8895C57D2BA6091200F7C28A /* PostReplyRow.swift in Sources */,
+				8895C57D2BA6091200F7C28A /* ReplyRow.swift in Sources */,
 				8895C6312BA6161600F7C28A /* ActivityViewModel.swift in Sources */,
 				8848263B2BABACEC000D3E95 /* AppRouter.swift in Sources */,
 				8895C57A2BA6091200F7C28A /* CurrentUserProfileCoordinator.swift in Sources */,
@@ -1128,7 +1128,7 @@
 				8895C5482BA5F18200F7C28A /* TabBarModel.swift in Sources */,
 				8895C5322BA5F18200F7C28A /* BinaryFloatingPoint+Extensions.swift in Sources */,
 				8895C5562BA5F7D800F7C28A /* CurrentUserProfileView.swift in Sources */,
-				88A64BC92BA640680048259D /* PostReplyView.swift in Sources */,
+				88A64BC92BA640680048259D /* ReplyView.swift in Sources */,
 				8895C5602BA600B100F7C28A /* PreferenceKeys.swift in Sources */,
 				8895C57B2BA6091200F7C28A /* ProfileInputData.swift in Sources */,
 				8895C57E2BA6091200F7C28A /* UserContentListView.swift in Sources */,

@@ -10,11 +10,11 @@ import Firebase
 @MainActor
 final class UserContentListViewModel: ObservableObject {
     @Published var posts = [Post]()
-    @Published var replies = [PostReply]()
+    @Published var replies = [Reply]()
     @Published var liked = [Post]()
     @Published var saved = [Post]()
     @Published var itemsPerPage: Int = 10
-    
+ 
     private var lastPostDocument: DocumentSnapshot?
   
     private var cancellables = Set<AnyCancellable>()
@@ -36,12 +36,12 @@ final class UserContentListViewModel: ObservableObject {
 //    private func fetchReplyMetadata() async throws {
 //        await withThrowingTaskGroup(of: Void.self, body: { group in
 //            for reply in self.replies {
-//                group.addTask { try await self.fetchPostReplyData(for: reply) }
+//                group.addTask { try await self.fetchReplyData(for: reply) }
 //            }
 //        })
 //    }
 //    
-//    private func fetchPostReplyData(for reply: PostReply) async throws {
+//    private func fetchReplyData(for reply: Reply) async throws {
 //        guard let replyIndex = replies.firstIndex(where: { $0.id == reply.id }) else { return }
 //        
 //        async let post = try await PostService.fetchPost(postID: reply.postID)

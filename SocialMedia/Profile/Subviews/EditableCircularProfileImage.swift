@@ -17,7 +17,7 @@ struct EditableCircularProfileImage: View {
                      photoLibrary: .shared()) {
             Group {
                 if imageData.imageSelection != nil {
-                    SelectedPhotoPickerImage(imageState: imageData.imageState, size: size)
+                    SelectedPhotoPickerImage(imageState: imageData.imageState, size: size, contentMode: .fill)
                         .clipShape(Circle())
                 } else {
                     CircularProfileImageView(profileImageURL: model.currentUser?.profileImageURL, size: size)

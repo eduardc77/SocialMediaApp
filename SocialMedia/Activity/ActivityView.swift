@@ -36,8 +36,8 @@ struct ActivityView: View {
                 }
             }
             .navigationTitle("Activity")
-            .navigationDestination(for: Post.self, destination: { post in
-                PostDetailsView(post: post)
+            .navigationDestination(for: PostType.self, destination: { postType in
+                PostDetailsView(postType: postType)
             })
             .navigationDestination(for: User.self, destination: { user in
                 ProfileView(user: user)

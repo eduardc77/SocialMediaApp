@@ -12,14 +12,14 @@ struct PostEditorView: View {
     
     @EnvironmentObject private var tabRouter: AppRouter
     @EnvironmentObject private var settings: AppSettings
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
            ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(alignment: .top) {
-                        CircularProfileImageView(profileImageURL: model.user?.profileImageURL, size: .small)
+                        CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
                         
                         VStack(alignment: .leading, spacing: 16) {
                             VStack(alignment: .leading, spacing: 2) {
@@ -43,11 +43,13 @@ struct PostEditorView: View {
                             }
                         }
                     }
-                    TextField("Write a post...", text: $model.caption, axis: .vertical)
+                    TextField("Write a post...", text: $model.caption, axis: .vertical)         
+    #if DEBUG
                         .autocorrectionDisabled()
+    #endif
                         .font(.footnote)
                     
-                    SelectedPhotoPickerImage(imageState: imageData.imageState, size: .custom(height: 300))
+                    SelectedPhotoPickerImage(imageState: imageData.imageState, size: .none)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(alignment: .topTrailing) {
                             Button {
@@ -77,7 +79,7 @@ struct PostEditorView: View {
                 
                 Spacer()
             }
-            .padding(10)
+           .padding(.horizontal, 10)
             .background(Color.groupedBackground)
             .toolbar {
 #if !os(macOS)

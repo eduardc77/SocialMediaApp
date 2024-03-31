@@ -36,14 +36,19 @@ struct FeedbackView: View {
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
 #endif
-                    .autocorrectionDisabled(true)
+            
+#if DEBUG
+                    .autocorrectionDisabled()
+#endif
             }
             
             Section {
                 TextField("Message", text: $message, prompt: Text("Write your message..."), axis: .vertical)
                     .focused($focusedField, equals: .message)
                     .lineLimit(10, reservesSpace: true)
-                    .autocorrectionDisabled(true)
+#if DEBUG
+                    .autocorrectionDisabled()
+#endif
 #if os(iOS)
                     .textInputAutocapitalization(.sentences)
 #endif

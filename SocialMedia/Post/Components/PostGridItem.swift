@@ -6,9 +6,9 @@
 import SwiftUI
 import SocialMediaNetwork
 
-enum PostType {
+enum PostType: Hashable {
     case post(Post)
-    case reply(PostReply)
+    case reply(Reply)
 }
 
 struct PostGridItem: View {
@@ -22,8 +22,8 @@ struct PostGridItem: View {
         switch postType {
             case .post(let post):
                 return post.user
-            case .reply(let postReply):
-                return postReply.replyUser
+            case .reply(let reply):
+                return reply.user
         }
     }
     
@@ -40,8 +40,8 @@ struct PostGridItem: View {
         switch postType {
             case .post(let post):
                 return post.caption
-            case .reply(let postReply):
-                return postReply.replyText
+            case .reply(let reply):
+                return reply.replyText
         }
     }
 
@@ -49,8 +49,8 @@ struct PostGridItem: View {
         switch postType {
             case .post(let post):
                 return post.timestamp.timestampString()
-            case .reply(let postReply):
-                return postReply.timestamp.timestampString()
+            case .reply(let reply):
+                return reply.timestamp.timestampString()
         }
     }
     

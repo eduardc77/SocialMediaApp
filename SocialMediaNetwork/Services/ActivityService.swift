@@ -53,7 +53,6 @@ public struct ActivityService {
             if postID != nil {
                 guard postID == notification?.postID else { return }
             }
-            
             try await document.reference.delete()
         }
     }

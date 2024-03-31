@@ -9,31 +9,31 @@ import SocialMediaNetwork
 struct PostDetailsView: View {
     @StateObject var model: PostDetailsViewModel
     
-    init(post: Post) {
-        _model = StateObject(wrappedValue: PostDetailsViewModel(post: post))
+    init(postType: PostType) {
+        _model = StateObject(wrappedValue: PostDetailsViewModel(postType: postType))
     }
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
-                HStack(spacing: 10) {
-                    CircularProfileImageView(profileImageURL: model.post.user?.profileImageURL, size: .small)
+            VStack {
+                HStack {
+                    CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
                     
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(model.post.user?.fullName ?? "")
+                        Text(model.user?.fullName ?? "")
                             .foregroundStyle(Color.primary)
                             .font(.footnote)
                             .fontWeight(.semibold)
                             .lineLimit(1)
                         
-                        Text(model.post.user?.username ?? "")
+                        Text(model.user?.username ?? "")
                             .font(.caption)
                             .foregroundStyle(Color.secondary)
                             .lineLimit(1)
                     }
                     Spacer()
                     
-                    Text(model.post.timestamp.timestampString())
+                    Text(model.post?.timestamp.timestampString() ?? model.reply?.timestamp.timestampString() ?? "")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
                     
@@ -45,11 +45,33 @@ struct PostDetailsView: View {
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(model.post.caption)
+                VStack(alignment: .leading) {
+                    Text(model.post?.caption ?? model.reply?.replyText ?? "")
                         .font(.subheadline)
                     
-                    PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(model.post)))
+                    switch model.postType {
+                    case .post:
+                        if let post = model.post {
+                            if let imageURLString = post.imageUrl, let postImageURL = URL(string: imageURLString) {
+                                AsyncImageView(url: postImageURL, contentMode: .fit)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .allowsHitTesting(false)
+                            }
+                            
+                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)))
+                        }
+                    case .reply:
+                        if let reply = model.reply {
+                            if let imageURLString = model.reply?.imageUrl, let postImageURL = URL(string: imageURLString) {
+                                AsyncImageView(url: postImageURL, contentMode: .fit)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .allowsHitTesting(false)
+                            }
+                            
+                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)))
+                        }
+                    }
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -57,20 +79,17 @@ struct PostDetailsView: View {
             
             Divider()
             
-            if let user = model.post.user {
-                ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
-                    ZStack {
-                        NavigationLink(value: reply) {
-                            Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                        }
-                        .buttonStyle(.plain)
-                        
-                        PostGridItem(postType: .reply(reply), profileImageSize: .small)
+            ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
+                ZStack {
+                    NavigationLink(value: PostType.reply(reply)) {
+                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
                     }
-                    .contentShape(.containerRelative)
-                    .containerShape(.rect(cornerRadius: 8))
+                    .buttonStyle(.plain)
+                    
+                    PostGridItem(postType: .reply(reply), profileImageSize: .small)
                 }
-
+                .contentShape(.containerRelative)
+                .containerShape(.rect(cornerRadius: 8))
             }
         }
         .background(Color.groupedBackground)
@@ -81,12 +100,13 @@ struct PostDetailsView: View {
                 try await model.loadMoreReplies()
             }
         }
-
+        
     }
 }
 
 struct PostDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        PostDetailsView(post: preview.post)
+        PostDetailsView(postType: PostType.post(preview.post))
+        PostDetailsView(postType: PostType.reply(preview.reply))
     }
 }

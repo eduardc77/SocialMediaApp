@@ -6,16 +6,21 @@
 import SwiftUI
 import SocialMediaNetwork
 
+final class RefreshedFilterModel: ObservableObject {
+    @Published var refreshedFilter: ProfilePostFilter = .posts
+}
+
 struct ProfileTabsContentView<Content: View>: View {
+    @StateObject private var refreshedFilterModel = RefreshedFilterModel()
     @StateObject private var model: UserContentListViewModel
     
     private let tab: ProfilePostFilter
     @ViewBuilder private let info: () -> Content
-
+    
     @Environment(\.horizontalSizeClass) private var sizeClass
-
+    
     private var isCompact: Bool {
-
+        
         if sizeClass == .compact {
             return true
         } else {
@@ -43,45 +48,48 @@ struct ProfileTabsContentView<Content: View>: View {
     
     var body: some View {
         TabContainerScroll(
-            tab: tab
-        ) { _ in
-            LazyVStack(spacing: 0) {
-                info()
-                    .padding([.leading, .trailing, .top], 20)
-                    .id(0)
-                switch tab {
-                case .posts:
-                    UserPostsView(user: model.user)
-                    
-                case .replies:
-                    Group {
-                        if model.replies.isEmpty {
-                            VStack {
-                                Text(model.noContentText(filter: .replies))
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        } else {
-                            ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
-                                PostReplyRow(reply: reply)
-                                    .padding(.vertical, 5)
-                                    .padding(.horizontal, 10)
+            tab: tab, refreshableAction: onRefresh) { _ in
+                LazyVStack(spacing: 0) {
+                    info()
+                        .padding([.leading, .trailing, .top], 20)
+                        .id(0)
+                    switch tab {
+                    case .posts:
+                        UserPostsView(user: model.user, noContentText: model.noContentText(filter: .saved))
+                        
+                    case .replies:
+                        Group {
+                            if model.replies.isEmpty {
+                                VStack {
+                                    Text(model.noContentText(filter: .replies))
+                                        .font(.subheadline)
+                                        .foregroundStyle(Color.secondary)
+                                }
+                            } else {
+                                ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
+                                    ReplyRow(reply: reply)
+                                        .padding(.vertical, 5)
+                                        .padding(.horizontal, 10)
+                                }
                             }
                         }
+                        
+                    case .liked:
+                        UserLikedPostsView(user: model.user, noContentText: model.noContentText(filter: .liked))
+                        
+                    case .saved:
+                        UserSavedPostsView(user: model.user, noContentText: model.noContentText(filter: .saved))
                     }
-          
-                case .liked:
-                    UserLikedPostsView(user: model.user)
-                    
-                case .saved:
-                    UserSavedPostsView(user: model.user)
                 }
+                .padding(.vertical, 5)
+                .scrollTargetLayout()
+                .environmentObject(refreshedFilterModel)
             }
-            .padding(.vertical, 5)
-            .scrollTargetLayout()
-            
-        }
-        .background(Color.groupedBackground)
+            .background(Color.groupedBackground)
+    }
+    
+    func onRefresh() {
+        refreshedFilterModel.refreshedFilter = tab
     }
 }
 

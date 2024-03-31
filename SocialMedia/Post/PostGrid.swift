@@ -8,19 +8,18 @@ import SocialMediaNetwork
 
 enum PostGridType {
     case posts([Post])
-    case replies([PostReply])
+    case replies([Reply])
 }
 
 struct PostGrid: View {
     let postGridType: PostGridType
     @Binding var isLoading: Bool
     var itemsPerPage: Int = 20
-    var noContentText: String = "No Content"
+    var noContentText: String = ""
     
-    var fetchNewPage: (() async throws -> Void)? = nil
+    var loadNewPage: (() async throws -> Void)? = nil
     
     @Environment(\.horizontalSizeClass) private var sizeClass
-    
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     private var isCompact: Bool {
@@ -53,22 +52,21 @@ struct PostGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridItems) {
-            
             switch postGridType {
             case .posts(let posts):
                 Group {
                     if posts.isEmpty, !isLoading {
                         VStack {
                             ContentUnavailableView(
-                                noContentText,
+                                "No Content",
                                 systemImage: "doc.richtext",
-                                description: Text("")
+                                description: Text(noContentText)
                             )
                         }
                     } else {
                         ForEach(Array(posts.enumerated()), id: \.element) { index, post in
                             ZStack(alignment: .top) {
-                                NavigationLink(value: post) {
+                                NavigationLink(value: PostType.post(post)) {
                                     Color.secondaryGroupedBackground.clipShape(.containerRelative)
                                 }
                                 .buttonStyle(.plain)
@@ -79,11 +77,11 @@ struct PostGrid: View {
                             .contentShape(.containerRelative)
                             .containerShape(.rect(cornerRadius: 8))
                             .onAppear {
-                                if let fetchNewPage = fetchNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
+                                if let loadNewPage = loadNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
                                     isLoading = true
                                     
                                     Task {
-                                        try await fetchNewPage()
+                                        try await loadNewPage()
                                         isLoading = false
                                     }
                                 }
@@ -95,7 +93,7 @@ struct PostGrid: View {
             case .replies(let replies):
                 ForEach(Array(replies.enumerated()), id: \.element) { index, reply in
                     ZStack {
-                        NavigationLink(value: reply) {
+                        NavigationLink(value: PostType.reply(reply)) {
                             Color.secondaryGroupedBackground.clipShape(.containerRelative)
                         }
                         .buttonStyle(.plain)
@@ -105,20 +103,22 @@ struct PostGrid: View {
                     .contentShape(.containerRelative)
                     .containerShape(.rect(cornerRadius: 8))
                     .onAppear {
-                        if let fetchNewPage = fetchNewPage, !isLoading, !replies.isEmpty, index == replies.count - 1 {
+                        if let loadNewPage = loadNewPage, !isLoading, !replies.isEmpty, index == replies.count - 1 {
                             isLoading = true
                             
                             Task {
-                                try await fetchNewPage()
+                                try await loadNewPage()
                                 isLoading = false
                             }
                         }
                     }
                 }
             }
-        
         }
         .padding(10)
+        .overlay(alignment: .bottom) {
+            if isLoading { ProgressView() }
+        }
     }
 }
 

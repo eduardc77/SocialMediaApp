@@ -37,7 +37,7 @@ public class AuthService: AuthServiceable {
             self.userSession = result.user
             try await AuthService.uploadUserData(userInputData, userId: result.user.uid)
         } catch {
-            print("DEBUG: Failed to login with error \(error.localizedDescription)")
+            print("DEBUG: Failed to register user with error \(error.localizedDescription)")
             throw error
         }
     }
@@ -48,7 +48,7 @@ public class AuthService: AuthServiceable {
             self.userSession = nil
             UserService.shared.resetUser()
         } catch {
-            print("DEBUG: Failed to sign out")
+            print("DEBUG: Failed to sign out with error \(error.localizedDescription)")
         }
     }
     
@@ -56,7 +56,7 @@ public class AuthService: AuthServiceable {
         do {
             try await Auth.auth().sendPasswordReset(withEmail: email)
         } catch {
-            print("DEBUG: Failed to send email with error \(error.localizedDescription)")
+            print("DEBUG: Failed to send password reset email with error \(error.localizedDescription)")
             throw error
         }
     }
@@ -83,7 +83,7 @@ public extension AuthService {
                 return false
             }
         } catch {
-            print("DEBUG: Fail to fetch users with error: \(error.localizedDescription)")
+            print("DEBUG: Failed to fetch users for checking 'isUsernameAvailable' with error: \(error.localizedDescription)")
             throw error
         }
     }

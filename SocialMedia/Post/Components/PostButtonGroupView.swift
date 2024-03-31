@@ -14,7 +14,7 @@ struct PostButtonGroupView: View {
             ForEach(PostButtonType.allCases, id: \.self) { buttonType in
                 switch buttonType {
                 case .like:
-                    PostButton(count: model.postLikes,
+                    PostButton(count: model.numberOfLikes,
                                   buttonType: buttonType,
                                   isActive: model.didLike) {
                             likeButtonTapped()
@@ -22,11 +22,9 @@ struct PostButtonGroupView: View {
                     Divider().padding(.vertical, 5)
                     
                 case .reply:
-                    PostButton(count: model.post?.replies ?? 0,
+                    PostButton(count: model.numberOfReplies,
                                   buttonType: buttonType) {
-                        if let post = model.post {
-                            modalRouter.presentSheet(destination: PostSheetDestination.reply(post: post))
-                        }
+                            modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: model.postType))
                     }
                     Divider().padding(.vertical, 5)
                     
@@ -56,8 +54,8 @@ struct PostButtonGroupView: View {
             Task {
                 try await model.checkIfUserLikedPost()
                 try await model.checkIfUserSavedPost()
+
             }
-            
         }
     }
     

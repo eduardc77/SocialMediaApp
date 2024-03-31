@@ -26,7 +26,9 @@ struct UserContentListView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {
-                            PostGrid(postGridType: .posts(model.posts), isLoading: .constant(false), fetchNewPage: {})
+                            PostGrid(postGridType: .posts(model.posts),
+                                     isLoading: .constant(false),
+                                     loadNewPage: {})
                                 .transition(.move(edge: .leading))
                         }
                     } else {
@@ -36,7 +38,7 @@ struct UserContentListView: View {
                                 .foregroundStyle(Color.secondary)
                         } else {
                             ForEach(model.replies) { reply in
-                                PostReplyRow(reply: reply)
+                                ReplyRow(reply: reply)
                             }
                             .padding(.horizontal, 10)
                             .transition(.move(edge: .trailing))

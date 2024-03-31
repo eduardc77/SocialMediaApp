@@ -1,21 +1,21 @@
 //
-//  PostReplyView.swift
+//  ReplyView.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
 
-struct PostReplyView: View {
-    @StateObject private var model: PostReplyViewModel
+struct ReplyView: View {
+    @StateObject private var model: ReplyViewModel
     @Environment(\.dismiss) private var dismiss
     
     private var rowSpacing: CGFloat = 16
     
-    init(post: Post) {
-        _model = StateObject(wrappedValue: PostReplyViewModel(post: post))
+    init(postType: PostType) {
+        _model = StateObject(wrappedValue: ReplyViewModel(postType: postType))
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
@@ -23,8 +23,13 @@ struct PostReplyView: View {
                 VStack(alignment: .leading, spacing: rowSpacing) {
                     HStack(alignment: .top) {
                         VStack {
-                            CircularProfileImageView(profileImageURL: model.post.user?.profileImageURL, size: .small)
-                            
+                            switch model.postType {
+                            case .post(let post):
+                                CircularProfileImageView(profileImageURL: post.user?.profileImageURL)
+                            case .reply(let reply):
+                                CircularProfileImageView(profileImageURL: reply.user?.profileImageURL)
+                            }
+
                             Rectangle()
                                 .fill(Color.secondary)
                                 .frame(maxWidth: 2, minHeight: rowSpacing, maxHeight: .infinity)
@@ -33,11 +38,19 @@ struct PostReplyView: View {
                         
                         VStack(alignment: .leading) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(model.post.user?.username ?? "")
-                                    .fontWeight(.semibold)
-                                
-                                Text(model.post.caption)
-                                    .multilineTextAlignment(.leading)
+                                switch model.postType {
+                                case .post(let post):
+                                    Text(post.user?.username ?? "")
+                                        .fontWeight(.semibold)
+                                    Text(post.caption)
+                                        .multilineTextAlignment(.leading)
+                                    
+                                case .reply(let reply):
+                                    Text(reply.user?.username ?? "")
+                                        .fontWeight(.semibold)
+                                    Text(reply.replyText)
+                                        .multilineTextAlignment(.leading)
+                                }
                             }
                             .font(.footnote)
                             .fixedSize(horizontal: false, vertical: true)
@@ -45,18 +58,26 @@ struct PostReplyView: View {
                     }
                     
                     HStack(alignment: .top) {
-                        CircularProfileImageView(profileImageURL: model.currentUser?.profileImageURL, size: .small)
+                        CircularProfileImageView(profileImageURL: model.currentUser?.profileImageURL)
                         
                         VStack(alignment: .leading) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(model.post.user?.username ?? "")
-                                    .fontWeight(.semibold)
-                                
+                                switch model.postType {
+                                case .post(let post):
+                                    Text(model.currentUser?.username ?? "")
+                                        .fontWeight(.semibold)
+                                case .reply(let reply):
+                                    Text(model.currentUser?.username ?? "")
+                                        .fontWeight(.semibold)
+                                }
+
                                 TextField("Add your reply...", text: $model.replyText, axis: .vertical)
-                                    .autocorrectionDisabled()
                                     .tint(.primary)
                                     .padding(2)
                                     .multilineTextAlignment(.leading)
+#if DEBUG
+                                    .autocorrectionDisabled()
+#endif
                             }
                         }
                         .font(.footnote)
@@ -84,7 +105,7 @@ struct PostReplyView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Post") {
                         Task {
-                            try await model.uploadPostReply(toPost: model.post, replyText: model.replyText)
+                            try await model.uploadReply(with: model.replyText)
                             dismiss()
                         }
                     }
@@ -99,8 +120,9 @@ struct PostReplyView: View {
     }
 }
 
-struct PostReplyView_Previews: PreviewProvider {
+struct ReplyView_Previews: PreviewProvider {
     static var previews: some View {
-        PostReplyView(post: preview.post)
+        ReplyView(postType: .post(preview.post))
+        ReplyView(postType: .reply(preview.reply))
     }
 }

@@ -27,8 +27,8 @@ struct CurrentUserProfileCoordinator: View {
                                 ProfileView(user: user)
                             }
                         })
-                        .navigationDestination(for: Post.self, destination: { post in
-                            PostDetailsView(post: post)
+                        .navigationDestination(for: PostType.self, destination: { postType in
+                            PostDetailsView(postType: postType)
                         })
                         .navigationDestination(for: PostCategory.self, destination: { category in
                             PostCategoryDetailView(category: category)

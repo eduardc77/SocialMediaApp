@@ -110,11 +110,13 @@ public struct ContainerTabBar<Tab>: View where Tab: Hashable {
             }
             .scrollPosition(id: $selectedTabScroll, anchor: .center)
             .scrollIndicators(.never)
-            .scrollBounceBehavior(.basedOnSize)
+            .scrollBounceBehavior(.always)
         }
         .frame(height: height)
         .onPreferenceChange(TabBarHeightPreferenceKey.self) { height in
-            self.height = height
+            DispatchQueue.main.async {
+                self.height = height
+            }
         }
         .onChange(of: selectedTab) {
             selectedTabScroll = selectedTab
