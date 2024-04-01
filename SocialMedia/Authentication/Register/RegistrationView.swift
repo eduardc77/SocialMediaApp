@@ -16,14 +16,12 @@ struct RegistrationView: View {
             registerButton
         }
         .formStyle(.grouped)
+        .disabled(viewModel.isAuthenticating)
         .navigationTitle(AuthScreen.register.navigationTitle)
         .alert(isPresented: $viewModel.showAlert) {
-            Alert(title: Text("Error"),
+            Alert(title: Text(AuthScreen.register.errorAlertTitle),
                   message: Text(viewModel.authError?.description ?? ""))
         }
-        .alert(isPresented: $viewModel.showAgreementAlert, content: {
-            Alert(title: Text(viewModel.agreementAlertTitle), message: Text(viewModel.agreementAlertMessage), dismissButton: .cancel())
-        })
     }
 }
 
@@ -52,6 +50,9 @@ private extension RegistrationView {
 #if os(iOS)
             .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
 #endif
+            .alert(isPresented: $viewModel.showAgreementAlert, content: {
+                Alert(title: Text(viewModel.agreementAlertTitle), message: Text(viewModel.agreementAlertMessage), dismissButton: .cancel())
+            })
         }
     }
     
@@ -64,7 +65,7 @@ private extension RegistrationView {
             Task { try await viewModel.createUser() }
         }
         .buttonStyle(.main(isLoading: $viewModel.isAuthenticating))
-        .disabled(viewModel.isAuthenticating || !viewModel.validForm)
+        .disabled(!viewModel.validForm)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)
     }

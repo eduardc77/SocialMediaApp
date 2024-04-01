@@ -17,9 +17,10 @@ struct LoginView: View {
                 loginButton
             }
             .formStyle(.grouped)
+            .disabled(viewModel.isAuthenticating)
             .navigationTitle(AuthScreen.login.navigationTitle)
             .alert(isPresented: $viewModel.showAlert) {
-                Alert(title: Text("Error"),
+                Alert(title: Text(AuthScreen.login.errorAlertTitle),
                       message: Text(viewModel.authError?.description ?? ""))
             }
         }
@@ -29,6 +30,7 @@ struct LoginView: View {
 // MARK: - Subviews
 
 private extension LoginView {
+
     var logoImage: some View {
         Section {
             Image(systemName: "questionmark.app.fill")
@@ -60,7 +62,7 @@ private extension LoginView {
             .frame(maxWidth: .infinity, alignment: .leading)
 #if os(iOS)
             .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
-#endif   
+#endif
         }
     }
     
@@ -69,7 +71,7 @@ private extension LoginView {
             Task { try await viewModel.login() }
         }
         .buttonStyle(.main(isLoading: $viewModel.isAuthenticating))
-        .disabled(viewModel.isAuthenticating || !viewModel.validForm)
+        .disabled(!viewModel.validForm)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)
     }

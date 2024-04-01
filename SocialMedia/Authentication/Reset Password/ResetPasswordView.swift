@@ -26,18 +26,23 @@ struct ResetPasswordView: View {
             Button(AuthScreen.resetPassword.buttonTitle) {
                 focusedField = false
                 Task {
-                    try await viewModel.sendPasswordResetEmail()
-                    viewModel.showAlert = true
+                    try await viewModel.sendPasswordResetEmail() 
                 }
             }
             .buttonStyle(.main(isLoading: $viewModel.isLoading))
             .disabled(!viewModel.validForm)
             .listRowInsets(.init())
             .listRowBackground(Color.clear)
+            
+            .alert(isPresented: $viewModel.showErrorAlert) {
+                Alert(title: Text(AuthScreen.resetPassword.errorAlertTitle),
+                      message: Text(viewModel.authError?.description ?? ""))
+            }
         }
         .formStyle(.grouped)
+        .disabled(viewModel.isLoading)
         .navigationTitle(AuthScreen.resetPassword.navigationTitle)
-        .alert(isPresented: $viewModel.didSendEmail) {
+        .alert(isPresented: $viewModel.showEmailSentAlert) {
             Alert(title: Text(viewModel.emailSentAlertTitle),
                   message: Text(viewModel.emailSentAlertMessage),
                   dismissButton: .default(Text("Done"), action: { dismiss() }))

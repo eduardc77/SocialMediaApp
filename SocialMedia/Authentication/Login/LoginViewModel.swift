@@ -14,9 +14,8 @@ final class LoginViewModel: ObservableObject {
     
     var validForm: Bool {
         !user.email.isEmpty
-        && user.email.contains(".")
-        && user.email.contains("@")
         && !user.password.isEmpty
+        && user.email.validEmail
     }
     
     @MainActor
@@ -26,8 +25,7 @@ final class LoginViewModel: ObservableObject {
             try await AuthService.shared.login(withUser: user)
             isAuthenticating = false
         } catch {
-            let authError = AuthErrorCode.Code(rawValue: (error as NSError).code)
-            self.authError = AuthError(authErrorCode: authError ?? .userNotFound)
+            authError = AuthError(error: error)
             showAlert = true
             isAuthenticating = false
         }

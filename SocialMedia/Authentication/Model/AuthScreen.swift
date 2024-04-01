@@ -25,4 +25,13 @@ enum AuthScreen: String {
             return "Reset Password"
         }
     }
+    
+    var errorAlertTitle: String {
+        switch self {
+        case .resetPassword:
+            return "Reset Password Error"
+        default:
+            return "\(self.rawValue.capitalized) Error"
+        }
+    }
 }

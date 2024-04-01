@@ -29,8 +29,7 @@ final class RegistrationViewModel: ObservableObject {
     
     var validForm: Bool {
         !user.email.isEmpty
-        && user.email.contains("@")
-        && user.email.contains(".")
+        && user.email.validEmail
         && !user.password.isEmpty
         && !user.fullName.isEmpty
         && user.password.count > 5
@@ -43,8 +42,7 @@ final class RegistrationViewModel: ObservableObject {
             try await AuthService.shared.registerUser(withData: user)
             isAuthenticating = false
         } catch {
-            let authErrorCode = AuthErrorCode.Code(rawValue: (error as NSError).code)
-            authError = AuthError(authErrorCode: authErrorCode ?? .userNotFound)
+            authError = AuthError(error: error)
             showAlert = true
             isAuthenticating = false
         }

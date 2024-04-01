@@ -51,7 +51,7 @@ private extension FeedView {
                          loadNewPage: model.fetchFeedForCurrentFilter)
             }
             .tag(FeedFilter.forYou)
-            .onFirstAppear {
+            .onAppear {
                 Task {
                     try await model.fetchFeedForCurrentFilter()
                 }
@@ -65,7 +65,7 @@ private extension FeedView {
                 
             }
             .tag(FeedFilter.following)
-            .onFirstAppear {
+            .onAppear {
                 Task {
                     try await model.fetchFeedForCurrentFilter()
                 }

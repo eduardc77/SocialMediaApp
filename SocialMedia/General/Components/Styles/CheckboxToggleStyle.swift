@@ -10,11 +10,12 @@ struct CheckboxToggleStyle: ToggleStyle {
         Button(action: {
             configuration.isOn.toggle()
         }, label: {
-            HStack(alignment: .top) {
+            HStack(alignment: .firstTextBaseline) {
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                     .font(.body)
                     .foregroundStyle(.tint)
                 configuration.label
+                    .foregroundStyle(Color.primary)
             }
         })
         .buttonStyle(.borderless)

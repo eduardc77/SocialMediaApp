@@ -76,26 +76,32 @@ final class PostDetailsViewModel: ObservableObject {
     
     func loadMoreReplies() async throws {
         guard !noMoreItemsToFetch else {
-            addListenerForPostReplies()
+            if let reply = reply {
+                addListenerForPostReplies(reply.depthLevel)
+            }
             return
         }
         isLoading = true
         var (newReplies, lastReplyDocument): ([Reply], DocumentSnapshot?)
+        
         switch postType {
         case .post:
             guard let post = post else { return }
-            (newReplies, lastReplyDocument) = try await ReplyService.fetchPostReplies(forPost: post, countLimit: itemsPerPage, descending: true, lastDocument: lastDocument)
+            (newReplies, lastReplyDocument) = try await ReplyService.fetchPostReplies(forPost: post, countLimit: itemsPerPage, lastDocument: lastDocument)
     
         case .reply:
             guard let reply = reply else { return }
-            (newReplies, lastReplyDocument) = try await ReplyService.fetchReplyReplies(forReply: reply, countLimit: itemsPerPage, descending: true, lastDocument: lastDocument)
+            (newReplies, lastReplyDocument) = try await ReplyService.fetchReplyReplies(forReply: reply, countLimit: itemsPerPage, lastDocument: lastDocument)
         }
         
         guard !newReplies.isEmpty else {
             self.noMoreItemsToFetch = true
             self.isLoading = false
             self.lastDocument = nil
-            self.addListenerForPostReplies()
+            if let reply = reply {
+                self.addListenerForPostReplies(reply.depthLevel)
+            }
+                
             return
         }
         
@@ -104,7 +110,9 @@ final class PostDetailsViewModel: ObservableObject {
                 guard let self = self else {
                     self?.isLoading = false
                     print("DEBUG: FeedViewModel object not found.")
-                    self?.addListenerForPostReplies()
+                    if let reply = self?.reply {
+                        self?.addListenerForPostReplies(reply.depthLevel)
+                    }
                     return
                 }
                 var userDataReplies = [Reply]()
@@ -126,7 +134,9 @@ final class PostDetailsViewModel: ObservableObject {
                 self.replies.append(contentsOf: userDataReplies.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 
                 self.isLoading = false
-                self.addListenerForPostReplies()
+                if let reply = reply {
+                    self.addListenerForPostReplies(reply.depthLevel)
+                }
             }
         } catch {
             print("Error fetching post replies: \(error)")
@@ -134,30 +144,18 @@ final class PostDetailsViewModel: ObservableObject {
     }
     
     func fetchUserData(for reply: Reply) async throws -> Reply {
-        switch postType {
-        case .post:
-            var result = reply
-            if let post = post {
-                async let user = try await UserService.fetchUser(userID: reply.ownerUID)
-                result.user = try await user
-            }
-
-            return result
-        case .reply:
-            var result = reply
-            if let reply = self.reply {
-                async let user = try await UserService.fetchUser(userID: reply.ownerUID)
-                result.user = try await user
-            }
-            return result
-        }
+        var result = reply
+        async let user = try await UserService.fetchUser(userID: reply.ownerUID)
+        result.user = try await user
+        
+        return result
     }
-
+    
     @MainActor
-    func addListenerForPostReplies() {
+    func addListenerForPostReplies(_ depthLevel: Int) {
         guard let userID = post?.user?.id else { return }
     
-        ReplyService.addListenerForPostReplies(forUserID: userID)
+        ReplyService.addListenerForPostReplies(forUserID: userID, depthLevel: depthLevel)
             .sink { completion in
                 
             } receiveValue: { [weak self] documentChangeType, lastDocument in
@@ -189,24 +187,6 @@ final class PostDetailsViewModel: ObservableObject {
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
         try await loadMoreReplies()
-    }
-//
-//    func fetchFeedForCurrentFilter() async throws {
-//        switch currentFilter {
-//        case .forYou:
-//            try await fetchForYouPosts()
-//        case .following:
-//            try await fetchFollowingPosts()
-//        }
-//    }
-//
-    func refreshFeedForCurrentFilter() async throws {
-//        switch currentFilter {
-//        case .forYou:
-//            try await refreshForYouFeed()
-//        case .following:
-//            try await refreshFollowingFeed()
-//        }
     }
 }
 

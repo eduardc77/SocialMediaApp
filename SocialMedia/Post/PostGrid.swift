@@ -54,42 +54,40 @@ struct PostGrid: View {
         LazyVGrid(columns: gridItems) {
             switch postGridType {
             case .posts(let posts):
-                Group {
-                    if posts.isEmpty, !isLoading {
-                        VStack {
-                            ContentUnavailableView(
-                                "No Content",
-                                systemImage: "doc.richtext",
-                                description: Text(noContentText)
-                            )
-                        }
-                    } else {
-                        ForEach(Array(posts.enumerated()), id: \.element) { index, post in
-                            ZStack(alignment: .top) {
-                                NavigationLink(value: PostType.post(post)) {
-                                    Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                                }
-                                .buttonStyle(.plain)
-                                
-                                PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
+                if posts.isEmpty, !isLoading {
+                    VStack {
+                        ContentUnavailableView(
+                            "No Content",
+                            systemImage: "doc.richtext",
+                            description: Text(noContentText)
+                        )
+                    }
+                } else {
+                    ForEach(Array(posts.enumerated()), id: \.element) { index, post in
+                        ZStack(alignment: .top) {
+                            NavigationLink(value: PostType.post(post)) {
+                                Color.secondaryGroupedBackground.clipShape(.containerRelative)
                             }
-                            .fixedSize(horizontal: false, vertical: true)
-                            .contentShape(.containerRelative)
-                            .containerShape(.rect(cornerRadius: 8))
-                            .onAppear {
-                                if let loadNewPage = loadNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
-                                    isLoading = true
-                                    
-                                    Task {
-                                        try await loadNewPage()
-                                        isLoading = false
-                                    }
+                            .buttonStyle(.plain)
+                            
+                            PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
+                        }
+                        .fixedSize(horizontal: false, vertical: true)
+                        .contentShape(.containerRelative)
+                        .containerShape(.rect(cornerRadius: 8))
+                        .onAppear {
+                            if let loadNewPage = loadNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
+                                isLoading = true
+                                
+                                Task {
+                                    try await loadNewPage()
+                                    isLoading = false
                                 }
                             }
                         }
                     }
                 }
-                    
+                
             case .replies(let replies):
                 ForEach(Array(replies.enumerated()), id: \.element) { index, reply in
                     ZStack {

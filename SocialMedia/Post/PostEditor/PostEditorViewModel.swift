@@ -39,7 +39,8 @@ final class PostEditorViewModel: ObservableObject {
             category: category,
             timestamp: Timestamp(),
             likes: 0,
-            replies: 0
+            replies: 0,
+            replyDepthLevel: 0
         )
         if case let .success(postImageData) = imageState {
             post.imageUrl = try await StorageService.uploadImage(imageData: postImageData, type: .post(userID: userID, postID: post.id ?? UUID().uuidString))

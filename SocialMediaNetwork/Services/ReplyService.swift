@@ -26,13 +26,14 @@ public struct ReplyService {
         
         let reply = Reply(
             postID: postID,
+            replyID: postID,
             replyText: replyText,
             ownerUID: currentUID,
             postOwnerUID: post.ownerUID,
             timestamp: Timestamp()
         )
         guard let data = try? Firestore.Encoder().encode(reply) else { return }
-        try await FirestoreConstants.replies.document().setData(data)
+        try await FirestoreConstants.replies().document().setData(data)
         try await FirestoreConstants.posts.document(postID).updateData([
             "replies": post.replies + 1
         ])
@@ -42,39 +43,44 @@ public struct ReplyService {
     public static func replyToReply(_ reply: Reply, replyText: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         
-        let reply = Reply(
-            postID: replyID,
+        let newReply = Reply(
+            postID: reply.postID,
+            replyID: replyID,
             replyText: replyText,
             ownerUID: currentUID,
             postOwnerUID: reply.ownerUID,
-            timestamp: Timestamp()
+            timestamp: Timestamp(),
+            depthLevel: reply.depthLevel + 1
         )
-        guard let data = try? Firestore.Encoder().encode(reply) else { return }
-        try await FirestoreConstants.replies.document(reply.postID).collection("replies").document().setData(data)
-        try await FirestoreConstants.replies.document(replyID).updateData([
+        guard let data = try? Firestore.Encoder().encode(newReply) else { return }
+
+        try await FirestoreConstants.replies(newReply.depthLevel).document().setData(data)
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData([
             "replies": reply.replies + 1
         ])
+        try await FirestoreConstants.posts.document(reply.postID).updateData([
+            "replyDepthLevel": newReply.depthLevel
+        ])
+
         ActivityService.uploadNotification(toUID: reply.ownerUID, type: .reply, postID: replyID)
     }
     
-    public static func fetchPostReplies(forPost post: Post, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Reply], lastDocument: DocumentSnapshot?) {
+    public static func fetchPostReplies(forPost post: Post, countLimit: Int = 0, lastDocument: DocumentSnapshot? = nil) async throws -> (documents: [Reply], lastDocument: DocumentSnapshot?) {
         guard let postID = post.id else { return ([], nil) }
         
-        let snapshotQuery = try await FirestoreConstants.replies
+        let snapshotQuery = try await FirestoreConstants.replies()
             .whereField("postID", isEqualTo: postID)
-            .order(by: "timestamp", descending: descending)
             .limit(to: countLimit)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentsWithSnapshot(as: Reply.self)
         return snapshotQuery
     }
     
-    public static func fetchReplyReplies(forReply reply: Reply, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Reply], lastDocument: DocumentSnapshot?) {
-        guard let postID = reply.id else { return ([], nil) }
+    public static func fetchReplyReplies(forReply reply: Reply, countLimit: Int = 0, lastDocument: DocumentSnapshot? = nil) async throws -> (documents: [Reply], lastDocument: DocumentSnapshot?) {
+        guard let replyID = reply.id else { return ([], nil) }
         
-        let snapshotQuery = try await FirestoreConstants.replies.document(postID).collection("replies")
-            .whereField("postID", isEqualTo: postID)
-            .order(by: "timestamp", descending: descending)
+        let snapshotQuery = try await Firestore.firestore().collection("replies\(reply.depthLevel + 1)")
+            .whereField("replyID", isEqualTo: replyID)
             .limit(to: countLimit)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentsWithSnapshot(as: Reply.self)
@@ -84,7 +90,8 @@ public struct ReplyService {
     public static func fetchPostReplies(forUser user: User, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Reply], lastDocument: DocumentSnapshot?) {
         guard let userID = user.id else { return ([], nil) }
         
-        let snapshotQuery = try await FirestoreConstants.replies
+        // FIXME: - query all depth levels
+        let snapshotQuery = try await FirestoreConstants.replies()
             .whereField("ownerUID", isEqualTo: userID)
             .order(by: "timestamp", descending: descending)
             .limit(to: countLimit)
@@ -94,9 +101,9 @@ public struct ReplyService {
         return snapshotQuery
     }
   
-    public static func addListenerForPostReplies(forUserID userID: String) -> (AnyPublisher<(DocChangeType<Reply>, DocumentSnapshot?), Error>) {
+    public static func addListenerForPostReplies(forUserID userID: String, depthLevel: Int) -> (AnyPublisher<(DocChangeType<Reply>, DocumentSnapshot?), Error>) {
         let (publisher, listener) =
-        FirestoreConstants.replies
+        FirestoreConstants.replies(depthLevel)
             .whereField("ownerUID", isEqualTo: userID)
             .addSnapshotListener(as: Reply.self)
         
@@ -114,18 +121,18 @@ public extension ReplyService {
     static func likeReply(_ reply: Reply) async throws {
         guard let uid = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         
-        try await FirestoreConstants.posts.document(replyID).collection("replyLikes").document(uid).setData([:])
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).collection("replyLikes").document(uid).setData([:])
         try await FirestoreConstants.users.document(uid).collection("userLikedReplies").document(replyID).setData([:])
-        try await FirestoreConstants.posts.document(replyID).updateData(["likes": reply.likes])
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData(["likes": reply.likes])
         ActivityService.uploadNotification(toUID: reply.ownerUID, type: .like, postID: reply.postID)
     }
     
     static func unlikeReply(_ reply: Reply) async throws {
         guard let uid = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         
-        try await FirestoreConstants.posts.document(replyID).collection("replyLikes").document(uid).delete()
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).collection("replyLikes").document(uid).delete()
         try await FirestoreConstants.users.document(uid).collection("userLikedReplies").document(replyID).delete()
-        try await FirestoreConstants.posts.document(replyID).updateData(["likes": reply.likes])
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData(["likes": reply.likes])
         try await ActivityService.deleteNotification(toUID: reply.ownerUID, type: .like, postID: reply.postID)
     }
     
@@ -212,31 +219,66 @@ public extension ReplyService {
 
 public extension ReplyService {
     
-    static func deleteReply(_ reply: Reply) async throws {
-        guard reply.user?.isCurrentUser ?? false, let userID = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
-        try await FirestoreConstants.replies.document(replyID).delete()
-        try await FirestoreConstants.replies.document(replyID).collection("replies").document(userID).delete()
-        try await FirestoreConstants.users.document(userID).collection("userLikedReplies").document(replyID).delete()
-        try await FirestoreConstants.users.document(userID).collection("userSavedReplies").document(replyID).delete()
+    static func deleteReply(for postID: String, maxReplyDepthLevel: Int) async throws {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
         
+        for replyLevel in 0...maxReplyDepthLevel {
+            let replySnapshot = try await FirestoreConstants.replies(replyLevel)
+                .whereField("postID", isEqualTo: postID)
+                .getDocuments().documents
+            
+            for document in replySnapshot {
+                if let reply = try? document.data(as: Reply.self), let replyID = reply.id {
+                    async let deleteReplyUserData: Void = deleteReplyUserData(for: userID, replyID: replyID)
+                    async let deleteReplyLikes: Void = deleteReplyLikes(for: replyID, currentReplyLevel: replyLevel)
+                    async let deleteReply: Void = FirestoreConstants.replies(replyLevel).document(replyID).delete()
+                    _ = try await [deleteReplyUserData, deleteReplyLikes, deleteReply]
+                }
+            }
+        }
+    }
+    
+    private static func deleteReplyUserData(for userID: String, replyID: String) async throws {
+        // Delete current user data
+        async let deleteUserLikes: Void = FirestoreConstants.users
+            .document(userID)
+            .collection("userLikedReplies")
+            .document(replyID).delete()
+        async let deleteUserSaves: Void = FirestoreConstants.users
+            .document(userID)
+            .collection("userSavedReplies")
+            .document(replyID).delete()
+        
+        _ = try await [deleteUserLikes, deleteUserSaves]
+        
+        // Delete user data for all users except current
         let users = try await UserService.fetchUsers()
+        
         for user in users {
             guard let userID = user.id else { return }
-            let userLikesDocument = FirestoreConstants.users.document(userID).collection("userLikedReplies").document(replyID)
-            let userSavesDocument = FirestoreConstants.users.document(userID).collection("userSavedReplies").document(replyID)
             
-            try await userLikesDocument.delete()
-            try await userSavesDocument.delete()
+            async let deleteUserLikes: Void = FirestoreConstants.users
+                .document(userID)
+                .collection("userLikedReplies")
+                .document(replyID).delete()
+            async let deleteUserSaves: Void = FirestoreConstants.users
+                .document(userID)
+                .collection("userSavedReplies")
+                .document(replyID).delete()
+            
+            _ = try await [deleteUserLikes, deleteUserSaves]
         }
-        let snapshot = try await FirestoreConstants
-            .replies
-            .whereField("postID", isEqualTo: replyID)
-            .getDocuments()
+    }
+
+    private static func deleteReplyLikes(for replyID: String, currentReplyLevel: Int) async throws {
+        let replyLikes = try await FirestoreConstants.replies(currentReplyLevel)
+            .document(replyID)
+            .collection("replyLikes")
+            .getDocuments().documents
         
-        for document in snapshot.documents {
-            let reply = try? document.data(as: Reply.self)
-            guard replyID == reply?.postID else { return }
+        for document in replyLikes {
             try await document.reference.delete()
         }
     }
 }
+

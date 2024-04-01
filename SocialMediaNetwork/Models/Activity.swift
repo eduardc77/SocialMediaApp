@@ -3,8 +3,8 @@
 //  SocialMedia
 //
 
-import FirebaseFirestoreSwift
 import Firebase
+import FirebaseFirestoreSwift
 
 public struct Activity: Identifiable, Codable, Hashable {
     @DocumentID public var id: String?

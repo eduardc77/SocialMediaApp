@@ -166,6 +166,7 @@ final class PostButtonGroupViewModel: ObservableObject {
     
     static func deleteReply(_ reply: Reply) async throws {
         guard reply.user?.isCurrentUser != nil else { return }
-        try await ReplyService.deleteReply(reply)
+        let post = try await PostService.fetchPost(postID: reply.postID)
+        try await ReplyService.deleteReply(for: reply.postID, maxReplyDepthLevel: post.replyDepthLevel)
     }
 }

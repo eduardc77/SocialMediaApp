@@ -59,14 +59,14 @@ public struct PostService {
     
     public static func fetchUserFollowingPosts(countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
         guard let userID = Auth.auth().currentUser?.uid else { return (documentIDs: [], lastDocument: nil) }
-
+        
         let querySnapshot = try await FirestoreConstants.users
             .document(userID)
             .collection("userFeed")
             .limit(to: countLimit)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentIDsWithSnapshot()
-
+        
         return querySnapshot
     }
     
@@ -84,7 +84,7 @@ public struct PostService {
         }
         try await FirestoreConstants.users.document(uid).collection("userFeed").document(postID).setData([:])
     }
-
+    
     public static func addListenerForUserFollowingFeed(forUserID userID: String) -> (AnyPublisher<(DocChangeType<String>, DocumentSnapshot?), Error>) {
         let (publisher, listener) =
         FirestoreConstants.users
@@ -201,7 +201,7 @@ public extension PostService {
         guard let uid = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         try await FirestoreConstants.users.document(uid).collection("userSavedPosts").document(postID).delete()
     }
-
+    
     static func checkIfUserSavedPost(_ post: Post) async throws -> Bool {
         guard let uid = Auth.auth().currentUser?.uid, let postID = post.id else { return false }
         
@@ -210,7 +210,7 @@ public extension PostService {
     }
     
     static func fetchUserSavedPosts(userID: String, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
-    
+        
         let querySnapshot = try await FirestoreConstants.users
             .document(userID)
             .collection("userSavedPosts")
@@ -241,32 +241,68 @@ public extension PostService {
     
     static func deletePost(_ post: Post) async throws {
         guard post.user?.isCurrentUser ?? false, let userID = Auth.auth().currentUser?.uid, let postID = post.id else { return }
-        try await FirestoreConstants.posts.document(postID).delete()
-        try await FirestoreConstants.posts.document(postID).collection("postLikes").document(userID).delete()
-        try await FirestoreConstants.users.document(userID).collection("userLikedPosts").document(postID).delete()
-        try await FirestoreConstants.users.document(userID).collection("userSavedPosts").document(postID).delete()
-        try await FirestoreConstants.users.document(userID).collection("userFeed").document(postID).delete()
         
+        async let deletePostUserData: Void = try await deletePostUserData(for: userID, postID: postID)
+        async let deletePostLikes: Void = try await deletePostLikes(for: postID)
+        async let deletePostReplies: Void = try await deletePostReplies(for: postID)
+
+        _ = try await [deletePostUserData, deletePostLikes, deletePostReplies, deletePost]
+    }
+    
+    private static func deletePostUserData(for userID: String, postID: String) async throws {
+        // Delete current user data
+        async let deleteUserFeed: Void = FirestoreConstants.users
+            .document(userID)
+            .collection("userFeed")
+            .document(postID).delete()
+        async let deleteUserLikes: Void = FirestoreConstants.users
+            .document(userID)
+            .collection("userLikedPosts")
+            .document(postID).delete()
+        async let deleteUserSaves: Void = FirestoreConstants.users
+            .document(userID)
+            .collection("userSavedPosts")
+            .document(postID).delete()
+        
+        _ = try await [deleteUserFeed, deleteUserLikes, deleteUserSaves]
+        
+        // Delete user data for all users except current
         let users = try await UserService.fetchUsers()
+        
         for user in users {
             guard let userID = user.id else { return }
-            let userFeedDocument = FirestoreConstants.users.document(userID).collection("userFeed").document(postID)
-            let userLikesDocument = FirestoreConstants.users.document(userID).collection("userLikedPosts").document(postID)
-            let userSavesDocument = FirestoreConstants.users.document(userID).collection("userSavedPosts").document(postID)
             
-            try await userFeedDocument.delete()
-            try await userLikesDocument.delete()
-            try await userSavesDocument.delete()
+            async let deleteUserFeed: Void = FirestoreConstants.users
+                .document(userID)
+                .collection("userFeed")
+                .document(postID).delete()
+            async let deleteUserLikes: Void = FirestoreConstants.users
+                .document(userID)
+                .collection("userLikedPosts")
+                .document(postID).delete()
+            async let deleteUserSaves: Void = FirestoreConstants.users
+                .document(userID)
+                .collection("userSavedPosts")
+                .document(postID).delete()
+            
+            _ = try await [deleteUserFeed, deleteUserLikes, deleteUserSaves]
         }
-        let snapshot = try await FirestoreConstants
-            .replies
-            .whereField("postID", isEqualTo: postID)
-            .getDocuments()
+    }
+    
+    private static func deletePostLikes(for postID: String) async throws {
+        let postLikes = try await FirestoreConstants.posts
+            .document(postID)
+            .collection("postLikes")
+            .getDocuments().documents
         
-        for document in snapshot.documents {
-            let reply = try? document.data(as: Reply.self)
-            guard postID == reply?.postID else { return }
+        for document in postLikes {
             try await document.reference.delete()
         }
+    }
+    
+    private static func deletePostReplies(for postID: String) async throws {
+        let post = try await fetchPost(postID: postID)
+        try await ReplyService.deleteReply(for: postID, maxReplyDepthLevel: post.replyDepthLevel)
+        try await FirestoreConstants.posts.document(postID).delete()
     }
 }

@@ -17,13 +17,15 @@ public struct Post: Identifiable, Codable, Hashable {
     public var likes: Int
     public var reposts: Int
     public var replies: Int
+    public var replyDepthLevel: Int
     public var imageUrl: String?
-    public var user: User?
     public var didLike: Bool
     public var didRepost: Bool
     public var didSave: Bool
     
-    public init(id: String? = nil, caption: String, ownerUID: String, category: PostCategory, timestamp: Timestamp, likes: Int = 0, reposts: Int = 0, replies: Int = 0, imageUrl: String? = nil, user: User? = nil, didLike: Bool = false, didRepost: Bool = false, didSave: Bool = false) {
+    public var user: User?
+    
+    public init(id: String? = nil, caption: String, ownerUID: String, category: PostCategory, timestamp: Timestamp, likes: Int = 0, reposts: Int = 0, replies: Int = 0, replyDepthLevel: Int = 0, imageUrl: String? = nil, didLike: Bool = false, didRepost: Bool = false, didSave: Bool = false,  user: User? = nil) {
         self.id = id
         self.caption = caption
         self.ownerUID = ownerUID
@@ -32,11 +34,12 @@ public struct Post: Identifiable, Codable, Hashable {
         self.likes = likes
         self.reposts = reposts
         self.replies = replies
+        self.replyDepthLevel = replyDepthLevel
         self.imageUrl = imageUrl
-        self.user = user
         self.didLike = didLike
         self.didRepost = didRepost
         self.didSave = didSave
+        self.user = user
     }
 }
 

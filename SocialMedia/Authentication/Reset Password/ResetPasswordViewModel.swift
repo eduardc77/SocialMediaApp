@@ -3,21 +3,22 @@
 //  SocialMedia
 //
 
-import Foundation
+import FirebaseAuth
 import SocialMediaNetwork
 
 @MainActor
 final class ResetPasswordViewModel: ObservableObject {
     @Published var email = ""
-    @Published var didSendEmail = false
     @Published var isLoading: Bool = false
     
-    @Published var showAlert: Bool = false
+    @Published var showEmailSentAlert: Bool = false
+    @Published var showErrorAlert: Bool = false
+    
+    @Published var authError: AuthError?
     
     var validForm: Bool {
         !email.isEmpty
-        && email.contains(".")
-        && email.contains("@")
+        && email.validEmail
     }
     
     var footerText: String {
@@ -31,11 +32,18 @@ final class ResetPasswordViewModel: ObservableObject {
     var emailSentAlertMessage: String {
         "An email has been sent to your email address \(email). Follow the directions in the email to reset your password."
     }
-  
+    
+    @MainActor
     func sendPasswordResetEmail() async throws {
         isLoading = true
-        try await AuthService.sendPasswordResetEmail(toEmail: email)
-        isLoading = false
-        didSendEmail = true
+        do {
+            try await AuthService.sendPasswordResetEmail(toEmail: email)
+            isLoading = false
+            showEmailSentAlert = true
+        } catch {
+            authError = AuthError(error: error)
+            showErrorAlert = true
+            isLoading = false
+        }
     }
 }
