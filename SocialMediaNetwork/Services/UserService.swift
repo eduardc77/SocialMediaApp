@@ -65,7 +65,7 @@ public extension UserService {
             .setData([:])
         
         ActivityService.uploadNotification(toUID: userID, type: .follow)
-        currentUser?.stats?.followingCount += 1
+        currentUser?.stats.followingCount += 1
         
         async let _ = try await UserService.updateUserFeedAfterFollowing(userID: userID)
     }
@@ -88,7 +88,7 @@ public extension UserService {
             .document(currentUID)
             .delete()
         
-        currentUser?.stats?.followingCount -= 1
+        currentUser?.stats.followingCount -= 1
         async let _ = try await ActivityService.deleteNotification(toUID: userID, type: .follow)
         async let _ = try await UserService.updateUserFeedAfterUnfollowing(userID: userID)
     }

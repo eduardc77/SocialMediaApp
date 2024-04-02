@@ -50,10 +50,10 @@ final class UserRelationsViewModel: ObservableObject {
         switch selectedFilter {
         case .followers:
             self.users = followers
-            self.currentStatString = "\(user.stats?.followersCount ?? 0) followers"
+            self.currentStatString = "\(user.stats.followersCount) followers"
         case .following:
             self.users = following
-            self.currentStatString = "\(user.stats?.followingCount ?? 0) following"
+            self.currentStatString = "\(user.stats.followingCount) following"
         }
     }
     

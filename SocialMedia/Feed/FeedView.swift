@@ -13,7 +13,7 @@ struct FeedView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 FeedFilterView(currentFilter: $model.currentFilter)
-                postsTabView
+                feedTabView
             }
             .background(Color.groupedBackground)
             .refreshable {
@@ -42,7 +42,7 @@ struct FeedView: View {
 
 private extension FeedView {
     
-    var postsTabView: some View {
+    var feedTabView: some View {
         TabView(selection: $model.currentFilter) {
             ScrollView {
                 PostGrid(postGridType: .posts(model.forYouPosts),

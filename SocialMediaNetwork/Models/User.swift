@@ -16,7 +16,7 @@ public struct User: Identifiable, Codable, Hashable {
     public var profileImageURL: String
     public var aboutMe: String
     public var link: String
-    public var stats: UserStats?
+    public var stats: UserStats
     public var isFollowed: Bool
     public var privateProfile: Bool
 
@@ -24,7 +24,7 @@ public struct User: Identifiable, Codable, Hashable {
         return id == Auth.auth().currentUser?.uid
     }
     
-    public init(id: String? = nil, email: String, username: String, fullName: String, joinDate: Timestamp, profileImageURL: String = "", aboutMe: String = "", link: String = "", stats: UserStats? = nil, isFollowed: Bool = false, privateProfile: Bool = false) {
+    public init(id: String? = nil, email: String, username: String, fullName: String, joinDate: Timestamp, profileImageURL: String = "", aboutMe: String = "", link: String = "", stats: UserStats = .init(), isFollowed: Bool = false, privateProfile: Bool = false) {
         self.id = id
         self.email = email
         self.username = username
@@ -37,10 +37,21 @@ public struct User: Identifiable, Codable, Hashable {
         self.isFollowed = isFollowed
         self.privateProfile = privateProfile
     }
+    
+    public func matches(searchText: String) -> Bool {
+        guard !searchText.isEmpty else { return true }
+        return fullName.localizedCaseInsensitiveContains(searchText) || username.localizedCaseInsensitiveContains(searchText)
+    }
 }
 
 public struct UserStats: Codable, Hashable {
     public var followersCount: Int
     public var followingCount: Int
     public var postsCount: Int
+    
+    public init(followersCount: Int = 0, followingCount: Int = 0, postsCount: Int = 0) {
+        self.followersCount = followersCount
+        self.followingCount = followingCount
+        self.postsCount = postsCount
+    }
 }

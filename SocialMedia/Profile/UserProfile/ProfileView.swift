@@ -42,7 +42,7 @@ struct ProfileView: View {
                             Button {
                                 model.showUserRelationSheet.toggle()
                             } label: {
-                                Text("\(model.user.stats?.followersCount ?? 0) followers")
+                                Text("\(model.user.stats.followersCount) followers")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }

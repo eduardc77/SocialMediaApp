@@ -44,7 +44,7 @@ extension UserProfileViewModel {
         isLoading = true
         try await UserService.shared.follow(userID: userID)
         self.user.isFollowed = true
-        self.user.stats?.followersCount += 1
+        self.user.stats.followersCount += 1
         isLoading = false
     }
     
@@ -53,7 +53,7 @@ extension UserProfileViewModel {
         isLoading = true
         try await UserService.shared.unfollow(userID: userID)
         self.user.isFollowed = false
-        self.user.stats?.followersCount -= 1
+        self.user.stats.followersCount -= 1
         isLoading = false
     }
     

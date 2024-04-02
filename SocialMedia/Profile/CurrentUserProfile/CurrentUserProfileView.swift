@@ -85,7 +85,7 @@ struct CurrentUserProfileView: View {
                             modalRouter.presentSheet(destination: ProfileSheetDestination.userRelations(user: user))
                         }
                     } label: {
-                        Text("\(model.currentUser?.stats?.followersCount ?? 0) followers")
+                        Text("\(model.currentUser?.stats.followersCount ?? 0) followers")
                             .font(.subheadline)
                             .foregroundStyle(Color.accentColor)
                     }

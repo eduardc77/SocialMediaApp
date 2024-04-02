@@ -51,7 +51,7 @@ struct UserRelationsView: View {
                         .padding(4)
                     
                     ForEach(viewModel.users) { user in
-                        UserCell(model: SearchViewModel(), user: user)
+                        SearchRow(model: SearchViewModel(), user: user, thumbnailSize: 30)
                     }
                 }
                 .searchable(text: $searchText, prompt: "Search...")
