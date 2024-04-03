@@ -12,6 +12,7 @@ enum PostType: Hashable {
 }
 
 struct PostGridItem: View {
+    var router: any Router
     let postType: PostType
     var profileImageSize: ImageSize = .small
     
@@ -94,7 +95,7 @@ struct PostGridItem: View {
 
 private extension PostGridItem {
     func profileView(user: User?) -> some View {
-        NavigationLink(value: user) {
+        NavigationLink {
             HStack(alignment: .top) {
                 CircularProfileImageView(profileImageURL: user?.profileImageURL, size: profileImageSize)
                 
@@ -110,12 +111,13 @@ private extension PostGridItem {
                         .lineLimit(1)
                 }
             }
+        } action: {
+            router.push(user)
         }
-        .buttonStyle(.borderless)
     }
     
     func categoryView(category: PostCategory) -> some View {
-        NavigationLink(value: category) {
+        NavigationLink {
             Label {
                 Text(category.rawValue.capitalized)
                     .foregroundStyle(Color.secondary)
@@ -126,8 +128,9 @@ private extension PostGridItem {
             .font(.caption)
             .background(in: RoundedRectangle(cornerRadius: 5, style: .continuous))
             .backgroundStyle(.regularMaterial)
+        } action: {
+            router.push(category)
         }
-        .buttonStyle(.borderless)
     }
     
     var ellipsisView: some View {
@@ -167,8 +170,8 @@ private extension PostGridItem {
 }
 
 
-struct FeedCell_Previews: PreviewProvider {
+struct PostGridItem_Previews: PreviewProvider {
     static var previews: some View {
-        PostGridItem(postType: .post(preview.post))
+        PostGridItem(router: FeedViewRouter(), postType: .post(preview.post))
     }
 }

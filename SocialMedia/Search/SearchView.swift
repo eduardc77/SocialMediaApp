@@ -11,6 +11,8 @@ struct SearchView: View {
     @State private var selection = Set<User.ID>()
     @State private var layout = BrowserLayout.grid
     
+    @EnvironmentObject private var router: SearchViewRouter
+    
     var tableImageSize: Double {
 #if os(macOS)
         return 30
@@ -20,41 +22,37 @@ struct SearchView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            Group {
-                switch layout {
-                case .grid:
-                    grid
-                case .list:
-                    table
-                }
+        Group {
+            switch layout {
+            case .grid:
+                grid
+            case .list:
+                table
             }
-#if os(iOS)
-            .toolbarRole(.browser)
-#endif
-            .toolbar {
-                ToolbarItemGroup {
-                    toolbarItems
-                }
+        }
+        .toolbar {
+            ToolbarItemGroup {
+                toolbarItems
             }
-            .background(Color.groupedBackground)
-            .navigationTitle(AppScreen.search.title)
-            .searchable(text: $model.searchText)
-            .searchSuggestions {
-                if model.searchText.isEmpty {
-                    searchSuggestions
-                }
+        }
+        .background(Color.groupedBackground)
+        .navigationTitle(AppScreen.search.title)
+        .searchable(text: $model.searchText)
+        .searchSuggestions {
+            if model.searchText.isEmpty {
+                searchSuggestions
             }
-            .navigationDestination(for: User.self, destination: { user in
-                ProfileView(user: user)
-            })
         }
     }
     
     var grid: some View {
         GeometryReader { geometryProxy in
             ScrollView {
-                SearchGrid(users: model.filteredUsers, width: geometryProxy.size.width)
+                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width, followedIndex: model.followedIndex, isLoading: model.isLoading) { user in
+                    Task {
+                        try await model.toggleFollow(for: user)
+                    }
+                }
             }
         }
     }
@@ -62,8 +60,10 @@ struct SearchView: View {
     var table: some View {
         Table(model.filteredUsers, selection: $selection) {
             TableColumn("Name") { user in
-                NavigationLink(value: user) {
+                NavigationLink {
                     SearchRow(model: SearchViewModel(), user: user, thumbnailSize: tableImageSize)
+                } action: {
+                    router.push(user)
                 }
             }
         }

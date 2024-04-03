@@ -11,6 +11,7 @@ struct CurrentUserProfileView: View {
     var didNavigate: Bool = false
     
     @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @EnvironmentObject private var router: ProfileViewRouter
     
     @Environment(\.horizontalSizeClass) private var sizeClass
     
@@ -36,12 +37,12 @@ struct CurrentUserProfileView: View {
                             Spacer()
                             
                             NavigationLink {
-                                SettingsView()
-                            } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .font(.title2)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(Color.primary)
+                            } action: {
+                                router.push(SettingsDestination.settings)
                             }
                         }
                         .padding(.top, isCompact ? 0 : 20)

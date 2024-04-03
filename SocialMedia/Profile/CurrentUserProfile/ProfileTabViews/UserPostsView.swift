@@ -10,6 +10,7 @@ struct UserPostsView: View {
     @StateObject var model: UserPostsViewModel
     let noContentText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
+    @EnvironmentObject private var router: ProfileViewRouter
     
     init(user: User, noContentText: String) {
         self._model = StateObject(wrappedValue: UserPostsViewModel(user: user))
@@ -17,7 +18,8 @@ struct UserPostsView: View {
     }
     
     var body: some View {
-        PostGrid(postGridType: .posts(model.posts),
+        PostGrid(router: router,
+                 postGridType: .posts(model.posts),
                  isLoading: $model.isLoading,
                  itemsPerPage: model.itemsPerPage,
                  noContentText: noContentText,

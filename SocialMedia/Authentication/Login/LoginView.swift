@@ -51,11 +51,11 @@ private extension LoginView {
                 .focused($focusedField, equals: .password)
         } footer: {
             HStack {
-                NavigationLink(AuthScreen.resetPassword.buttonTitle) {
+                SwiftUI.NavigationLink(AuthScreen.resetPassword.buttonTitle) {
                     ResetPasswordView()
                 }
                 Spacer()
-                NavigationLink(AuthScreen.register.buttonTitle) {
+                SwiftUI.NavigationLink(AuthScreen.register.buttonTitle) {
                     RegistrationView()
                 }
             }

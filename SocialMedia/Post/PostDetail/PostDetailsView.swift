@@ -7,9 +7,11 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct PostDetailsView: View {
+    var router: any Router
     @StateObject var model: PostDetailsViewModel
     
-    init(postType: PostType) {
+    init(router: any Router, postType: PostType) {
+        self.router = router
         _model = StateObject(wrappedValue: PostDetailsViewModel(postType: postType))
     }
     
@@ -81,12 +83,14 @@ struct PostDetailsView: View {
             
             ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
                 ZStack {
-                    NavigationLink(value: PostType.reply(reply)) {
+                    NavigationLink {
                         Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                    } action: {
+                        router.push(PostType.reply(reply))
                     }
                     .buttonStyle(.plain)
                     
-                    PostGridItem(postType: .reply(reply), profileImageSize: .small)
+                    PostGridItem(router: router, postType: .reply(reply), profileImageSize: .small)
                 }
                 .contentShape(.containerRelative)
                 .containerShape(.rect(cornerRadius: 8))
@@ -94,7 +98,7 @@ struct PostDetailsView: View {
         }
         .background(Color.groupedBackground)
         .navigationTitle("Post Details")
-        
+        .navigationBarTitleDisplayMode(.inline)
         .onFirstAppear {
             Task {
                 try await model.loadMoreReplies()
@@ -106,7 +110,7 @@ struct PostDetailsView: View {
 
 struct PostDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        PostDetailsView(postType: PostType.post(preview.post))
-        PostDetailsView(postType: PostType.reply(preview.reply))
+        PostDetailsView(router: FeedViewRouter(), postType: PostType.post(preview.post))
+        PostDetailsView(router: FeedViewRouter(), postType: PostType.reply(preview.reply))
     }
 }

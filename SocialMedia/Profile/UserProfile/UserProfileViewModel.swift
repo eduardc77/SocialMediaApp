@@ -42,18 +42,18 @@ extension UserProfileViewModel {
     func follow() async throws {
         guard let userID = user.id else { return }
         isLoading = true
+        user.isFollowed = true
+        user.stats.followersCount += 1
         try await UserService.shared.follow(userID: userID)
-        self.user.isFollowed = true
-        self.user.stats.followersCount += 1
         isLoading = false
     }
     
     func unfollow() async throws {
         guard let userID = user.id else { return }
         isLoading = true
+        user.isFollowed = false
+        user.stats.followersCount -= 1
         try await UserService.shared.unfollow(userID: userID)
-        self.user.isFollowed = false
-        self.user.stats.followersCount -= 1
         isLoading = false
     }
     

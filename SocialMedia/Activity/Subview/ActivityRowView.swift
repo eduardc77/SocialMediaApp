@@ -7,6 +7,7 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct ActivityRowView: View {
+    var router: any Router
     let model: Activity
     
     private var activityMessage: String {
@@ -27,12 +28,14 @@ struct ActivityRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 16) {
-                NavigationLink(value: model.user) {
+                NavigationLink {
                     ZStack(alignment: .bottomTrailing) {
                         CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
                         ActivityBadgeView(type: model.type)
                             .offset(x: 8, y: 4)
                     }
+                } action: {
+                    router.push(model.user)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -82,6 +85,6 @@ struct ActivityRowView: View {
 
 struct ActivityRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityRowView(model: preview.activityModel)
+        ActivityRowView(router: ActivityViewRouter(), model: preview.activityModel)
     }
 }

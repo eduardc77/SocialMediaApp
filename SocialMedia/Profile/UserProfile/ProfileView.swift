@@ -59,7 +59,7 @@ struct ProfileView: View {
                 } label: {
                     Text(model.isFollowed ? "Following" : "Follow")                    
                 }
-                .buttonStyle(.secondary(foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: $model.isLoading, isActive: model.isFollowed))
+                .buttonStyle(.secondary(foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
             }
             .padding(.horizontal)
             

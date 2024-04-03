@@ -1,41 +1,46 @@
 /*
-See the LICENSE.txt file for this sample’s licensing information.
-
-Abstract:
-The grid view used in the DonutGallery.
-*/
+ See the LICENSE.txt file for this sample’s licensing information.
+ 
+ Abstract:
+ The grid view used in the DonutGallery.
+ */
 
 import SwiftUI
 import SocialMediaNetwork
 
 struct SearchGrid: View {
+    var router: any Router
     var users: [User]
     var width: Double
     
-    #if os(iOS)
+    var followedIndex: Int = 0
+    var isLoading: Bool = false
+    var followAction: ((User) -> Void)?
+    
+#if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
-    #endif
+#endif
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     var useReducedThumbnailSize: Bool {
-        #if os(iOS)
+#if os(iOS)
         if sizeClass == .compact {
             return true
         }
-        #endif
+#endif
         if dynamicTypeSize >= .xxxLarge {
             return true
         }
         
-        #if os(iOS)
+#if os(iOS)
         if width <= 390 {
             return true
         }
-        #elseif os(macOS)
+#elseif os(macOS)
         if width <= 520 {
             return true
         }
-        #endif
+#endif
         
         return false
     }
@@ -45,11 +50,11 @@ struct SearchGrid: View {
     }
     
     var thumbnailSize: Double {
-        #if os(iOS)
+#if os(iOS)
         return useReducedThumbnailSize ? 60 : 100
-        #else
+#else
         return useReducedThumbnailSize ? 40 : 80
-        #endif
+#endif
     }
     
     var gridItems: [GridItem] {
@@ -58,11 +63,31 @@ struct SearchGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 20) {
-            ForEach(users) { user in
-                NavigationLink(value: user) {
-                    SearchGridItem(user: user, thumbnailSize: thumbnailSize)
+            ForEach(Array(users.enumerated()), id: \.offset) { index, user in
+                VStack {
+                    NavigationLink {
+                        SearchGridItem(user: user, thumbnailSize: thumbnailSize)
+                    } action: {
+                        router.push(user)
+                    }
+                    if let followAction = followAction {
+                        Button {
+                            withAnimation {
+                                followAction(user)
+                            }
+                        } label: {
+                            Text(user.isFollowed ? "Following" : "Follow")
+                                .font(.subheadline)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .overlay {
+                            if followedIndex == index && isLoading {
+                                ProgressView()
+                            }
+                        }
+                        .disabled(followedIndex == index && isLoading)
+                    }
                 }
-                .buttonStyle(.plain)
             }
         }
         .padding()
@@ -72,7 +97,7 @@ struct SearchGrid: View {
 //struct DonutGalleryGrid_Previews: PreviewProvider {
 //    struct Preview: View {
 //        @State private var donuts = Donut.all
-//        
+//
 //        var body: some View {
 //            GeometryReader { geometryProxy in
 //                ScrollView {
@@ -81,7 +106,7 @@ struct SearchGrid: View {
 //            }
 //        }
 //    }
-//    
+//
 //    static var previews: some View {
 //        Preview()
 //    }
@@ -91,7 +116,7 @@ struct SearchGrid: View {
 
 //struct UserListView: View {
 //    @ObservedObject var model: SearchViewModel
-//    
+//
 //    var body: some View {
 //        ScrollView {
 //            LazyVStack {

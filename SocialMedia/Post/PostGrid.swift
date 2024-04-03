@@ -12,6 +12,7 @@ enum PostGridType {
 }
 
 struct PostGrid: View {
+    var router: any Router
     let postGridType: PostGridType
     @Binding var isLoading: Bool
     var itemsPerPage: Int = 20
@@ -65,12 +66,13 @@ struct PostGrid: View {
                 } else {
                     ForEach(Array(posts.enumerated()), id: \.element) { index, post in
                         ZStack(alignment: .top) {
-                            NavigationLink(value: PostType.post(post)) {
+                            NavigationLink {
                                 Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                            } action: {
+                                router.push(PostType.post(post))
                             }
-                            .buttonStyle(.plain)
                             
-                            PostGridItem(postType: .post(post), profileImageSize: profileImageSize)
+                            PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize)
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .contentShape(.containerRelative)
@@ -91,12 +93,13 @@ struct PostGrid: View {
             case .replies(let replies):
                 ForEach(Array(replies.enumerated()), id: \.element) { index, reply in
                     ZStack {
-                        NavigationLink(value: PostType.reply(reply)) {
+                        NavigationLink {
                             Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                        } action: {
+                            router.push(PostType.reply(reply))
                         }
-                        .buttonStyle(.plain)
                         
-                        PostGridItem(postType: .reply(reply), profileImageSize: profileImageSize)
+                        PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize)
                     }
                     .contentShape(.containerRelative)
                     .containerShape(.rect(cornerRadius: 8))

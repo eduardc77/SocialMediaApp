@@ -7,9 +7,11 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct PostCategoryDetailView: View {
+    var router: any Router
     @StateObject var model: PostCategoryViewModel
     
-    init(category: PostCategory) {
+    init(router: any Router, category: PostCategory) {
+        self.router = router
         _model = StateObject(wrappedValue: PostCategoryViewModel(category: category))
     }
     
@@ -33,13 +35,13 @@ private extension PostCategoryDetailView {
     var postsTabView: some View {
         TabView(selection: $model.currentFilter) {
             ScrollView {
-                PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
+                PostGrid(router: router, postGridType: .posts(model.posts), isLoading: $model.isLoading)
 
             }
             .tag(CategoryExploreFilter.hot)
             
             ScrollView {
-                PostGrid(postGridType: .posts(model.posts), isLoading: $model.isLoading)
+                PostGrid(router: router, postGridType: .posts(model.posts), isLoading: $model.isLoading)
 
             }
             .tag(CategoryExploreFilter.new)
@@ -55,7 +57,7 @@ private extension PostCategoryDetailView {
 struct CategoryView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PostCategoryDetailView(category: .affirmations)
+            PostCategoryDetailView(router: FeedViewRouter(), category: .affirmations)
         }
     }
 }

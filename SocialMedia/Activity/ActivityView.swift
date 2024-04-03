@@ -7,44 +7,40 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct ActivityView: View {
-    @StateObject var viewModel = ActivityViewModel()
+    @StateObject private var viewModel = ActivityViewModel()
+    @EnvironmentObject private var router: ActivityViewRouter
     
     var body: some View {
-        NavigationStack {
-            ScrollView(showsIndicators: false) {
-                LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
-                    Section(header: ActivityFilterView(selectedFilter: $viewModel.selectedFilter)) {
-                        ForEach(viewModel.filteredNotifications) { activityModel in
-                            switch activityModel.type {
-                            case .follow, .like:
-                                NavigationLink(value: activityModel.user) {
-                                    ActivityRowView(model: activityModel)
-                                }
-                            case .reply:
-                                NavigationLink(value: activityModel.post) {
-                                    ActivityRowView(model: activityModel)
+        ScrollView(showsIndicators: false) {
+            LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
+                Section(header: ActivityFilterView(selectedFilter: $viewModel.selectedFilter)) {
+                    ForEach(viewModel.filteredNotifications) { activityModel in
+                        switch activityModel.type {
+                        case .follow, .like:
+                            NavigationLink {
+                                ActivityRowView(router: router, model: activityModel)
+                            } action: {
+                                router.push(activityModel.user)
+                            }
+                        case .reply:
+                            NavigationLink {
+                                ActivityRowView(router: router, model: activityModel)
+                            } action: {
+                                if let post = activityModel.post {
+                                    router.push(PostType.post(post))
                                 }
                             }
                         }
                     }
                 }
             }
-            .background(Color.groupedBackground)
-            .overlay {
-                if viewModel.isLoading {
-                    ProgressView()
-                }
+        }
+        .navigationTitle("Activity")
+        .background(Color.groupedBackground)
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
             }
-            .navigationTitle("Activity")
-            .navigationDestination(for: PostType.self, destination: { postType in
-                PostDetailsView(postType: postType)
-            })
-            .navigationDestination(for: User.self, destination: { user in
-                ProfileView(user: user)
-            })
-            .navigationDestination(for: PostCategory.self, destination: { category in
-                PostCategoryDetailView(category: category)
-            })
         }
     }
 }

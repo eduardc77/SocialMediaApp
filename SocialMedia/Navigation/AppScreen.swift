@@ -49,13 +49,13 @@ extension AppScreen {
     var destination: some View {
         switch self {
         case .home:
-            FeedView()
+            FeedCoordinator()
         case .search:
-            SearchView()
+            SearchCoordinator()
         case .newPost:
             NewPostCoordinator()
         case .activity:
-            ActivityView()
+            ActivityCoordinator()
         case .profile:
             CurrentUserProfileCoordinator()
         }

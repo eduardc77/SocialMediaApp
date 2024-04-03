@@ -50,14 +50,14 @@ public extension UserService {
     func follow(userID: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
         
-        async let _ = try await FirestoreConstants
+        try await FirestoreConstants
             .following
             .document(currentUID)
             .collection("userFollowing")
             .document(userID)
             .setData([:])
         
-        async let _ = try await FirestoreConstants
+        try await FirestoreConstants
             .followers
             .document(userID)
             .collection("userFollowers")
@@ -66,22 +66,21 @@ public extension UserService {
         
         ActivityService.uploadNotification(toUID: userID, type: .follow)
         currentUser?.stats.followingCount += 1
-        
-        async let _ = try await UserService.updateUserFeedAfterFollowing(userID: userID)
+        try await UserService.updateUserFeedAfterFollowing(userID: userID)
     }
     
     @MainActor
     func unfollow(userID: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
         
-        async let _ = try await FirestoreConstants
+        try await FirestoreConstants
             .following
             .document(currentUID)
             .collection("userFollowing")
             .document(userID)
             .delete()
 
-        async let _ = try await FirestoreConstants
+        try await FirestoreConstants
             .followers
             .document(userID)
             .collection("userFollowers")
@@ -89,8 +88,8 @@ public extension UserService {
             .delete()
         
         currentUser?.stats.followingCount -= 1
-        async let _ = try await ActivityService.deleteNotification(toUID: userID, type: .follow)
-        async let _ = try await UserService.updateUserFeedAfterUnfollowing(userID: userID)
+        try await ActivityService.deleteNotification(toUID: userID, type: .follow)
+        try await UserService.updateUserFeedAfterUnfollowing(userID: userID)
     }
     
     static func checkIfUserIsFollowed(userID uid: String) async -> Bool {

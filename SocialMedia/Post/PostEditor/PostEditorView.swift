@@ -10,7 +10,7 @@ struct PostEditorView: View {
     @StateObject var model = PostEditorViewModel()
     @StateObject var imageData = ImageData()
     
-    @EnvironmentObject private var tabRouter: AppRouter
+    @EnvironmentObject private var tabRouter: AppTabRouter
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) private var dismiss
     

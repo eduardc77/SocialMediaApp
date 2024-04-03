@@ -4,36 +4,22 @@
 //
 
 import SwiftUI
-import SocialMediaNetwork
 
 struct FeedView: View {
     @StateObject private var model = FeedViewModel()
+    @EnvironmentObject private var router: FeedViewRouter
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                FeedFilterView(currentFilter: $model.currentFilter)
-                feedTabView
+        VStack(spacing: 0) {
+            FeedFilterView(currentFilter: $model.currentFilter)
+            feedTabView
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color.groupedBackground)
+        .refreshable {
+            Task {
+                try await model.refreshFeedForCurrentFilter()
             }
-            .background(Color.groupedBackground)
-            .refreshable {
-                Task {
-                    try await model.refreshFeedForCurrentFilter()
-                }
-            }
-            .navigationDestination(for: User.self, destination: { user in
-                if user.isCurrentUser {
-                    CurrentUserProfileCoordinator(didNavigate: true)
-                } else {
-                    ProfileView(user: user)
-                }
-            })
-            .navigationDestination(for: PostType.self, destination: { postType in
-                PostDetailsView(postType: postType)
-            })
-            .navigationDestination(for: PostCategory.self, destination: { category in
-                PostCategoryDetailView(category: category)
-            })
         }
     }
 }
@@ -45,7 +31,7 @@ private extension FeedView {
     var feedTabView: some View {
         TabView(selection: $model.currentFilter) {
             ScrollView {
-                PostGrid(postGridType: .posts(model.forYouPosts),
+                PostGrid(router: router, postGridType: .posts(model.forYouPosts),
                          isLoading: $model.isLoading,
                          itemsPerPage: model.itemsPerPage,
                          loadNewPage: model.fetchFeedForCurrentFilter)
@@ -58,7 +44,7 @@ private extension FeedView {
             }
             
             ScrollView {
-                PostGrid(postGridType: .posts(model.followingPosts),
+                PostGrid(router: router, postGridType: .posts(model.followingPosts),
                          isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage,
                          noContentText: "You haven't followed any accounts yet.",
                          loadNewPage: model.fetchFeedForCurrentFilter)

@@ -7,7 +7,9 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct CurrentUserProfileCoordinator: View {
+    @StateObject private var router = ProfileViewRouter()
     private var didNavigate: Bool = false
+    @EnvironmentObject private var tabRouter: AppTabRouter
     
     init(didNavigate: Bool = false) {
         self.didNavigate = didNavigate
@@ -18,29 +20,63 @@ struct CurrentUserProfileCoordinator: View {
             if didNavigate {
                 CurrentUserProfileView(didNavigate: didNavigate)
             } else {
-                NavigationStack {
+                NavigationStack(path: $router.path) {
                     CurrentUserProfileView(didNavigate: didNavigate)
-                        .navigationDestination(for: User.self, destination: { user in
-                            if user.isCurrentUser {
-                                CurrentUserProfileCoordinator(didNavigate: true)
-                            } else {
-                                ProfileView(user: user)
+                        .navigationDestination(for: AnyHashable.self) { destination in
+                            switch destination {
+                            case let user as User:
+                                if user.isCurrentUser {
+                                    CurrentUserProfileCoordinator(didNavigate: true)
+                                } else {
+                                    ProfileView(user: user)
+                                }
+                            case let postType as PostType:
+                                PostDetailsView(router: router, postType: postType)
+                            case let category as PostCategory:
+                                PostCategoryDetailView(router: router, category: category)
+                            case let settingsDestination as SettingsDestination:
+                                settings(destination: settingsDestination)
+                            default:
+                                EmptyView()
                             }
-                        })
-                        .navigationDestination(for: PostType.self, destination: { postType in
-                            PostDetailsView(postType: postType)
-                        })
-                        .navigationDestination(for: PostCategory.self, destination: { category in
-                            PostCategoryDetailView(category: category)
-                        })
+                        }
                 }
             }
+        }
+        .onReceive(tabRouter.$tabReselected) { tabReselected in
+            guard tabReselected, tabRouter.selection == .profile, !router.path.isEmpty else { return }
+            router.popToRoot()
+        }
+        .environmentObject(router)
+    }
+    
+    @ViewBuilder
+    private func settings(destination: SettingsDestination) -> some View {
+        switch destination {
+        case .settings:
+            SettingsView()
+                .environmentObject(router)
+        case .termsOfUse:
+            PlaceholderText(title: .termsOfUse)
+        case .privacyPolicy:
+            PlaceholderText(title: .privacyPolicy)
+        case .about:
+            AboutView()
+        case .feedback:
+            FeedbackView()
         }
     }
 }
 
-struct CurrentUserProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        CurrentUserProfileCoordinator()
-    }
+enum SettingsDestination: Hashable {
+    case settings
+    case termsOfUse
+    case privacyPolicy
+    case about
+    case feedback
+    
+}
+
+#Preview {
+    CurrentUserProfileCoordinator()
 }

@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 struct ContentView: View {
     @StateObject private var model = ContentViewModel()
-    @StateObject private var appRouter = AppRouter()
+    @StateObject private var tabRouter = AppTabRouter()
     @StateObject private var modalRouter = ModalScreenRouter()
     
     @EnvironmentObject private var settings: AppSettings
@@ -21,23 +21,23 @@ struct ContentView: View {
             } else {
                 Group {
                     if prefersTabNavigation {
-                        AppTabView(appRouter: appRouter)
+                        AppTabView(appRouter: tabRouter)
                     } else {
                         NavigationSplitView {
-                            AppSidebarList(selection: $appRouter.selection)
+                            AppSidebarList(selection: $tabRouter.selection)
                         } detail: {
-                            AppDetailColumn(screen: appRouter.selection)
+                            AppDetailColumn(screen: tabRouter.selection)
                         }
                     }
                 }
                 .tint(settings.theme.color)
                 .sheet(item: $modalRouter.presentedSheet, content: sheetContent)
                 .alert($modalRouter.alert)
-                .onReceive(appRouter.$urlString) { newValue in
+                .onReceive(tabRouter.$urlString) { newValue in
                     guard let urlString = newValue, let url = URL(string: urlString) else { return }
                     openURL(url)
                 }
-                .environmentObject(appRouter)
+                .environmentObject(tabRouter)
                 .environmentObject(modalRouter)
                 .ignoresSafeArea(.keyboard)
             }

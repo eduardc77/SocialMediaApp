@@ -1,11 +1,11 @@
 //
-//  AppRouter.swift
+//  AppTabRouter.swift
 //  SocialMedia
 //
 
 import Foundation
 
-final class AppRouter: ObservableObject {
+final class AppTabRouter: ObservableObject {
     @Published var selection: AppScreen? = .home {
         willSet {
             if selection == newValue {

@@ -11,7 +11,7 @@ struct SecondaryButtonStyle: ButtonStyle {
     let foregroundColor: Color
     let activeBackgroundColor: Color
     let inactiveBackgroundColor: Color
-    @Binding var isLoading: Bool
+    var isLoading: Bool
     var isActive: Bool
     @Environment(\.isEnabled) var isEnabled
     
@@ -33,8 +33,8 @@ struct SecondaryButtonStyle: ButtonStyle {
             .overlay {
                 if isLoading {
                     ZStack {
-                        inactiveBackgroundColor.clipShape(RoundedRectangle(cornerRadius: 8))
-                        ProgressView().tint(Color.secondaryGroupedBackground)
+                        inactiveBackgroundColor.clipShape(RoundedRectangle(cornerRadius: 8)).zIndex(1)
+                        ProgressView().tint(Color.secondaryGroupedBackground).zIndex(2)
                     }
                 }
             }
@@ -42,7 +42,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == SecondaryButtonStyle {
-    static func secondary(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.secondaryGroupedBackground, activeBackgroundColor: Color = .groupedBackground, inactiveBackgroundColor: Color = .primary, isLoading: Binding<Bool> = .constant(false), isActive: Bool = true) -> SecondaryButtonStyle {
+    static func secondary(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.secondaryGroupedBackground, activeBackgroundColor: Color = .groupedBackground, inactiveBackgroundColor: Color = Color.primary, isLoading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
         SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, activeBackgroundColor: activeBackgroundColor, inactiveBackgroundColor: inactiveBackgroundColor, isLoading: isLoading, isActive: isActive)
     }
 }

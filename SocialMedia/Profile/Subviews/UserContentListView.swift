@@ -7,11 +7,13 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct UserContentListView: View {
+    var router: any Router
     @Binding var selectedFilter: ProfilePostFilter
     @StateObject var model: UserContentListViewModel
     @Namespace var animation
     
-    init(selectedFilter: Binding<ProfilePostFilter>, user: User) {
+    init(router: any Router, selectedFilter: Binding<ProfilePostFilter>, user: User) {
+        self.router = router
         self._selectedFilter = selectedFilter
         self._model = StateObject(wrappedValue: UserContentListViewModel(user: user))
     }
@@ -26,7 +28,7 @@ struct UserContentListView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {
-                            PostGrid(postGridType: .posts(model.posts),
+                            PostGrid(router: router, postGridType: .posts(model.posts),
                                      isLoading: .constant(false),
                                      loadNewPage: {})
                                 .transition(.move(edge: .leading))
@@ -92,7 +94,7 @@ struct UserContentListView: View {
 struct UserContentListView_Previews: PreviewProvider {
     static var previews: some View {
         UserContentListView(
-            selectedFilter: .constant(.posts),
+            router: ProfileViewRouter(), selectedFilter: .constant(.posts),
             user: preview.user
         )
     }

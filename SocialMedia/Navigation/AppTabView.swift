@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct AppTabView: View {
-    @ObservedObject var appRouter: AppRouter
+    @ObservedObject var appRouter: AppTabRouter
 
     var body: some View {
         TabView(selection: $appRouter.selection) {
@@ -23,5 +23,5 @@ struct AppTabView: View {
 }
 
 #Preview {
-    AppTabView(appRouter: AppRouter())
+    AppTabView(appRouter: AppTabRouter())
 }
