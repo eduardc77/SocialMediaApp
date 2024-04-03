@@ -24,18 +24,18 @@ struct UserContentListView: View {
                 LazyVStack {
                     if selectedFilter == .posts {
                         if model.posts.isEmpty {
-                            Text(model.noContentText(filter: .posts))
+                            Text(model.contentUnavailableText(filter: .posts))
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {
                             PostGrid(router: router, postGridType: .posts(model.posts),
                                      isLoading: .constant(false),
                                      loadNewPage: {})
-                                .transition(.move(edge: .leading))
+                            .transition(.move(edge: .leading))
                         }
                     } else {
                         if model.replies.isEmpty {
-                            Text(model.noContentText(filter: .replies))
+                            Text(model.contentUnavailableText(filter: .replies))
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondary)
                         } else {

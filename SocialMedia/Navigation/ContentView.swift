@@ -71,7 +71,7 @@ enum PostSheetDestination: Identifiable {
 }
 
 enum ProfileSheetDestination: Identifiable {
-    case editProfile(model: CurrentUserProfileViewModel, imageData: ImageData)
+    case editProfile(model: CurrentUserProfileHeaderModel, imageData: ImageData)
     case userRelations(user: User)
     
     var id: String { UUID().uuidString }

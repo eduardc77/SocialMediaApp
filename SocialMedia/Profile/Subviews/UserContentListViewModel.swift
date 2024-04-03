@@ -134,7 +134,7 @@ final class UserContentListViewModel: ObservableObject {
 //            .store(in: &cancellables)
 //    }
     
-    func noContentText(filter: ProfilePostFilter) -> String {
+    func contentUnavailableText(filter: ProfilePostFilter) -> String {
         let name = user.isCurrentUser ? "You" : user.username
         let nextWord = user.isCurrentUser ? "haven't" : "hasn't"
         let contentType = filter == .replies ? "replies" : "posts"

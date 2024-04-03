@@ -16,7 +16,7 @@ struct PostGrid: View {
     let postGridType: PostGridType
     @Binding var isLoading: Bool
     var itemsPerPage: Int = 20
-    var noContentText: String = ""
+    var contentUnavailableText: String = ""
     
     var loadNewPage: (() async throws -> Void)? = nil
     
@@ -60,7 +60,7 @@ struct PostGrid: View {
                         ContentUnavailableView(
                             "No Content",
                             systemImage: "doc.richtext",
-                            description: Text(noContentText)
+                            description: Text(contentUnavailableText)
                         )
                     }
                 } else {

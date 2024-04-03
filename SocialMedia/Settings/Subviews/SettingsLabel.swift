@@ -10,6 +10,7 @@ struct SettingsLabel: View {
     
     var body: some View {
         Label(settingsOption.rawValue.capitalized, systemImage: settingsOption.icon)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 }
 

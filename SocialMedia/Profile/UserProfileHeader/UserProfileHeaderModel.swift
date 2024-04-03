@@ -1,5 +1,5 @@
 //
-//  ProfileViewModel.swift
+//  UserProfileHeaderModel.swift
 //  SocialMedia
 //
 
@@ -7,15 +7,15 @@ import Foundation
 import SocialMediaNetwork
 
 @MainActor
-final class UserProfileViewModel: ObservableObject {
+final class UserProfileHeaderModel: ObservableObject {
     @Published var user: User
     @Published var isLoading: Bool = false
     
     @Published var selectedPostFilter: ProfilePostFilter = .posts
     @Published var showEditProfile = false
     @Published var showUserRelationSheet = false
-
-    var isFollowed: Bool { return user.isFollowed }
+    
+    var isFollowed: Bool { user.isFollowed }
     
     init(user: User) {
         self.user = user
@@ -38,7 +38,7 @@ final class UserProfileViewModel: ObservableObject {
 
 // MARK: - Following
 
-extension UserProfileViewModel {
+extension UserProfileHeaderModel {
     func follow() async throws {
         guard let userID = user.id else { return }
         isLoading = true

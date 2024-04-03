@@ -10,10 +10,7 @@ import Firebase
 import SocialMediaNetwork
 
 @MainActor
-final class CurrentUserProfileViewModel: ObservableObject {
-    
-    // MARK: - Properties
-    
+final class CurrentUserProfileHeaderModel: ObservableObject {
     @Published var currentUser: SocialMediaNetwork.User?
     
     @Published var profileInputData = ProfileInputData()
@@ -34,16 +31,12 @@ final class CurrentUserProfileViewModel: ObservableObject {
     @Published var imageState: ImageData.ImageState = .empty
     @Published var newImageSet: Bool = false
     
-    // MARK: - Init
-    
     init() {
         setupSubscribers()
     }
 }
 
-// MARK: - User Data
-
-extension CurrentUserProfileViewModel {
+extension CurrentUserProfileHeaderModel {
     func loadUserData() {
         guard let user = currentUser else { return }
         guard let currentUID = user.id else { return }
@@ -95,9 +88,7 @@ extension CurrentUserProfileViewModel {
     }
 }
 
-// MARK: - Subscribers
-
-extension CurrentUserProfileViewModel {
+extension CurrentUserProfileHeaderModel {
     
     @MainActor
     private func setupSubscribers() {
@@ -108,9 +99,7 @@ extension CurrentUserProfileViewModel {
     }
 }
 
-// MARK: - Image Loading
-
-private extension CurrentUserProfileViewModel {
+private extension CurrentUserProfileHeaderModel {
     
     func updateProfileImage(_ imageData: Data) async throws {
         guard let userID = currentUser?.id, let imageUrl = try? await StorageService.uploadImage(imageData: imageData, type: .profile(userID: userID)) else { return }

@@ -19,6 +19,7 @@ struct ActivityFilterView: View {
                     }
                 }
                 .padding(.horizontal)
+                .background(Color.groupedBackground)
             }
         }
     }

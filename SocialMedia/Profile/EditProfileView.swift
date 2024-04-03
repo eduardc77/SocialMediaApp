@@ -7,7 +7,7 @@ import SwiftUI
 import PhotosUI
 
 struct EditProfileView: View {
-    @ObservedObject var model: CurrentUserProfileViewModel
+    @ObservedObject var model: CurrentUserProfileHeaderModel
     @ObservedObject var imageData: ImageData
     @Environment(\.dismiss) private var dismiss
     
@@ -89,6 +89,6 @@ struct EditProfileView: View {
 
 struct EditProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        EditProfileView(model: CurrentUserProfileViewModel(), imageData: ImageData())
+        EditProfileView(model: CurrentUserProfileHeaderModel(), imageData: ImageData())
     }
 }

@@ -8,13 +8,14 @@ import SocialMediaNetwork
 
 struct UserLikedPostsView: View {
     @StateObject var model: UserLikedPostsViewModel
-    let noContentText: String
+    var router: any Router
+    let contentUnavailableText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
-    @EnvironmentObject private var router: ProfileViewRouter
-    
-    init(user: User, noContentText: String) {
+
+    init(router: any Router, user: User, contentUnavailableText: String) {
+        self.router = router
         self._model = StateObject(wrappedValue: UserLikedPostsViewModel(user: user))
-        self.noContentText = noContentText
+        self.contentUnavailableText = contentUnavailableText
     }
     
     var body: some View {
@@ -22,7 +23,7 @@ struct UserLikedPostsView: View {
                  postGridType: .posts(model.posts),
                  isLoading: $model.isLoading,
                  itemsPerPage: model.itemsPerPage,
-                 noContentText: noContentText,
+                 contentUnavailableText: contentUnavailableText,
                  loadNewPage: model.loadMorePosts)
         .onFirstAppear {
             Task { try await model.loadMorePosts() }

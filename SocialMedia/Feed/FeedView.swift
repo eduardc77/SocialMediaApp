@@ -46,7 +46,7 @@ private extension FeedView {
             ScrollView {
                 PostGrid(router: router, postGridType: .posts(model.followingPosts),
                          isLoading: $model.isLoading, itemsPerPage: model.itemsPerPage,
-                         noContentText: "You haven't followed any accounts yet.",
+                         contentUnavailableText: "You haven't followed any accounts yet.",
                          loadNewPage: model.fetchFeedForCurrentFilter)
                 
             }

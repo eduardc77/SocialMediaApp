@@ -72,7 +72,7 @@ struct ReplyView: View {
                                 }
 
                                 TextField("Add your reply...", text: $model.replyText, axis: .vertical)
-                                    .tint(.primary)
+                                    .tint(Color.primary)
                                     .padding(2)
                                     .multilineTextAlignment(.leading)
 #if DEBUG

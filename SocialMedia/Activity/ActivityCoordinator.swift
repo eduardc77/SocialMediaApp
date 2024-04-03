@@ -16,7 +16,7 @@ struct ActivityCoordinator: View {
                 .navigationDestination(for: AnyHashable.self) { destination in
                     switch destination {
                     case let user as User:
-                        ProfileView(user: user)
+                        ProfileTabsContainer(router: router, user: user, didNavigate: true)
                     case let postType as PostType:
                         PostDetailsView(router: router, postType: postType)
                     case let category as PostCategory:

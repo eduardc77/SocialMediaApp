@@ -9,7 +9,7 @@ import SocialMediaNetwork
 struct ReplyRow: View {
     let reply: Reply
     @State private var showReplySheet = false
-
+    
     var body: some View {
         if let post = reply.post {
             VStack(alignment: .leading) {
@@ -60,7 +60,7 @@ struct ReplyRow: View {
                 
                 Divider()
             }
-
+            
         }
     }
 }

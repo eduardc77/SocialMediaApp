@@ -7,7 +7,7 @@ import SwiftUI
 import PhotosUI
 
 struct EditableCircularProfileImage: View {
-    @ObservedObject var model: CurrentUserProfileViewModel
+    @ObservedObject var model: CurrentUserProfileHeaderModel
     @ObservedObject var imageData: ImageData
     var size: ImageSize = .xLarge
     
