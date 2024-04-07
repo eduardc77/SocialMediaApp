@@ -5,11 +5,13 @@
 
 import Foundation
 
-enum ProfilePostFilter: String, Hashable, CaseIterable {
+enum ProfilePostFilter: String, Identifiable, CaseIterable {
     case posts
     case replies
     case liked
     case saved
+    
+    var id: ProfilePostFilter { self }
     
     var title: String { rawValue.capitalized }
     

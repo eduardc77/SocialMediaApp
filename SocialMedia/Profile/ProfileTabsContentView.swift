@@ -61,7 +61,7 @@ struct ProfileTabsContentView<Content: View>: View {
                     if !contentUnavailable {
                         switch tab {
                         case .posts:
-                            UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .saved))
+                            UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .posts))
                             
                         case .replies:
                             Group {
@@ -73,7 +73,7 @@ struct ProfileTabsContentView<Content: View>: View {
                                     }
                                 } else {
                                     ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
-                                        ReplyRow(reply: reply)
+                                        ReplyRow(reply: reply, onReplyTapped: {_ in })
                                             .padding(.vertical, 5)
                                             .padding(.horizontal, 10)
                                     }
@@ -87,19 +87,19 @@ struct ProfileTabsContentView<Content: View>: View {
                             UserSavedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .saved))
                         }
                     } else {
-                        VStack {
-                            ContentUnavailableView(
-                                "Private Account",
-                                systemImage: "lock.fill",
-                                description: Text("Follow this account to see their content.")
-                            )
-                        }
+                        ContentUnavailableView(
+                            "Private Account",
+                            systemImage: "lock.fill",
+                            description: Text("Follow this account to see their content.")
+                        )
                     }
                 }
                 .padding(.vertical, 5)
                 .scrollTargetLayout()
             }
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .background(Color.groupedBackground)
             .environmentObject(refreshedFilterModel)
     }
@@ -108,5 +108,3 @@ struct ProfileTabsContentView<Content: View>: View {
         refreshedFilterModel.refreshedFilter = tab
     }
 }
-
-

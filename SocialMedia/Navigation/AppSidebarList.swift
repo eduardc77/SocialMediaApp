@@ -10,7 +10,7 @@ struct AppSidebarList: View {
     
     var body: some View {
         List(AppScreen.allCases, selection: $selection) { screen in
-            SwiftUI.NavigationLink(value: screen) {
+            NavigationLink(value: screen) {
                 screen.label
             }
         }

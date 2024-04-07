@@ -8,6 +8,8 @@ import SocialMediaNetwork
 
 struct ReplyRow: View {
     let reply: Reply
+    let onReplyTapped: (PostType) -> Void
+    
     @State private var showReplySheet = false
     
     var body: some View {
@@ -33,7 +35,7 @@ struct ReplyRow: View {
                         }
                         .font(.footnote)
                         
-                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)))
+                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)), onReplyTapped: onReplyTapped)
                             .frame(height: 20)
                         
                         Spacer()
@@ -50,7 +52,7 @@ struct ReplyRow: View {
                             Text(reply.replyText)
                                 .lineLimit(10)
                         }
-                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)))
+                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)), onReplyTapped: onReplyTapped)
                             .frame(height: 20)
                         
                         Spacer()
@@ -65,9 +67,6 @@ struct ReplyRow: View {
     }
 }
 
-struct ReplyRow_Previews: PreviewProvider {
-    static var previews: some View {
-        ReplyRow(reply: preview.reply)
-    }
+#Preview {
+    ReplyRow(reply: Preview.reply, onReplyTapped: {_ in })
 }
-

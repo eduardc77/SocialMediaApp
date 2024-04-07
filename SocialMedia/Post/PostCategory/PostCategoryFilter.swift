@@ -6,18 +6,18 @@
 import SwiftUI
 
 struct PostCategoryFilter: View {
-    @Binding private var currentFilter: CategoryExploreFilter
-    var action: (CategoryExploreFilter) -> Void
+    @Binding private var currentFilter: CategoryFilter
+    var action: (CategoryFilter) -> Void
     @Namespace var animation
     
-    init(filter: Binding<CategoryExploreFilter>, action: @escaping (CategoryExploreFilter) -> Void) {
+    init(filter: Binding<CategoryFilter>, action: @escaping (CategoryFilter) -> Void) {
         _currentFilter = filter
         self.action = action
     }
     
     var body: some View {
         HStack {
-            ForEach(CategoryExploreFilter.allCases, id: \.self) { filter in
+            ForEach(CategoryFilter.allCases) { filter in
                 Button {
                     withAnimation {
                         currentFilter = filter
@@ -52,8 +52,13 @@ struct PostCategoryFilter: View {
     }
 }
 
-struct CategoryFilter_Previews: PreviewProvider {
-    static var previews: some View {
-        PostCategoryFilter(filter: .constant(.hot), action: { _ in })
+#Preview {
+    struct Example: View {
+        @State var selection: CategoryFilter = .hot
+        
+        var body: some View {
+            PostCategoryFilter(filter: $selection, action: { _ in })
+        }
     }
+    return Example()
 }

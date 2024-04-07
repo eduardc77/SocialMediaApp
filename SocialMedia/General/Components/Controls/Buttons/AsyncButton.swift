@@ -43,16 +43,9 @@ public extension AsyncButton where Label == Text {
     }
 }
 
-
-// MARK: - Preview
-
-#if DEBUG
-struct AsyncButton_Previews: PreviewProvider {
-    static var previews: some View {
-        AsyncButton("Async Task") {
-            try? await Task.sleep(nanoseconds: 6_000_000_000)
-        }
-        .padding()
+#Preview {
+    AsyncButton("Async Task") {
+        try? await Task.sleep(nanoseconds: 6_000_000_000)
     }
+    .padding()
 }
-#endif

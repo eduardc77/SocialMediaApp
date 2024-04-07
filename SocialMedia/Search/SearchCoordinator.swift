@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 struct SearchCoordinator: View {
     @StateObject private var router = SearchViewRouter()
-    @EnvironmentObject private var tabRouter: AppTabRouter
+    @EnvironmentObject private var tabRouter: AppScreenRouter
 
     var body: some View {
         NavigationStack(path: $router.path) {

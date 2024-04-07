@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-enum AppScreen: String, Codable, Hashable, Identifiable, CaseIterable {
+enum AppScreen: String, Codable, Identifiable, CaseIterable {
     case home
     case search
     case newPost

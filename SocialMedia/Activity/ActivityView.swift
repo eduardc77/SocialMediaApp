@@ -7,27 +7,37 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct ActivityView: View {
-    @StateObject private var viewModel = ActivityViewModel()
+    @StateObject private var model = ActivityViewModel()
     @EnvironmentObject private var router: ActivityViewRouter
     
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
-                Section(header: ActivityFilterView(selectedFilter: $viewModel.selectedFilter)) {
-                    ForEach(viewModel.filteredNotifications) { activityModel in
-                        switch activityModel.type {
-                        case .follow, .like:
-                            NavigationLink {
-                                ActivityRowView(router: router, model: activityModel)
-                            } action: {
-                                router.push(activityModel.user)
-                            }
-                        case .reply:
-                            NavigationLink {
-                                ActivityRowView(router: router, model: activityModel)
-                            } action: {
-                                if let post = activityModel.post {
-                                    router.push(PostType.post(post))
+                Section(header: ActivityFilterView(selectedFilter: $model.selectedFilter)) {
+                    if model.filteredNotifications.isEmpty, !model.isLoading {
+                        ContentUnavailableView(
+                            "No Content",
+                            systemImage: "doc.richtext",
+                            description: Text(model.contentUnavailableText)
+                        )
+                    } else {
+                        ForEach(model.filteredNotifications) { activityModel in
+                            
+                            switch activityModel.type {
+                            case .follow, .like:
+                                NavigationButton {
+                                    router.push(activityModel.user)
+                                } label: {
+                                    ActivityRowView(router: router, model: activityModel)
+                                }
+                                
+                            case .reply:
+                                NavigationButton {
+                                    if let post = activityModel.post {
+                                        router.push(PostType.post(post))
+                                    }
+                                } label: {
+                                    ActivityRowView(router: router, model: activityModel)
                                 }
                             }
                         }
@@ -38,15 +48,13 @@ struct ActivityView: View {
         .navigationTitle("Activity")
         .background(Color.groupedBackground)
         .overlay {
-            if viewModel.isLoading {
+            if model.isLoading {
                 ProgressView()
             }
         }
     }
 }
 
-struct ActivityView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivityView()
-    }
+#Preview {
+    ActivityView()
 }

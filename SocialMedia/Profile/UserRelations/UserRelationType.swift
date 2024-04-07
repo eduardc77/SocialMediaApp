@@ -5,16 +5,11 @@
 
 import Foundation
 
-enum UserRelationType: Int, CaseIterable, Identifiable {
+enum UserRelationType: String, Identifiable, CaseIterable {
     case followers
     case following
     
-    var title: String {
-        switch self {
-        case .followers: return "Followers"
-        case .following: return "Following"
-        }
-    }
+    var id: UserRelationType { self }
     
-    var id: Int { return self.rawValue }
+    var title: String { rawValue.capitalized }
 }

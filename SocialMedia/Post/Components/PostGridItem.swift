@@ -16,42 +16,44 @@ struct PostGridItem: View {
     let postType: PostType
     var profileImageSize: ImageSize = .small
     
+    var onReplyTapped: (PostType) -> Void
+    
     @State private var userSelectedPostAction: UserPostActionSheetOptions?
     @State private var selectedPostAction: PostActionSheetOptions?
     
     private var user: User? {
         switch postType {
-            case .post(let post):
-                return post.user
-            case .reply(let reply):
-                return reply.user
+        case .post(let post):
+            return post.user
+        case .reply(let reply):
+            return reply.user
         }
     }
     
     private var post: Post? {
         switch postType {
-            case .post(let post):
-                return post
-            case .reply(_):
-                return nil
+        case .post(let post):
+            return post
+        case .reply(_):
+            return nil
         }
     }
     
     private var caption: String {
         switch postType {
-            case .post(let post):
-                return post.caption
-            case .reply(let reply):
-                return reply.replyText
+        case .post(let post):
+            return post.caption
+        case .reply(let reply):
+            return reply.replyText
         }
     }
-
+    
     private var timestampString: String {
         switch postType {
-            case .post(let post):
-                return post.timestamp.timestampString()
-            case .reply(let reply):
-                return reply.timestamp.timestampString()
+        case .post(let post):
+            return post.timestamp.timestampString()
+        case .reply(let reply):
+            return reply.timestamp.timestampString()
         }
     }
     
@@ -79,7 +81,7 @@ struct PostGridItem: View {
                 }
                 VStack(spacing: 2) {
                     Divider()
-                    PostButtonGroupView(model: PostButtonGroupViewModel(postType: postType))
+                    PostButtonGroupView(model: PostButtonGroupViewModel(postType: postType), onReplyTapped: onReplyTapped)
                 }
             }
         }
@@ -91,11 +93,13 @@ struct PostGridItem: View {
         .redacted(reason: user == nil ? .placeholder : [])
     }
 }
-    // MARK: - Subviews
+// MARK: - Subviews
 
 private extension PostGridItem {
     func profileView(user: User?) -> some View {
-        NavigationLink {
+        NavigationButton {
+            router.push(user)
+        } label: {
             HStack(alignment: .top) {
                 CircularProfileImageView(profileImageURL: user?.profileImageURL, size: profileImageSize)
                 
@@ -111,13 +115,13 @@ private extension PostGridItem {
                         .lineLimit(1)
                 }
             }
-        } action: {
-            router.push(user)
         }
     }
     
     func categoryView(category: PostCategory) -> some View {
-        NavigationLink {
+        NavigationButton {
+            router.push(category)
+        } label: {
             Label {
                 Text(category.rawValue.capitalized)
                     .foregroundStyle(Color.secondary)
@@ -128,31 +132,29 @@ private extension PostGridItem {
             .font(.caption)
             .background(in: RoundedRectangle(cornerRadius: 5, style: .continuous))
             .backgroundStyle(.regularMaterial)
-        } action: {
-            router.push(category)
         }
     }
     
     var ellipsisView: some View {
         Menu {
             switch postType {
-                case .post(let post):
-                    if post.user?.isCurrentUser ?? false {
-                        UserPostActionSheetView(post: post, onDeleteHandler: {
-                            Task {
-                                try await PostButtonGroupViewModel.deletePost(post)
-                            }
-                        }, selectedAction: $userSelectedPostAction)
-                    } else {
-                        PostActionSheetView(post: post, onDeleteHandler: {
-                            
-                        }, selectedAction: $selectedPostAction)
-                    }
-                    
-                case .reply:
-                    EmptyView()
+            case .post(let post):
+                if post.user?.isCurrentUser ?? false {
+                    UserPostActionSheetView(post: post, onDeleteHandler: {
+                        Task {
+                            try await PostButtonGroupViewModel.deletePost(post)
+                        }
+                    }, selectedAction: $userSelectedPostAction)
+                } else {
+                    PostActionSheetView(post: post, onDeleteHandler: {
+                        
+                    }, selectedAction: $selectedPostAction)
+                }
+                
+            case .reply:
+                EmptyView()
             }
-
+            
         } label: {
             Label("Menu", systemImage: "ellipsis")
                 .labelStyle(.iconOnly)
@@ -170,8 +172,6 @@ private extension PostGridItem {
 }
 
 
-struct PostGridItem_Previews: PreviewProvider {
-    static var previews: some View {
-        PostGridItem(router: FeedViewRouter(), postType: .post(preview.post))
-    }
+#Preview {
+    PostGridItem(router: FeedViewRouter(), postType: .post(Preview.post), onReplyTapped: {_ in })
 }

@@ -49,7 +49,7 @@ struct ProfileTabsContainer: View {
                 Color.clear.background(.bar.opacity(0.7))
             },
             content: {
-                ForEach(ProfilePostFilter.allCases, id: \.self) { tab in
+                ForEach(ProfilePostFilter.allCases) { tab in
                     ProfileTabsContentView(
                         router: router,
                         user: user,
@@ -60,7 +60,9 @@ struct ProfileTabsContainer: View {
                 }
             }
         )
+#if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
         .background(Color.groupedBackground)
     }
 }
@@ -68,12 +70,3 @@ struct ProfileTabsContainer: View {
 #Preview {
     CurrentUserProfileHeader()
 }
-
-
-
-
-
-
-
-
-

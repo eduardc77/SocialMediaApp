@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct NewPostCoordinator: View {
-    @EnvironmentObject private var tabRouter: AppTabRouter
+    @EnvironmentObject private var tabRouter: AppScreenRouter
     @EnvironmentObject private var modalRouter: ModalScreenRouter
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     

@@ -10,13 +10,13 @@ struct PostEditorView: View {
     @StateObject var model = PostEditorViewModel()
     @StateObject var imageData = ImageData()
     
-    @EnvironmentObject private var tabRouter: AppTabRouter
+    @EnvironmentObject private var tabRouter: AppScreenRouter
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
-           ScrollView {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(alignment: .top) {
                         CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
@@ -32,21 +32,11 @@ struct PostEditorView: View {
                             }
                         }
                         Spacer()
-                        
-                        if !model.caption.isEmpty {
-                            Button {
-                                model.caption = ""
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .font(.title3)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        }
                     }
-                    TextField("Write a post...", text: $model.caption, axis: .vertical)         
-    #if DEBUG
+                    TextField("Write a post...", text: $model.caption, axis: .vertical)
+#if DEBUG
                         .autocorrectionDisabled()
-    #endif
+#endif
                         .font(.footnote)
                     
                     SelectedPhotoPickerImage(imageState: imageData.imageState, size: .none)
@@ -79,7 +69,7 @@ struct PostEditorView: View {
                 
                 Spacer()
             }
-           .padding(.horizontal, 10)
+            .padding(.horizontal, 10)
             .background(Color.groupedBackground)
             .toolbar {
 #if !os(macOS)
@@ -108,7 +98,7 @@ struct PostEditorView: View {
                     .foregroundStyle(Color.primary)
                 }
             }
-#if os(iOS)
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .navigationTitle("New Post")
@@ -153,10 +143,9 @@ private extension PostEditorView {
         .menuStyle(.borderlessButton)
 #endif
     }
-    
 }
-struct PostEditorView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostEditorView()
-    }
+
+#Preview {
+    PostEditorView()
+        .environmentObject(AppSettings())
 }

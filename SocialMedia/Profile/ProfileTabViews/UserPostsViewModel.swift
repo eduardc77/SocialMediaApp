@@ -26,7 +26,7 @@ final class UserPostsViewModel: ObservableObject {
         self.user = user
     }
     
-    func addListenerForUpdates() {
+    func addListenerForPostUpdates() {
         guard let userID = user.id else { return }
         
         PostService.addListenerForUserPosts(forUserID: userID)
@@ -55,7 +55,6 @@ final class UserPostsViewModel: ObservableObject {
     
     func loadMorePosts() async throws {
         guard !noMoreItemsToFetch, let userID = user.id else {
-            addListenerForUpdates()
             return
         }
         isLoading = true
@@ -66,7 +65,6 @@ final class UserPostsViewModel: ObservableObject {
             self.noMoreItemsToFetch = true
             self.isLoading = false
             self.lastPostDocument = nil
-            self.addListenerForUpdates()
             return
         }
         
@@ -74,7 +72,6 @@ final class UserPostsViewModel: ObservableObject {
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
                     self?.isLoading = false
-                    self?.addListenerForUpdates()
                     return
                 }
                 var userDataPosts = [Post]()
@@ -96,32 +93,31 @@ final class UserPostsViewModel: ObservableObject {
                 self.posts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 
                 self.isLoading = false
-                self.addListenerForUpdates()
             }
         } catch {
             print("Error fetching user posts: \(error)")
         }
     }
-    
+
     func refresh() async throws {
         posts.removeAll()
         noMoreItemsToFetch = false
         lastPostDocument = nil
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
         try await loadMorePosts()
     }
 }
 
+// MARK: - Private Methods
+
 private extension UserPostsViewModel {
+    
     func add(_ post: Post) async throws {
-        guard !self.posts.contains(where: { $0.id == post.id }),
-              let index = self.posts.firstIndex(where: { $0.id != post.id }) else { return }
+        guard !posts.contains(where: { $0.id == post.id }) else { return }
         
         let userDataPost = try await self.fetchPostUserData(post: post)
-        if userDataPost.ownerUID == post.ownerUID {
+        if userDataPost.ownerUID == post.ownerUID, (!posts.contains(where: { $0.id == post.id })  || posts.isEmpty) {
             withAnimation {
-                self.posts.insert(userDataPost, at: index)
+                self.posts.insert(userDataPost, at: 0)
             }
         }
     }

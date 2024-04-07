@@ -12,7 +12,7 @@ struct FeedFilterView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             HStack {
-                ForEach(FeedFilter.allCases, id: \.self) { filter in
+                ForEach(FeedFilter.allCases) { filter in
                     feedFilterItem(for: filter)
                         .id(filter)
                         .frame(maxWidth: .infinity)
@@ -21,7 +21,6 @@ struct FeedFilterView: View {
             Divider()
         }
         .background(.bar)
-        .compositingGroup()
     }
     
     @ViewBuilder
@@ -33,14 +32,14 @@ struct FeedFilterView: View {
         } label: {
             Text(filter.title)
                 .font(.footnote.weight(.semibold))
-                .padding(.vertical, 10)
+                .padding(.bottom, 8)
                 .foregroundStyle(currentFilter == filter ? Color.primary : Color.secondary)
                 .frame(maxWidth: .infinity)
                 .overlay(alignment: .bottom) {
                     if currentFilter == filter {
                         Rectangle()
                             .fill(.primary)
-                            .frame(height: 1)
+                            .frame(height: 1.5)
                             .matchedGeometryEffect(id: "FeedFilter", in: animation)
                             .padding(.horizontal)
                     }
@@ -48,5 +47,3 @@ struct FeedFilterView: View {
         }
     }
 }
-
-

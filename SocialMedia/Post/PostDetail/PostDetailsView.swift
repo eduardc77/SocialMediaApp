@@ -10,6 +10,8 @@ struct PostDetailsView: View {
     var router: any Router
     @StateObject var model: PostDetailsViewModel
     
+    @EnvironmentObject private var modalRouter: ModalScreenRouter
+    
     init(router: any Router, postType: PostType) {
         self.router = router
         _model = StateObject(wrappedValue: PostDetailsViewModel(postType: postType))
@@ -60,7 +62,9 @@ struct PostDetailsView: View {
                                     .allowsHitTesting(false)
                             }
                             
-                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)))
+                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)), onReplyTapped: { postType in
+                                modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                            })
                         }
                     case .reply:
                         if let reply = model.reply {
@@ -70,7 +74,9 @@ struct PostDetailsView: View {
                                     .allowsHitTesting(false)
                             }
                             
-                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)))
+                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)), onReplyTapped: { postType in
+                                modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                            })
                         }
                     }
                     
@@ -81,36 +87,35 @@ struct PostDetailsView: View {
             
             Divider()
             
-            ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
-                ZStack {
-                    NavigationLink {
-                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                    } action: {
-                        router.push(PostType.reply(reply))
-                    }
-                    .buttonStyle(.plain)
-                    
-                    PostGridItem(router: router, postType: .reply(reply), profileImageSize: .small)
-                }
-                .contentShape(.containerRelative)
-                .containerShape(.rect(cornerRadius: 8))
-            }
+            PostGrid(router: router, postGridType: .replies(model.replies),
+                     isLoading: $model.isLoading,
+                     itemsPerPage: model.itemsPerPage,
+                     contentUnavailableText: model.contentUnavailableText,
+                     loadNewPage: model.loadMoreReplies)
         }
         .background(Color.groupedBackground)
         .navigationTitle("Post Details")
+#if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
-        .onFirstAppear {
+#endif
+        .onAppear {
             Task {
                 try await model.loadMoreReplies()
+                if let post = model.post {
+                    model.addListenerForReplyUpdates()
+                } else if let reply = model.reply {
+                    model.addListenerForReplyUpdates(depthLevel: reply.depthLevel + 1)
+                }
             }
         }
-        
+        .refreshable {
+            Task {
+                try await model.refresh()
+            }
+        }
     }
 }
 
-struct PostDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostDetailsView(router: FeedViewRouter(), postType: PostType.post(preview.post))
-        PostDetailsView(router: FeedViewRouter(), postType: PostType.reply(preview.reply))
-    }
+#Preview {
+    PostDetailsView(router: FeedViewRouter(), postType: PostType.post(Preview.post))
 }

@@ -3,20 +3,20 @@
 //  SocialMedia
 //
 
-enum ActivityFilter: Int, CaseIterable, Identifiable, Codable {
+enum ActivityFilter: String, CaseIterable, Identifiable {
     case all
-    case follows
-    case replies
-    case likes
-
+    case follow
+    case reply
+    case like
+    
+    var id: ActivityFilter { self }
+    
     var title: String {
         switch self {
         case .all: return "All"
-        case .follows: return "Follows"
-        case .replies: return "Replies"
-        case .likes: return "Likes"
+        case .follow: return "Follows"
+        case .reply: return "Replies"
+        case .like: return "Likes"
         }
     }
-    
-    var id: Int { return self.rawValue }
 }

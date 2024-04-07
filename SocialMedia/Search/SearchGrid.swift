@@ -1,9 +1,7 @@
-/*
- See the LICENSE.txt file for this sample’s licensing information.
- 
- Abstract:
- The grid view used in the DonutGallery.
- */
+//
+//  SearchGrid.swift
+//  SocialMedia
+//
 
 import SwiftUI
 import SocialMediaNetwork
@@ -15,7 +13,6 @@ struct SearchGrid: View {
     
     var followedIndex: Int = 0
     var isLoading: Bool = false
-    var followAction: ((User) -> Void)?
     
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -63,29 +60,12 @@ struct SearchGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 20) {
-            ForEach(Array(users.enumerated()), id: \.offset) { index, user in
+            ForEach(Array(users.enumerated()), id: \.element) { index, user in
                 VStack {
-                    NavigationLink {
-                        SearchGridItem(user: user, thumbnailSize: thumbnailSize)
-                    } action: {
+                    NavigationButton {
                         router.push(user)
-                    }
-                    if let followAction = followAction {
-                        Button {
-                            withAnimation {
-                                followAction(user)
-                            }
-                        } label: {
-                            Text(user.isFollowed ? "Following" : "Follow")
-                                .font(.subheadline)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .overlay {
-                            if followedIndex == index && isLoading {
-                                ProgressView()
-                            }
-                        }
-                        .disabled(followedIndex == index && isLoading)
+                    } label: {
+                        SearchGridItem(user: user, thumbnailSize: thumbnailSize)
                     }
                 }
             }
@@ -94,53 +74,6 @@ struct SearchGrid: View {
     }
 }
 
-//struct DonutGalleryGrid_Previews: PreviewProvider {
-//    struct Preview: View {
-//        @State private var donuts = Donut.all
-//
-//        var body: some View {
-//            GeometryReader { geometryProxy in
-//                ScrollView {
-//                    DonutGalleryGrid(donuts: donuts, width: geometryProxy.size.width)
-//                }
-//            }
-//        }
-//    }
-//
-//    static var previews: some View {
-//        Preview()
-//    }
-//}
-
-
-
-//struct UserListView: View {
-//    @ObservedObject var model: SearchViewModel
-//
-//    var body: some View {
-//        ScrollView {
-//            LazyVStack {
-//                ForEach(model.filteredUsers) { user in
-//                    NavigationLink(value: user) {
-//                        UserRow(model: model, user: user)
-//                            .padding(.leading)
-//                    }
-//                }
-//            }
-//            .navigationTitle("Search")
-//            .padding(.top)
-//        }
-//#if os(iOS)
-//        .searchable(text: $model.searchText, placement: .navigationBarDrawer)
-//#elseif os(macOS)
-//        .searchable(text: $model.searchText, placement: .automatic)
-//#endif
-//        .background(Color.groupedBackground)
-//    }
-//}
-//
-//struct UserListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserListView(model: SearchViewModel())
-//    }
-//}
+#Preview {
+    SearchGrid(router: SearchViewRouter(), users: [Preview.user, Preview.user2], width: 390)
+}

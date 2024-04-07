@@ -52,8 +52,13 @@ struct ActivityFilterView: View {
 
 }
 
-struct ActivityFilterView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivityFilterView(selectedFilter: .constant(.all))
+#Preview {
+    struct Example: View {
+        @State var selection: ActivityFilter = .all
+        
+        var body: some View {
+            ActivityFilterView(selectedFilter: $selection)
+        }
     }
+    return Example()
 }

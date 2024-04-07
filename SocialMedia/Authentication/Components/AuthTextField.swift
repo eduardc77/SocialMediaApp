@@ -52,9 +52,3 @@ struct AuthTextField: View {
         }
     }
 }
-
-struct AuthTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        AuthTextField(type: .email, text: .constant("john.appleseed@icloud.com"))
-    }
-}

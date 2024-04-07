@@ -14,6 +14,14 @@ final class SearchViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var followedIndex: Int = 0
     
+    var contentUnavailableTitle: String {
+        "No results for '\(searchText)'"
+    }
+    
+    var contentUnavailableText: String {
+        "Check the spelling or try a new search"
+    }
+    
     @Published var sort = UserSortOrder.name
     
     var filteredUsers: [User] {
@@ -24,9 +32,7 @@ final class SearchViewModel: ObservableObject {
         users.lazy.sorted { $0.stats.followersCount > $1.stats.followersCount }
     }
     
-    init() {
-        Task { try await fetchUsers() }
-    }
+    init() {}
     
     public func users(sortedBy sort: UserSortOrder = .popularity) -> [User] {
         switch sort {
@@ -59,22 +65,15 @@ final class SearchViewModel: ObservableObject {
         })
     }
     
-    func toggleFollow(for user: User) async throws {
-        if let index = users.firstIndex(where: { $0.id == user.id }) {
-            users[index].isFollowed.toggle()
-            followedIndex = index
-            if users[index].isFollowed {
-                try await follow(user: user, at: index)
-            } else {
-                try await unfollow(user: user, at: index)
-            }
-        }
-    }
-    
     func checkIfUserIsFollowed(user: User) async -> User {
         var result = user
         result.isFollowed = await UserService.checkIfUserIsFollowed(user)
         return result
+    }
+    
+    func refresh() async throws {
+        users.removeAll()
+        try await fetchUsers()
     }
 }
 
@@ -107,3 +106,4 @@ private extension SearchViewModel {
         isLoading = false
     }
 }
+

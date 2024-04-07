@@ -35,12 +35,6 @@ public struct CTAButton: View {
     }
 }
 
-// MARK: - Preview
-
-#if DEBUG
-struct CTAButton_Previews: PreviewProvider {
-    static var previews: some View {
-        CTAButton(title: "Start", action: {}).preferredColorScheme(.dark).previewLayout(.sizeThatFits)
-    }
+#Preview {
+    CTAButton(title: "Start", action: {}).preferredColorScheme(.dark).previewLayout(.sizeThatFits)
 }
-#endif

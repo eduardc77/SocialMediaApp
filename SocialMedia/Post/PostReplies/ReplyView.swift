@@ -120,9 +120,9 @@ struct ReplyView: View {
     }
 }
 
-struct ReplyView_Previews: PreviewProvider {
-    static var previews: some View {
-        ReplyView(postType: .post(preview.post))
-        ReplyView(postType: .reply(preview.reply))
+#Preview {
+    VStack {
+        ReplyView(postType: .post(Preview.post))
+        ReplyView(postType: .reply(Preview.reply))
     }
 }

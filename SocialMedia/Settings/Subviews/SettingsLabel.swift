@@ -14,8 +14,6 @@ struct SettingsLabel: View {
     }
 }
 
-struct SettingsLabel_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsLabel(settingsOption: .appColor)
-    }
+#Preview {
+    SettingsLabel(settingsOption: .appColor)
 }

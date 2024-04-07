@@ -40,7 +40,7 @@ public extension Query {
     func addSnapshotListener<T>(as type: T.Type) -> (AnyPublisher<(DocChangeType<T>, DocumentSnapshot?), Error>, ListenerRegistration) where T : Decodable {
         let publisher = PassthroughSubject<(DocChangeType<T>, DocumentSnapshot?), Error>()
         let listener = self.addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
-           
+//            guard querySnapshot?.documentChanges.count == 1 else { return }
             var documentChangeType: DocChangeType<T> = .none
             
             querySnapshot?.documentChanges.forEach { documentChange in
@@ -59,6 +59,28 @@ public extension Query {
         }
         return (publisher.eraseToAnyPublisher(), listener)
     }
+    
+    func addSnapshotListenerForDocumentIDs() -> (AnyPublisher<(DocIDChangeType, DocumentSnapshot?), Error>, ListenerRegistration) {
+        let publisher = PassthroughSubject<(DocIDChangeType, DocumentSnapshot?), Error>()
+        let listener = self.addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
+            guard querySnapshot?.documentChanges.count == 1 else { return }
+            var documentChangeType: DocIDChangeType = .none
+           
+            querySnapshot?.documentChanges.forEach { documentChange in
+                let documentID = documentChange.document.documentID
+                
+                if documentChange.type == .removed {
+                    documentChangeType = .removed(postID: documentID)
+                }
+                if documentChange.type == .added {
+                    documentChangeType = .added(postID: documentID)
+                }
+            }
+            let lastDocument = querySnapshot?.documents.last
+            publisher.send((documentChangeType, lastDocument))
+        }
+        return (publisher.eraseToAnyPublisher(), listener)
+    }
 }
 
 public enum DocChangeType<T> {
@@ -66,4 +88,11 @@ public enum DocChangeType<T> {
     case added(post: T)
     case modified(post: T)
     case removed(post: T)
+}
+
+public enum DocIDChangeType {
+    case none
+    case added(postID: String)
+    case modified(postID: String)
+    case removed(postID: String)
 }

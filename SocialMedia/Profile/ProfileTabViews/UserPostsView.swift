@@ -12,7 +12,6 @@ struct UserPostsView: View {
     let contentUnavailableText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
   
-    
     init(router: any Router, user: User, contentUnavailableText: String) {
         self.router = router
         self._model = StateObject(wrappedValue: UserPostsViewModel(user: user))
@@ -26,8 +25,13 @@ struct UserPostsView: View {
                  itemsPerPage: model.itemsPerPage,
                  contentUnavailableText: contentUnavailableText,
                  loadNewPage: model.loadMorePosts)
-        .onFirstAppear {
-            Task { try await model.loadMorePosts() }
+        .onAppear {
+            Task {
+                if model.posts.isEmpty {
+                    try await model.loadMorePosts()
+                }
+                model.addListenerForPostUpdates()
+            }
         }
         .onReceive(refreshedFilter.$refreshedFilter) { refreshedFilter in
             if refreshedFilter == .posts, !model.posts.isEmpty {

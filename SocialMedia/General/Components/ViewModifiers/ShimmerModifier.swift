@@ -88,16 +88,12 @@ public extension View {
     }
 }
 
-
-// MARK: - Previews
-
-#if DEBUG
-struct PlaceholderModifier_Previews: PreviewProvider {
+#Preview {
     struct Example: View {
         @State var placeholder: Bool = false
         
         var body: some View {
-            ScrollView {
+            return ScrollView {
                 VStack {
                     VStack(alignment: .leading) {
                         Text("Title 1").font(.title)
@@ -141,9 +137,5 @@ struct PlaceholderModifier_Previews: PreviewProvider {
         }
     }
     
-    static var previews: some View {
-        Example()
-    }
+    return Example()
 }
-#endif
-

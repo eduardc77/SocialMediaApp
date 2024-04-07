@@ -107,9 +107,9 @@ public extension UserService {
     }
     
     static func fetchUserStats(userID: String) async throws -> UserStats {
-        async let followingSnapshot = try await FirestoreConstants.following.document(userID).collection("userFollowing").getDocuments()
-        async let followerSnapshot = try await FirestoreConstants.followers.document(userID).collection("userFollowers").getDocuments()
-        async let postsSnapshot = try await FirestoreConstants.posts.whereField("ownerUID", isEqualTo: userID).getDocuments()
+        async let followingSnapshot = FirestoreConstants.following.document(userID).collection("userFollowing").getDocuments()
+        async let followerSnapshot = FirestoreConstants.followers.document(userID).collection("userFollowers").getDocuments()
+        async let postsSnapshot = FirestoreConstants.posts.whereField("ownerUID", isEqualTo: userID).getDocuments()
 
         return .init(followersCount: try await followerSnapshot.count,
                      followingCount: try await followingSnapshot.count,

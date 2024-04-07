@@ -5,7 +5,7 @@
 
 import Foundation
 
-final class AppTabRouter: ObservableObject {
+final class AppScreenRouter: ObservableObject {
     @Published var selection: AppScreen? = .home {
         willSet {
             if selection == newValue {

@@ -3,9 +3,11 @@
 //  SocialMedia
 //
 
-enum FeedFilter: String, CaseIterable, Hashable {
+enum FeedFilter: String, Identifiable, CaseIterable {
     case forYou
     case following
+    
+    var id: FeedFilter { self }
     
     var title: String {
         switch self {

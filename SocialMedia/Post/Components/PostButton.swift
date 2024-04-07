@@ -7,12 +7,13 @@ import SwiftUI
 
 struct PostButton: View {
     var count: Int
+    var isActive: Bool
     let buttonType: PostButtonType
-    var isActive: Bool = false
     
     var action: () -> Void
     
     @State private var tapped: Bool = false
+    @State private var countsDown: Bool = false
     
     var body: some View {
         Button {
@@ -24,12 +25,13 @@ struct PostButton: View {
                     .labelStyle(.iconOnly)
                     .symbolVariant(isActive ? .fill : .none)
                 if count > 0, buttonType != .save {
-                    Text("\(count)")
-                        .fontWeight(.medium)
-                        .contentTransition(.numericText())
+                    Text("\(count)") 
+                        .contentTransition(.numericText(countsDown: countsDown))
+                        .animation(.default, value: count)
                 }
             }
             .font(.footnote)
+            .fontWeight(.medium)
             .padding(.top, 6)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity)
@@ -39,12 +41,17 @@ struct PostButton: View {
 #if os(iOS)
         .hapticFeedback(trigger: tapped)
 #endif
+        
+        .onChange(of: count) { oldValue, newValue in
+            guard oldValue != newValue else { return }
+            countsDown = newValue < oldValue
+        }
     }
 }
 
 #Preview {
     PostButton(count: 2,
+               isActive: false,
                buttonType: .like,
-               isActive: true,
                action: {})
 }

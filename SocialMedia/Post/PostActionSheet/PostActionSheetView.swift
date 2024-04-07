@@ -37,10 +37,8 @@ struct UserPostActionSheetRowView: View {
     }
 }
 
-struct  UserPostActionSheetView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserPostActionSheetView(post: preview.post, selectedAction: .constant(.delete))
-    }
+#Preview {
+    UserPostActionSheetView(post: Preview.post, selectedAction: .constant(.delete))
 }
 
 struct PostActionSheetView: View {
@@ -96,8 +94,6 @@ struct PostActionSheetRowView: View {
     }
 }
 
-struct PostActionSheetView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostActionSheetView(post: preview.post, selectedAction: .constant(.unfollow))
-    }
+#Preview {
+    PostActionSheetView(post: Preview.post, selectedAction: .constant(.unfollow))
 }

@@ -14,6 +14,7 @@ final class PostDetailsViewModel: ObservableObject {
     @Published var reply: Reply?
     
     var postType: PostType
+    var contentUnavailableText = "Be the first to reply."
     
     @Published var replies = [Reply]()
     @Published var isLoading = false
@@ -75,12 +76,8 @@ final class PostDetailsViewModel: ObservableObject {
     }
     
     func loadMoreReplies() async throws {
-        guard !noMoreItemsToFetch else {
-            if let reply = reply {
-                addListenerForPostReplies(reply.depthLevel)
-            }
-            return
-        }
+        guard !noMoreItemsToFetch else { return }
+        
         isLoading = true
         var (newReplies, lastReplyDocument): ([Reply], DocumentSnapshot?)
         
@@ -98,10 +95,6 @@ final class PostDetailsViewModel: ObservableObject {
             self.noMoreItemsToFetch = true
             self.isLoading = false
             self.lastDocument = nil
-            if let reply = reply {
-                self.addListenerForPostReplies(reply.depthLevel)
-            }
-                
             return
         }
         
@@ -110,9 +103,6 @@ final class PostDetailsViewModel: ObservableObject {
                 guard let self = self else {
                     self?.isLoading = false
                     print("DEBUG: FeedViewModel object not found.")
-                    if let reply = self?.reply {
-                        self?.addListenerForPostReplies(reply.depthLevel)
-                    }
                     return
                 }
                 var userDataReplies = [Reply]()
@@ -131,12 +121,10 @@ final class PostDetailsViewModel: ObservableObject {
                     self.noMoreItemsToFetch = true
                     self.lastDocument = nil
                 }
-                self.replies.append(contentsOf: userDataReplies.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 
+                self.replies.append(contentsOf: userDataReplies.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 self.isLoading = false
-                if let reply = reply {
-                    self.addListenerForPostReplies(reply.depthLevel)
-                }
+                
             }
         } catch {
             print("Error fetching post replies: \(error)")
@@ -151,11 +139,17 @@ final class PostDetailsViewModel: ObservableObject {
         return result
     }
     
-    @MainActor
-    func addListenerForPostReplies(_ depthLevel: Int) {
-        guard let userID = post?.user?.id else { return }
-    
-        ReplyService.addListenerForPostReplies(forUserID: userID, depthLevel: depthLevel)
+    func addListenerForReplyUpdates(depthLevel: Int = 0) {
+        var repliedPostID: String = ""
+        
+        if let postID = post?.id {
+            repliedPostID = postID
+        } else if let replyID = reply?.id {
+            repliedPostID = replyID
+        }
+        guard !repliedPostID.isEmpty else { return }
+        
+        ReplyService.addListenerForPostReplies(postID: repliedPostID, depthLevel: depthLevel)
             .sink { completion in
                 
             } receiveValue: { [weak self] documentChangeType, lastDocument in
@@ -180,24 +174,24 @@ final class PostDetailsViewModel: ObservableObject {
     }
     
     
-    func refreshReplies() async throws {
+    func refresh() async throws {
         replies.removeAll()
         noMoreItemsToFetch = false
         lastDocument = nil
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
         try await loadMoreReplies()
     }
 }
 
 private extension PostDetailsViewModel {
     func add(_ reply: Reply) async throws {
-        guard !self.replies.contains(where: { $0.id == reply.id }),
-              let index = self.replies.firstIndex(where: { $0.id != reply.id }) else { return }
+        guard !self.replies.contains(where: { $0.id == reply.id }) else { return }
         
         let userDataReply = try await self.fetchUserData(for: reply)
-        withAnimation {
-            self.replies.insert(userDataReply, at: index)
+        
+        if !replies.contains(where: { $0.id == reply.id }) || replies.isEmpty {
+            withAnimation {
+                self.replies.insert(userDataReply, at: 0)
+            }
         }
     }
     
@@ -206,10 +200,15 @@ private extension PostDetailsViewModel {
         
         guard replies[index].id == reply.id, replies[index] != reply else { return }
         
-//        if replies[index].replyText != reply.replyText {
-//            replies[index].replyText = reply.replyText
-//        }
-        //...
+                if replies[index].likes != reply.likes {
+                    replies[index].likes = reply.likes
+                }
+                if replies[index].replies != reply.replies {
+                    replies[index].replies = reply.replies
+                }
+                if replies[index].reposts != reply.reposts {
+                    replies[index].reposts = reply.reposts
+                }
     }
     
     func remove(_ reply: Reply) {

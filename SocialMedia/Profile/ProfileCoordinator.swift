@@ -9,7 +9,7 @@ import SocialMediaNetwork
 struct ProfileCoordinator: View {
     @StateObject private var router = ProfileViewRouter()
     private var didNavigate: Bool = false
-    @EnvironmentObject private var tabRouter: AppTabRouter
+    @EnvironmentObject private var tabRouter: AppScreenRouter
     
     init(didNavigate: Bool = false) {
         self.didNavigate = didNavigate

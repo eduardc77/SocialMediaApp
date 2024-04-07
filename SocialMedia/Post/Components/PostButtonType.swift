@@ -5,11 +5,13 @@
 
 import SwiftUI
 
-enum PostButtonType: CaseIterable {
+enum PostButtonType: Identifiable, CaseIterable {
     case like
     case reply
     case repost
     case save
+    
+    var id: PostButtonType { self }
 }
 
 extension PostButtonType {

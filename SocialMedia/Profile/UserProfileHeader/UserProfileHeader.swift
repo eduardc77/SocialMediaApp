@@ -50,9 +50,11 @@ struct UserProfileHeader: View {
             } label: {
                 Text(model.isFollowed ? "Following" : "Follow")
             }
-            .buttonStyle(.secondary(foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
+            .buttonStyle(.secondary(buttonWidth: .infinity, foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
         }
+#if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
         .sheet(isPresented: $model.showUserRelationSheet) {
             UserRelationsView(user: model.user)
         }
@@ -69,8 +71,9 @@ struct UserProfileHeader: View {
     }
 }
 
-struct UserProfileHeader_Previews: PreviewProvider {
-    static var previews: some View {
-        UserProfileHeader(user: preview.user)
+#Preview {
+    VStack {
+        UserProfileHeader(user: Preview.user).padding()
+        Spacer()
     }
 }

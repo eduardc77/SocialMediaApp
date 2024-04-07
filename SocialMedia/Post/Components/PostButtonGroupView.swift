@@ -4,34 +4,45 @@
 //
 
 import SwiftUI
+import SocialMediaNetwork
+
+class TempPost: ObservableObject {
+    @Published var didLike: Bool = false
+    @Published var didSave: Bool = false
+}
 
 struct PostButtonGroupView: View {
-    @ObservedObject var model: PostButtonGroupViewModel
-    @EnvironmentObject var modalRouter: ModalScreenRouter
+    var model: PostButtonGroupViewModel
+    var onReplyTapped: (PostType) -> Void
     
+    @StateObject var post = TempPost()
+ 
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(PostButtonType.allCases, id: \.self) { buttonType in
+            ForEach(PostButtonType.allCases) { buttonType in
                 switch buttonType {
                 case .like:
                     PostButton(count: model.numberOfLikes,
-                                  buttonType: buttonType,
-                                  isActive: model.didLike) {
-                            likeButtonTapped()
+                               isActive: post.didLike,
+                               buttonType: buttonType) {
+                        Task {
+                            try await likeButtonTapped()
+                        }
                     }
                     Divider().padding(.vertical, 5)
                     
                 case .reply:
                     PostButton(count: model.numberOfReplies,
-                                  buttonType: buttonType) {
-                            modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: model.postType))
+                               isActive: false,
+                               buttonType: buttonType) {
+                        onReplyTapped(model.postType)
                     }
                     Divider().padding(.vertical, 5)
                     
                 case .repost:
-                    PostButton(count: model.temporaryRepostCount,
-                                  buttonType: buttonType,
-                                  isActive: model.temporaryRepostCount > 0) {
+                    PostButton(count: model.numberOfReposts,
+                               isActive: false,
+                               buttonType: buttonType) {
                         if model.temporaryRepostCount == 0 {
                             model.temporaryRepostCount += 1
                         } else {
@@ -41,47 +52,94 @@ struct PostButtonGroupView: View {
                     Divider().padding(.vertical, 5)
                     
                 case .save:
-                    PostButton(count: model.didSave ? 1 : 0,
-                                  buttonType: buttonType,
-                                  isActive: model.didSave) {
-                        saveButtonTapped()
+                    PostButton(count: post.didSave ? 1 : 0,
+                               isActive: post.didSave,
+                               buttonType: buttonType) {
+                        Task {
+                            try await saveButtonTapped()
+                        }
                     }
                 }
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .onFirstAppear {
+        .onChange(of: model.postType, { _, _ in
             Task {
-                try await model.checkIfUserLikedPost()
-                try await model.checkIfUserSavedPost()
-
+                await checkForUserActivity()
+            }
+        })
+        .task {
+            await checkForUserActivity()
+        }
+    }
+    
+    func likeButtonTapped() async throws {
+        if post.didLike {
+            post.didLike = false
+            try await model.unlikePost()
+           
+        } else {
+            post.didLike = true
+            try await model.likePost()
+           
+        }
+    }
+    
+    func saveButtonTapped() async throws {
+        if post.didSave {
+            post.didSave = false
+            try await model.unsavePost()
+           
+        } else {
+            post.didSave = true
+            try await model.savePost()
+        }
+    }
+    
+    func checkIfUserLikedPost() async throws {
+        switch model.postType {
+        case .post(let post):
+            if try await model.didUserLike(post: post) {
+                self.post.didLike = true
+            } else {
+                self.post.didLike = false
+            }
+        case .reply(let reply):
+            if try await model.didUserLike(reply: reply) {
+                self.post.didLike = true
+            } else {
+                self.post.didLike = false
             }
         }
     }
     
-    private func likeButtonTapped() {
-        Task {
-            if model.didLike {
-                try await model.unlikePost()
+    func checkIfUserSavedPost() async throws {
+        switch model.postType {
+        case .post(let post):
+            if try await model.didUserSave(post: post) {
+                self.post.didSave = true
             } else {
-                try await model.likePost()
+                self.post.didSave = false
+            }
+        case .reply(let reply):
+            if try await model.didUserSave(reply: reply) {
+                self.post.didSave = true
+            } else {
+                self.post.didSave = false
             }
         }
     }
     
-    private func saveButtonTapped() {
-        Task {
-            if model.didSave {
-                try await model.unsavePost()
-            } else {
-                try await model.savePost()
-            }
+    func checkForUserActivity() async {
+        do {
+            try await checkIfUserLikedPost()
+            try await checkIfUserSavedPost()
+        } catch {
+            print("DEBUG: Failed to check for user post activity.")
         }
     }
 }
 
-struct PostButtonGroupView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(preview.post)))
-    }
+#Preview {
+    PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(Preview.post)), onReplyTapped: {_ in })
 }

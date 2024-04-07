@@ -1,17 +1,17 @@
 //
-//  NavigationLink.swift
+//  NavigationButton.swift
 //  SocialMedia
 //
 
 import SwiftUI
 
-public struct NavigationLink<Label: View>: View {
-    var label: Label
+public struct NavigationButton<Label: View>: View {
     var action: () -> Void
-    
-    public init(@ViewBuilder label: () -> Label, action: @escaping () -> Void) {
-        self.label = label()
+    var label: Label
+
+    public init(action: @escaping () -> Void, @ViewBuilder label: () -> Label) {
         self.action = action
+        self.label = label()
     }
     
     public var body: some View {

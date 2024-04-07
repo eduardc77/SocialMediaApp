@@ -17,30 +17,56 @@ struct SearchView: View {
 #if os(macOS)
         return 30
 #else
-        return 60
+        return 50
 #endif
     }
     
     var body: some View {
         Group {
-            switch layout {
-            case .grid:
-                grid
-            case .list:
-                table
+            if model.isLoading { 
+                ProgressView()
+                
+            } else if model.filteredUsers.isEmpty {
+                
+                ContentUnavailableView(
+                    model.contentUnavailableTitle,
+                    systemImage: "magnifyingglass",
+                    description: Text(model.contentUnavailableText)
+                )
+            } else {
+                Group {
+                    switch layout {
+                    case .grid:
+                        grid
+                    case .list:
+                        table
+                    }
+                }
             }
         }
+        .background(Color.groupedBackground)
+        .navigationTitle(AppScreen.search.title)
         .toolbar {
             ToolbarItemGroup {
                 toolbarItems
             }
         }
-        .background(Color.groupedBackground)
-        .navigationTitle(AppScreen.search.title)
+        .task {
+            do {
+                try await model.fetchUsers()
+            } catch {
+                print("DEBUG: Failed to fetch users in Search View.")
+            }
+        }
         .searchable(text: $model.searchText)
         .searchSuggestions {
             if model.searchText.isEmpty {
                 searchSuggestions
+            }
+        }
+        .refreshable {
+            Task {
+                try await model.refresh()
             }
         }
     }
@@ -48,11 +74,7 @@ struct SearchView: View {
     var grid: some View {
         GeometryReader { geometryProxy in
             ScrollView {
-                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width, followedIndex: model.followedIndex, isLoading: model.isLoading) { user in
-                    Task {
-                        try await model.toggleFollow(for: user)
-                    }
-                }
+                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width, followedIndex: model.followedIndex, isLoading: model.isLoading)
             }
         }
     }
@@ -60,10 +82,10 @@ struct SearchView: View {
     var table: some View {
         Table(model.filteredUsers, selection: $selection) {
             TableColumn("Name") { user in
-                NavigationLink {
-                    SearchRow(model: SearchViewModel(), user: user, thumbnailSize: tableImageSize)
-                } action: {
+                NavigationButton {
                     router.push(user)
+                } label: {
+                    SearchRow(user: user, thumbnailSize: tableImageSize)
                 }
             }
         }
@@ -97,11 +119,10 @@ struct SearchView: View {
     }
     
     var searchSuggestions: some View {
-        ForEach(model.mostPopularUsers.prefix(10), id: \.self) { user in
+        ForEach(model.mostPopularUsers.prefix(10)) { user in
             Text("**\(user.fullName)**")
                 .searchCompletion(user.fullName)
         }
-        
     }
 }
 
@@ -109,9 +130,7 @@ enum BrowserLayout: String, Identifiable, CaseIterable {
     case grid
     case list
     
-    var id: String {
-        rawValue
-    }
+    var id: BrowserLayout { self }
     
     var title: LocalizedStringKey {
         switch self {

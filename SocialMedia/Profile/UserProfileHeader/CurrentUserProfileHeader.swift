@@ -14,6 +14,21 @@ struct CurrentUserProfileHeader: View {
     var didNavigate: Bool = false
     
     var body: some View {
+        if !didNavigate {
+            HStack {
+                Spacer()
+                
+                NavigationButton {
+                    router.push(SettingsDestination.settings)
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.primary)
+                }
+            }
+        }
+        
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading, spacing: 4) {
@@ -76,18 +91,6 @@ struct CurrentUserProfileHeader: View {
                 Text("Share Profile")
             }
             .buttonStyle(.secondary(foregroundColor: Color.primary))
-        }
-        .toolbar {
-            if !didNavigate {
-                NavigationLink {
-                    Image(systemName: "line.3.horizontal")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.primary)
-                } action: {
-                    router.push(SettingsDestination.settings)
-                }
-            }
         }
         .onFirstAppear {
             model.loadUserData()

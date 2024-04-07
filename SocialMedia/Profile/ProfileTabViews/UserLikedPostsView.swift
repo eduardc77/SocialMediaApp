@@ -25,8 +25,13 @@ struct UserLikedPostsView: View {
                  itemsPerPage: model.itemsPerPage,
                  contentUnavailableText: contentUnavailableText,
                  loadNewPage: model.loadMorePosts)
-        .onFirstAppear {
-            Task { try await model.loadMorePosts() }
+        .onAppear {
+            Task {
+                if model.posts.isEmpty {
+                    try await model.loadMorePosts()
+                }
+                model.addListenersForPostUpdates()
+            }
         }
         .onReceive(refreshedFilter.$refreshedFilter) { refreshedFilter in
             if refreshedFilter == .liked {

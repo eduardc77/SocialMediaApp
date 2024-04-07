@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct AppTabView: View {
-    @ObservedObject var appRouter: AppTabRouter
+    @EnvironmentObject private var appRouter: AppScreenRouter
 
     var body: some View {
         TabView(selection: $appRouter.selection) {
@@ -19,9 +19,14 @@ struct AppTabView: View {
                     }
             }
         }
+        .onAppear {
+            appRouter.selection = .home
+        }
     }
 }
 
 #Preview {
-    AppTabView(appRouter: AppTabRouter())
+    AppTabView()
+        .environmentObject(AppScreenRouter())
+        .environmentObject(ModalScreenRouter())
 }

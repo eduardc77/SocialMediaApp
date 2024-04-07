@@ -51,7 +51,7 @@ struct UserRelationsView: View {
                         .padding(4)
                     
                     ForEach(viewModel.users) { user in
-                        SearchRow(model: SearchViewModel(), user: user, thumbnailSize: 30)
+                        SearchRow(user: user, thumbnailSize: 30)
                     }
                 }
                 .searchable(text: $searchText, prompt: "Search...")
@@ -71,8 +71,6 @@ struct UserRelationsView: View {
     }
 }
 
-struct UserRelationsView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserRelationsView(user: preview.user)
-    }
+#Preview {
+    UserRelationsView(user: Preview.user)
 }

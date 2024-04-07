@@ -10,7 +10,7 @@ final class PostCategoryViewModel: ObservableObject {
     let category: PostCategory
     
     @Published var posts: [Post] = []
-    @Published var currentFilter: CategoryExploreFilter = .hot
+    @Published var currentFilter: CategoryFilter = .hot
     @Published var isLoading: Bool = false
     
     init(category: PostCategory) {
@@ -46,9 +46,11 @@ final class PostCategoryViewModel: ObservableObject {
     }
 }
 
-enum CategoryExploreFilter: String, CaseIterable, Hashable {
+enum CategoryFilter: String, Identifiable, CaseIterable {
     case hot
     case new
+    
+    var id: CategoryFilter { self }
     
     var title: String {
         rawValue.capitalized

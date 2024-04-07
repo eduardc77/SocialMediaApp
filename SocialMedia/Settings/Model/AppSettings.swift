@@ -6,16 +6,16 @@
 import SwiftUI
 
 final class AppSettings: ObservableObject {
-    @AppStorage("AppSettings.DisplayAppearance") var displayAppearance = DisplayAppearance.system
-    @AppStorage("AppSettings.AccentColor") var theme = Theme.indigo
     
-    enum DisplayAppearance: String, CaseIterable {
+    enum DisplayAppearance: String, Identifiable, CaseIterable {
         case system
         case light
         case dark
+        
+        var id: DisplayAppearance { self }
     }
     
-    enum Theme: String, CaseIterable {
+    enum Theme: String, Identifiable, CaseIterable {
         case red
         case orange
         case green
@@ -28,6 +28,17 @@ final class AppSettings: ObservableObject {
         case pink
         case brown
         case primary
+        
+        var id: Theme { self }
+    }
+    
+    @AppStorage("AppSettings.DisplayAppearance") var displayAppearance = DisplayAppearance.system
+    @AppStorage("AppSettings.AccentColor") var theme = Theme.indigo
+    
+    let appVersion: String?
+    
+    init(appVersion: AppVersion = AppVersion()) {
+        self.appVersion = appVersion.version()
     }
 }
 
@@ -65,7 +76,7 @@ extension AppSettings.Theme {
     var title: String {
         rawValue.capitalized
     }
-
+    
     var color: Color {
         switch self {
         case .red:
@@ -92,6 +103,30 @@ extension AppSettings.Theme {
             return .brown
         case .primary:
             return .primary
+        }
+    }
+}
+
+// MARK: - App Version
+
+extension AppSettings {
+    
+    struct AppVersion {
+        
+        private let bundle: Bundle
+        
+        init(bundle: Bundle = .main) {
+            self.bundle = bundle
+        }
+        
+        func version() -> String? {
+            guard let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+                  let build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+            else {
+                return nil
+            }
+            
+            return "\(version) (\(build))"
         }
     }
 }

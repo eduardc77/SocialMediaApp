@@ -45,8 +45,6 @@ struct ActivityBadgeView: View {
     }
 }
 
-struct ActivityBadgeView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivityBadgeView(type: .follow)
-    }
+#Preview {
+    ActivityBadgeView(type: .follow)
 }

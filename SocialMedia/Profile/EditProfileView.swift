@@ -13,11 +13,10 @@ struct EditProfileView: View {
     
     var body: some View {
         NavigationStack {
-            if let user = model.currentUser {
-                Form {
-                    VStack {
-                        EditableCircularProfileImage(model: model, imageData: imageData)
-                        
+            Form {
+                VStack {
+                    EditableCircularProfileImage(model: model, imageData: imageData)
+                    if let user = model.currentUser {
                         Text(user.fullName)
                             .font(.headline.bold())
                         
@@ -26,69 +25,67 @@ struct EditProfileView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     }
-                    .frame(maxWidth: .infinity)
-                    .listRowInsets(.none)
-                    .listRowBackground(Color.clear)
-                    
-                    Section("Name") {
-                        TextField("Display Name", text: $model.profileInputData.fullName)  
+                }
+                .frame(maxWidth: .infinity)
+                .listRowInsets(.none)
+                .listRowBackground(Color.clear)
+                
+                Section("Name") {
+                    TextField("Display Name", text: $model.profileInputData.fullName)
 #if DEBUG
-                            .autocorrectionDisabled()
+                        .autocorrectionDisabled()
 #endif
-                            .textContentType(.name)
+                        .textContentType(.name)
 #if os(iOS)
-                            .textInputAutocapitalization(.words)
+                        .textInputAutocapitalization(.words)
 #endif
-                    }
-                    
-                    Section("Username") {
-                        TextField("Username", text: $model.profileInputData.username)
-                            .foregroundStyle(.secondary)
-                            .disabled(true)
-                    }
-                    
-                    Section("About Me") {
-                        TextField("Write about you", text: $model.profileInputData.aboutMe, axis: .vertical)
-                    }
-                    Section("Link") {
-                        TextField("Add Link", text: $model.profileInputData.link)
-                    }
-                    Section {
-                        Toggle("Private profile", isOn: $model.profileInputData.privateProfile)
-                    }
                 }
-                .formStyle(.grouped)
-                .navigationTitle("Edit Profile")
-#if os(iOS)
-                .navigationBarTitleDisplayMode(.inline)
+                
+                Section("Username") {
+                    TextField("Username", text: $model.profileInputData.username)
+                        .foregroundStyle(.secondary)
+                        .disabled(true)
+                }
+                
+                Section("About Me") {
+                    TextField("Write about you", text: $model.profileInputData.aboutMe, axis: .vertical)
+                }
+                Section("Link") {
+                    TextField("Add Link", text: $model.profileInputData.link)
+                }
+                Section {
+                    Toggle("Private profile", isOn: $model.profileInputData.privateProfile)
+                }
+            }
+            .formStyle(.grouped)
+            .navigationTitle("Edit Profile")
+#if !os(macOS)
+            .navigationBarTitleDisplayMode(.inline)
 #endif
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
-                            Task {
-                                try await model.updateUserData()
-                            }
-                            dismiss()
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        Task {
+                            try await model.updateUserData()
                         }
-                        .disabled(!model.isProfileEdited)
+                        dismiss()
                     }
-                    
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
+                    .disabled(!model.isProfileEdited)
+                }
+                
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
                     }
                 }
-                .onReceive(imageData.$newImageSet) { newValue in
-                    model.newImageSet = newValue
-                }
+            }
+            .onReceive(imageData.$newImageSet) { newValue in
+                model.newImageSet = newValue
             }
         }
     }
 }
 
-struct EditProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditProfileView(model: CurrentUserProfileHeaderModel(), imageData: ImageData())
-    }
+#Preview {
+    EditProfileView(model: CurrentUserProfileHeaderModel(), imageData: ImageData())
 }

@@ -82,8 +82,6 @@ private extension RegistrationView {
     }
 }
 
-struct RegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegistrationView()
-    }
+#Preview {
+    RegistrationView()
 }

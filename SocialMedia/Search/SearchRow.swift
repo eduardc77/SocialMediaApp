@@ -7,44 +7,47 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct SearchRow: View {
-    @ObservedObject var model: SearchViewModel
-    let user: User
-    let thumbnailSize: CGFloat
+    @ObservedObject var model: SearchItemViewModel
     
-    private var isFollowed: Bool {
-        return user.isFollowed
+    init(user: User, thumbnailSize: CGFloat) {
+        self.model = SearchItemViewModel(user: user, thumbnailSize: thumbnailSize)
     }
     
     var body: some View {
         HStack {
-            CircularProfileImageView(profileImageURL: user.profileImageURL,
-                                     size: .custom(width: thumbnailSize, height: thumbnailSize),
+            CircularProfileImageView(profileImageURL: model.user.profileImageURL,
+                                     size: .custom(width: model.thumbnailSize, height: model.thumbnailSize),
                                      contentMode: .fit)
             
             VStack(alignment: .leading) {
-                Text(user.username)
+                Text(model.user.username)
                     .bold()
-                Text(user.fullName)
+                Text(model.user.fullName)
             }
             .font(.footnote)
-            
+            .foregroundStyle(Color.primary)
             Spacer()
             
-            if !user.isCurrentUser {
+            if !model.user.isCurrentUser {
                 Button {
-                    //                        model.toggleFollow(for: user)
+                    Task {
+                        try await model.toggleFollow()
+                    }
                 } label: {
-                    Text(isFollowed ? "Following" : "Follow")
+                    Text(model.isFollowed ? "Following" : "Follow")
                 }
-                .buttonStyle(.borderedProminent)
-                //                    .buttonStyle(.secondary(buttonWidth: 100, buttonHeight: 32, foregroundColor: isFollowed ? Color.secondary : Color.primary, inactiveBackgroundColor: Color.clear, isLoading: $model.isLoading, isActive: isFollowed))
+                .buttonStyle(.secondary(buttonWidth: nil, foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
+                .overlay {
+                    if model.isLoading {
+                        ProgressView()
+                    }
+                }
+                .disabled(model.isLoading)
             }
         }
     }
 }
 
-//struct UserGridItem_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserRow(model: SearchViewModel(), user: preview.user)
-//    }
-//}
+#Preview {
+    SearchRow(user: Preview.user, thumbnailSize: 30)
+}

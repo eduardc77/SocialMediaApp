@@ -36,15 +36,13 @@ private extension PostCategoryDetailView {
         TabView(selection: $model.currentFilter) {
             ScrollView {
                 PostGrid(router: router, postGridType: .posts(model.posts), isLoading: $model.isLoading)
-
             }
-            .tag(CategoryExploreFilter.hot)
+            .tag(CategoryFilter.hot)
             
             ScrollView {
                 PostGrid(router: router, postGridType: .posts(model.posts), isLoading: $model.isLoading)
-
             }
-            .tag(CategoryExploreFilter.new)
+            .tag(CategoryFilter.new)
             
         }
 #if os(iOS)
@@ -54,10 +52,8 @@ private extension PostCategoryDetailView {
     
 }
 
-struct CategoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            PostCategoryDetailView(router: FeedViewRouter(), category: .affirmations)
-        }
+#Preview {
+    NavigationView {
+        PostCategoryDetailView(router: FeedViewRouter(), category: .affirmations)
     }
 }

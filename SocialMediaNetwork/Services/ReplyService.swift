@@ -11,26 +11,21 @@ public struct ReplyService {
     
     private static var currentListener: ListenerRegistration? = nil
     
-    static var currentListenerRemoved: Bool {
-        ReplyService.currentListener == nil
-    }
-    
     public static func removeCurrentListener() {
-        guard !currentListenerRemoved else { return }
         ReplyService.currentListener?.remove()
         ReplyService.currentListener = nil
     }
-    
+
     public static func replyToPost(_ post: Post, replyText: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         
         let reply = Reply(
-            postID: postID,
-            replyID: postID,
             replyText: replyText,
             ownerUID: currentUID,
-            postOwnerUID: post.ownerUID,
-            timestamp: Timestamp()
+            replyID: postID,
+            timestamp: Timestamp(),
+            postID: postID,
+            postOwnerUID: post.ownerUID
         )
         guard let data = try? Firestore.Encoder().encode(reply) else { return }
         try await FirestoreConstants.replies().document().setData(data)
@@ -39,17 +34,17 @@ public struct ReplyService {
         ])
         ActivityService.uploadNotification(toUID: post.ownerUID, type: .reply, postID: postID)
     }
-    
+
     public static func replyToReply(_ reply: Reply, replyText: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         
         let newReply = Reply(
-            postID: reply.postID,
-            replyID: replyID,
             replyText: replyText,
             ownerUID: currentUID,
-            postOwnerUID: reply.ownerUID,
+            replyID: replyID,
             timestamp: Timestamp(),
+            postID: reply.postID,
+            postOwnerUID: reply.ownerUID,
             depthLevel: reply.depthLevel + 1
         )
         guard let data = try? Firestore.Encoder().encode(newReply) else { return }
@@ -101,10 +96,11 @@ public struct ReplyService {
         return snapshotQuery
     }
   
-    public static func addListenerForPostReplies(forUserID userID: String, depthLevel: Int) -> (AnyPublisher<(DocChangeType<Reply>, DocumentSnapshot?), Error>) {
+    public static func addListenerForPostReplies(postID: String, depthLevel: Int) -> (AnyPublisher<(DocChangeType<Reply>, DocumentSnapshot?), Error>) {
+        let field = depthLevel == 0 ? "postID" : "replyID"
         let (publisher, listener) =
         FirestoreConstants.replies(depthLevel)
-            .whereField("ownerUID", isEqualTo: userID)
+            .whereField(field, isEqualTo: postID)
             .addSnapshotListener(as: Reply.self)
         
         removeCurrentListener()
@@ -123,7 +119,7 @@ public extension ReplyService {
         
         try await FirestoreConstants.replies(reply.depthLevel).document(replyID).collection("replyLikes").document(uid).setData([:])
         try await FirestoreConstants.users.document(uid).collection("userLikedReplies").document(replyID).setData([:])
-        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData(["likes": reply.likes])
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData(["likes": reply.likes + 1])
         ActivityService.uploadNotification(toUID: reply.ownerUID, type: .like, postID: reply.postID)
     }
     
@@ -132,7 +128,7 @@ public extension ReplyService {
         
         try await FirestoreConstants.replies(reply.depthLevel).document(replyID).collection("replyLikes").document(uid).delete()
         try await FirestoreConstants.users.document(uid).collection("userLikedReplies").document(replyID).delete()
-        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData(["likes": reply.likes])
+        try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData(["likes": reply.likes - 1])
         try await ActivityService.deleteNotification(toUID: reply.ownerUID, type: .like, postID: reply.postID)
     }
     

@@ -28,14 +28,14 @@ struct ActivityRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 16) {
-                NavigationLink {
+                NavigationButton {
+                    router.push(model.user)
+                } label: {
                     ZStack(alignment: .bottomTrailing) {
                         CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
                         ActivityBadgeView(type: model.type)
                             .offset(x: 8, y: 4)
                     }
-                } action: {
-                    router.push(model.user)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -72,7 +72,6 @@ struct ActivityRowView: View {
                             }
                     }
                 }
-
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
@@ -83,8 +82,6 @@ struct ActivityRowView: View {
     }
 }
 
-struct ActivityRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivityRowView(router: ActivityViewRouter(), model: preview.activityModel)
-    }
+#Preview {
+    ActivityRowView(router: ActivityViewRouter(), model: Preview.activityModel)
 }

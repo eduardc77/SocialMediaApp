@@ -17,10 +17,8 @@ struct PlaceholderText: View {
     }
 }
 
-struct LoremText_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            PlaceholderText(title: .termsOfUse)
-        }
+#Preview {
+    NavigationStack {
+        PlaceholderText(title: .termsOfUse)
     }
 }

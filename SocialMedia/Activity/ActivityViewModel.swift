@@ -12,16 +12,20 @@ class ActivityViewModel: ObservableObject {
     @Published var filteredNotifications = [Activity]()
     @Published var isLoading = false
     
+    var contentUnavailableText: String {
+        selectedFilter == .all ? "No activities yet." : "No \(selectedFilter.rawValue) activities yet."
+    }
+    
     @Published var selectedFilter: ActivityFilter = .all {
         didSet {
             switch selectedFilter {
             case .all:
                 filteredNotifications = notifications
-            case .follows:
+            case .follow:
                 filteredNotifications = notifications.filter({ $0.type == .follow })
-            case .replies:
+            case .reply:
                 filteredNotifications = notifications.filter({ $0.type == .reply })
-            case .likes:
+            case .like:
                 filteredNotifications = notifications.filter({ $0.type == .like })
             }
         }
@@ -35,7 +39,7 @@ class ActivityViewModel: ObservableObject {
             filteredNotifications = notifications
         }
     }
-
+    
     private func updateNotifications() async throws {
         self.notifications = try await ActivityService.fetchUserActivity()
         

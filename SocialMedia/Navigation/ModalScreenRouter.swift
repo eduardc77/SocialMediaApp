@@ -44,7 +44,7 @@ final class ModalScreenRouter: ObservableObject {
         alert = AlertModel(title: title, message: message, buttons: buttons())
     }
     
-    func presentConfirmationDialog<Buttons: View>(title: String, message: String? = nil, @ViewBuilder buttons: @escaping () -> Buttons) where Buttons: View {
+    func presentConfirmationDialog<Buttons: View>(title: String, message: String? = nil, @ViewBuilder buttons: @escaping () -> Buttons ) where Buttons: View {
         guard self.confirmationDialog == nil else { return }
         confirmationDialog = AlertModel(title: title, message: message, buttons: buttons())
     }

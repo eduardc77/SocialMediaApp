@@ -16,7 +16,8 @@ struct SocialMediaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentCoordinator()
+                .tint(settings.theme.color)
                 .environmentObject(settings)
                 .preferredColorScheme(settings.displayAppearance.colorScheme)
         }

@@ -20,6 +20,7 @@ struct PostGrid: View {
     
     var loadNewPage: (() async throws -> Void)? = nil
     
+    @EnvironmentObject private var modalRouter: ModalScreenRouter
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
@@ -56,23 +57,23 @@ struct PostGrid: View {
             switch postGridType {
             case .posts(let posts):
                 if posts.isEmpty, !isLoading {
-                    VStack {
-                        ContentUnavailableView(
-                            "No Content",
-                            systemImage: "doc.richtext",
-                            description: Text(contentUnavailableText)
-                        )
-                    }
+                    ContentUnavailableView(
+                        "No Content",
+                        systemImage: "doc.richtext",
+                        description: Text(contentUnavailableText)
+                    )
                 } else {
-                    ForEach(Array(posts.enumerated()), id: \.element) { index, post in
+                    ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
                         ZStack(alignment: .top) {
-                            NavigationLink {
-                                Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                            } action: {
+                            NavigationButton {
                                 router.push(PostType.post(post))
+                            } label: {
+                                Color.secondaryGroupedBackground.clipShape(.containerRelative)
                             }
                             
-                            PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize)
+                            PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize, onReplyTapped: { postType in
+                                modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                            })
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .contentShape(.containerRelative)
@@ -91,25 +92,36 @@ struct PostGrid: View {
                 }
                 
             case .replies(let replies):
-                ForEach(Array(replies.enumerated()), id: \.element) { index, reply in
-                    ZStack {
-                        NavigationLink {
-                            Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                        } action: {
-                            router.push(PostType.reply(reply))
-                        }
-                        
-                        PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize)
-                    }
-                    .contentShape(.containerRelative)
-                    .containerShape(.rect(cornerRadius: 8))
-                    .onAppear {
-                        if let loadNewPage = loadNewPage, !isLoading, !replies.isEmpty, index == replies.count - 1 {
-                            isLoading = true
+                if replies.isEmpty, !isLoading {
+                    ContentUnavailableView(
+                        "No Content",
+                        systemImage: "doc.richtext",
+                        description: Text(contentUnavailableText)
+                    )
+                } else {
+                    ForEach(Array(replies.enumerated()), id: \.offset) { index, reply in
+                        ZStack(alignment: .top) {
+                            NavigationButton {
+                                router.push(PostType.reply(reply))
+                            } label: {
+                                Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                            }
                             
-                            Task {
-                                try await loadNewPage()
-                                isLoading = false
+                            PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize, onReplyTapped: { postType in
+                                modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                            })
+                        }
+                        .fixedSize(horizontal: false, vertical: true)
+                        .contentShape(.containerRelative)
+                        .containerShape(.rect(cornerRadius: 8))
+                        .onAppear {
+                            if let loadNewPage = loadNewPage, !isLoading, !replies.isEmpty, index == replies.count - 1 {
+                                isLoading = true
+                                
+                                Task {
+                                    try await loadNewPage()
+                                    isLoading = false
+                                }
                             }
                         }
                     }
@@ -123,6 +135,12 @@ struct PostGrid: View {
     }
 }
 
-//#Preview {
-//    PostGrid(postGridType: .posts([Post(id: "", ownerUid: "", caption: "", timestamp: <#T##Timestamp#>, likes: <#T##Int#>, replyCount: <#T##Int#>, imageUrl: <#T##String?#>, user: <#T##User?#>, didLike: <#T##Bool?#>, didSave: <#T##Bool?#>)]), fetchNewPage: <#T##() async throws -> Void#>: [], fetchNewPage: {})
-//}
+#Preview {
+    @State var isLoading: Bool = false
+    
+    return ScrollView {
+        PostGrid(router: FeedViewRouter(), postGridType: .posts([Preview.post, Preview.post2]), isLoading: $isLoading, itemsPerPage: 10)
+            .environmentObject(FeedViewRouter())
+            .environmentObject(ModalScreenRouter())
+    }
+}
