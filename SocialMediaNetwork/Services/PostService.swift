@@ -113,14 +113,25 @@ public struct PostService {
     
     // MARK: - Category Posts
     
-    public static func fetchPosts(by category: PostCategory, descending: Bool = true) async throws -> [Post] {
-        let querySnapshot = try await FirestoreConstants
-            .posts
+    public static func fetchPosts(by category: PostCategory, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Post], lastDocument: DocumentSnapshot?) {
+        let querySnapshot = try await FirestoreConstants.posts
             .whereField("category", isEqualTo: category.rawValue.lowercased())
-            .order(by: "timestamp", descending: descending)
-            .getDocuments()
+            .limit(to: countLimit)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: Post.self)
         
-        return querySnapshot.documents.compactMap({ try? $0.data(as: Post.self) })
+        return querySnapshot
+    }
+    
+    public static func addListenerForPostsByCategory(_ category: PostCategory) -> (AnyPublisher<(DocChangeType<Post>, DocumentSnapshot?), Error>) {
+        let (publisher, listener) =
+        FirestoreConstants.posts
+            .whereField("category", isEqualTo: category.rawValue.lowercased())
+            .addSnapshotListener(as: Post.self)
+        
+        replaceCurrentListeners(with: listener)
+        
+        return publisher
     }
 }
 
