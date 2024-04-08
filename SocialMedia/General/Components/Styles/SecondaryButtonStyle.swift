@@ -43,7 +43,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == SecondaryButtonStyle {
-    static func secondary(buttonWidth: CGFloat? = nil, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.secondaryGroupedBackground, activeBackgroundColor: Color = .groupedBackground, inactiveBackgroundColor: Color = Color.primary, isLoading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
+    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.secondaryGroupedBackground, activeBackgroundColor: Color = .groupedBackground, inactiveBackgroundColor: Color = Color.primary, isLoading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
         SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, activeBackgroundColor: activeBackgroundColor, inactiveBackgroundColor: inactiveBackgroundColor, isLoading: isLoading, isActive: isActive)
     }
 }

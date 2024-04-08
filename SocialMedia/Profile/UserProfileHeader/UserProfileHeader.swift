@@ -50,7 +50,7 @@ struct UserProfileHeader: View {
             } label: {
                 Text(model.isFollowed ? "Following" : "Follow")
             }
-            .buttonStyle(.secondary(buttonWidth: .infinity, foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
+            .buttonStyle(.secondary(foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
         }
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)

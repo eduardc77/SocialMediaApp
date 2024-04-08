@@ -15,7 +15,11 @@ struct ContentView: View {
     var body: some View {
         Group {
             if model.userSession == nil || model.currentUser == nil {
-                LoginView()
+                if model.isLoading {
+                    ProgressView()
+                } else {
+                    LoginView()
+                }
             } else {
                 if prefersTabNavigation {
                     AppTabView()
