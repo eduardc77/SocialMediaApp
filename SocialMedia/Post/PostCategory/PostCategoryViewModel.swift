@@ -5,6 +5,7 @@
 
 import SwiftUI
 import Combine
+import SocialMediaData
 import SocialMediaNetwork
 import Firebase
 
@@ -165,7 +166,7 @@ private extension PostCategoryViewModel {
     }
 }
 
-enum CategoryFilter: String, Identifiable, CaseIterable {
+enum CategoryFilter: String, TopFilter {
     case hot
     case new
     

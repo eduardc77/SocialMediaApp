@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-extension String {
+public extension String {
 #if os(iOS)
    func sizeUsingFont(usingFont font: UIFont) -> CGSize {
         let fontAttributes = [NSAttributedString.Key.font: font]
@@ -19,7 +19,7 @@ extension String {
 #endif
 }
 
-extension String {
+public extension String {
     var validEmail: Bool {
         NSPredicate(format: "SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}").evaluate(with: self)
     }

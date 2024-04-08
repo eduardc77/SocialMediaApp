@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 import SocialMediaNetwork
 
 struct PostDetailsView: View {

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 
 struct ResetPasswordView: View {
     @StateObject var viewModel = ResetPasswordViewModel()

@@ -24,8 +24,10 @@ struct PostButton: View {
                 Label(buttonType.title, systemImage: buttonType.icon)
                     .labelStyle(.iconOnly)
                     .symbolVariant(isActive ? .fill : .none)
+                    .contentTransition(.symbolEffect(isActive ? .replace.upUp : .replace.downUp))
+                    
                 if count > 0, buttonType != .save {
-                    Text("\(count)") 
+                    Text("\(count)")
                         .contentTransition(.numericText(countsDown: countsDown))
                         .animation(.default, value: count)
                 }

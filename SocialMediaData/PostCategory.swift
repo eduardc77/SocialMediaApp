@@ -3,7 +3,9 @@
 //  SocialMedia
 //
 
-public enum PostCategory: String, CaseIterable, Codable {
+import Foundation
+
+public enum PostCategory: String, Codable, TopFilter {
     case affirmations
     case art
     case beauty
@@ -33,6 +35,8 @@ public enum PostCategory: String, CaseIterable, Codable {
     case success
     case tips
     case women
+    
+    public var id: PostCategory { self }
     
     public var title: String {
         rawValue.capitalized

@@ -6,6 +6,7 @@
 import Combine
 import Firebase
 import FirebaseFirestoreSwift
+import SocialMediaData
 
 public struct PostService {
     

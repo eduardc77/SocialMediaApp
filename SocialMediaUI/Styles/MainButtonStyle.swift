@@ -5,15 +5,23 @@
 
 import SwiftUI
 
-struct MainButtonStyle: ButtonStyle {
-    var buttonWidth: CGFloat = .infinity
-    var buttonHeight: CGFloat = 44
-    var foregroundColor: Color = Color.secondaryGroupedBackground
-    var backgroundColor: Color = .primary
-    @Binding var isLoading: Bool
-    @Environment(\.isEnabled) var isEnabled
+public struct MainButtonStyle: ButtonStyle {
+    private var buttonWidth: CGFloat
+    private var buttonHeight: CGFloat
+    private var foregroundColor: Color
+    private var backgroundColor: Color
+    @Binding private var isLoading: Bool
+    @Environment(\.isEnabled) private var isEnabled
     
-    func makeBody(configuration: Configuration) -> some View {
+    public init(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 44, foregroundColor: Color = Color.secondaryGroupedBackground, backgroundColor: Color = .primary, isLoading: Binding<Bool>) {
+        self.buttonWidth = buttonWidth
+        self.buttonHeight = buttonHeight
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+        self._isLoading = isLoading
+    }
+    
+    public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.subheadline)
             .fontWeight(.semibold)
@@ -39,7 +47,7 @@ struct MainButtonStyle: ButtonStyle {
     }
 }
 
-extension ButtonStyle where Self == MainButtonStyle {
+public extension ButtonStyle where Self == MainButtonStyle {
     static var main: MainButtonStyle { MainButtonStyle(isLoading: .constant(false)) }
     
     static func main(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 44, foregroundColor: Color = Color.secondaryGroupedBackground, backgroundColor: Color = .primary, isLoading: Binding<Bool>) -> MainButtonStyle {

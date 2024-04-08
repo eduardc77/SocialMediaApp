@@ -5,6 +5,7 @@
 
 import Firebase
 import FirebaseFirestoreSwift
+import SocialMediaData
 
 public struct Post: Identifiable, Codable, Hashable {
     @DocumentID public var id: String?

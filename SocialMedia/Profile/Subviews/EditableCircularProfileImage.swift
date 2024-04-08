@@ -5,6 +5,7 @@
 
 import SwiftUI
 import PhotosUI
+import SocialMediaUI
 
 struct EditableCircularProfileImage: View {
     @ObservedObject var model: CurrentUserProfileHeaderModel

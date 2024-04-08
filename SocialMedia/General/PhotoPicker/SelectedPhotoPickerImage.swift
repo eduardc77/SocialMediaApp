@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 
 struct SelectedPhotoPickerImage: View {
     let imageState: ImageData.ImageState

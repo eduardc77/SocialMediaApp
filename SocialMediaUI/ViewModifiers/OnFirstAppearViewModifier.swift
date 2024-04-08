@@ -6,8 +6,12 @@
 import SwiftUI
 
 public struct OnFirstAppearModifier: ViewModifier {
-    let action: (() -> Void)?
+    private let action: (() -> Void)?
     @State private var isFirstAppear = true
+    
+    public init(action: (() -> Void)?) {
+        self.action = action
+    }
     
     public func body(content: Content) -> some View {
         content

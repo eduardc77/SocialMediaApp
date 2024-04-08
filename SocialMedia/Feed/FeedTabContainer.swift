@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 import SocialMediaNetwork
 
 struct FeedTabContainer: View {
@@ -12,7 +13,7 @@ struct FeedTabContainer: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            FeedFilterView(currentFilter: $currentFilter)
+            TopFilterBar(currentFilter: $currentFilter)
             feedTabView
         }
 #if !os(macOS)

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 
 struct PlaceholderText: View {
     let title: SettingsOption

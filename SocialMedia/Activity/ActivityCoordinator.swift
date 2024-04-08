@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaData
 import SocialMediaNetwork
 
 struct ActivityCoordinator: View {

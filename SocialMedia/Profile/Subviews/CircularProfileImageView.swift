@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 
 struct CircularProfileImageView: View {
     var profileImageURL: String?

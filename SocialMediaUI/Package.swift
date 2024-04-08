@@ -4,34 +4,29 @@
 import PackageDescription
 
 let package = Package(
-    name: "SocialMediaNetwork",
+    name: "SocialMediaUI",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v16),
+        .iOS(.v17),
         .macOS(.v13),
         .watchOS(.v9),
         .tvOS(.v16)
     ],
     products: [
         .library(
-            name: "SocialMediaNetwork",
+            name: "SocialMediaUI",
             type: .dynamic,
-            targets: ["SocialMediaNetwork"]
+            targets: ["SocialMediaUI"]
         )
     ],
     dependencies: [
         .package(path: "../SocialMediaData"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.0.0")
     ],
     targets: [
         .target(
-            name: "SocialMediaNetwork",
+            name: "SocialMediaUI",
             dependencies: [
                 .product(name: "SocialMediaData", package: "SocialMediaData", condition: nil),
-                .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
-                .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
-                .product(name: "FirebaseFirestoreSwift", package: "firebase-ios-sdk"),
-                .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
             ],
             path: "."
         )

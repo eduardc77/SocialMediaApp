@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 
 struct CurrentUserProfileHeader: View {
     @StateObject private var model = CurrentUserProfileHeaderModel()

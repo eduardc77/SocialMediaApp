@@ -5,8 +5,8 @@
 
 import SwiftUI
 
-struct CheckboxToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
+public struct CheckboxToggleStyle: ToggleStyle {
+    public func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
         }, label: {
@@ -22,22 +22,22 @@ struct CheckboxToggleStyle: ToggleStyle {
     }
 }
 
-extension ToggleStyle where Self == CheckboxToggleStyle {
+public extension ToggleStyle where Self == CheckboxToggleStyle {
    static var checkboxStyle: CheckboxToggleStyle { CheckboxToggleStyle() }
 }
 
 #Preview {
-    CheckboxToggleStyle_Preview()
-}
-
-private struct CheckboxToggleStyle_Preview: View {
-    @State private var isOn: Bool = false
-    private var agreementText: String = "I agree to the terms and conditions."
-
-    var body: some View {
-        Toggle(isOn: $isOn) {
-            Text(agreementText)
+    struct Example: View {
+        @State private var isOn: Bool = false
+        private var agreementText: String = "I agree to the terms and conditions."
+        
+        var body: some View {
+            Toggle(isOn: $isOn) {
+                Text(agreementText)
+            }
+            .toggleStyle(.checkboxStyle)
         }
-        .toggleStyle(.checkboxStyle)
     }
+    
+    return Example()
 }

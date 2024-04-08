@@ -5,14 +5,20 @@
 
 import SwiftUI
 
-struct CustomNavigationBar: ViewModifier {
-    let title: String
+public struct CustomNavigationBar: ViewModifier {
+    private let title: String
 #if os(iOS)
-    let displayMode: NavigationBarItem.TitleDisplayMode
+    private let displayMode: NavigationBarItem.TitleDisplayMode
 #endif
-    let background: Material
+    private let background: Material
     
-    func body(content: Content) -> some View {
+    public init(title: String, displayMode: NavigationBarItem.TitleDisplayMode = .inline, background: Material = .bar) {
+        self.title = title
+        self.displayMode = displayMode
+        self.background = background
+    }
+    
+    public func body(content: Content) -> some View {
         content
             .navigationTitle(title)
 #if os(iOS)
@@ -21,7 +27,7 @@ struct CustomNavigationBar: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
 #if os(iOS)
     func navigationBar(title: String,
                        displayMode: NavigationBarItem.TitleDisplayMode = .inline,

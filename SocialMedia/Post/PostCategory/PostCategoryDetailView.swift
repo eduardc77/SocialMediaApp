@@ -4,6 +4,8 @@
 //
 
 import SwiftUI
+import SocialMediaUI
+import SocialMediaData
 import SocialMediaNetwork
 
 struct PostCategoryDetailView: View {
@@ -17,10 +19,9 @@ struct PostCategoryDetailView: View {
     
     var body: some View {
         VStack {
-            PostCategoryFilter(filter: $model.currentFilter) { newFilter in
-                model.currentFilter = newFilter
+            TopFilterBar(currentFilter: $model.currentFilter, onSelection: {
                 model.sortPosts()
-            }
+            })
             postsTabView
         }
         .navigationBar(title: "\(model.category.icon) \(model.category.rawValue.capitalized)")
