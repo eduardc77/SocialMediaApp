@@ -3,7 +3,7 @@
 //  SocialMedia
 //
 
-import SocialMediaData
+import SocialMediaUI
 
 enum FeedFilter: String, Identifiable, Hashable, CaseIterable, TopFilter {
     case forYou

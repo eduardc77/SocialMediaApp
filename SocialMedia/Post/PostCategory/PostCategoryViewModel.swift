@@ -5,8 +5,8 @@
 
 import SwiftUI
 import Combine
-import SocialMediaData
 import SocialMediaNetwork
+import SocialMediaUI
 import Firebase
 
 @MainActor
@@ -163,16 +163,5 @@ private extension PostCategoryViewModel {
         result.user = try await user
         
         return result
-    }
-}
-
-enum CategoryFilter: String, TopFilter {
-    case hot
-    case new
-    
-    var id: CategoryFilter { self }
-    
-    var title: String {
-        rawValue.capitalized
     }
 }

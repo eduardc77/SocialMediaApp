@@ -1,7 +1,3 @@
-//
-//  AuthService.swift
-//  SocialMedia
-//
 
 import Firebase
 

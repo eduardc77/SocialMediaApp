@@ -102,7 +102,7 @@ struct PostDetailsView: View {
         .onAppear {
             Task {
                 try await model.loadMoreReplies()
-                if let post = model.post {
+                if model.post != nil {
                     model.addListenerForReplyUpdates()
                 } else if let reply = model.reply {
                     model.addListenerForReplyUpdates(depthLevel: reply.depthLevel + 1)

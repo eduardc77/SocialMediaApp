@@ -1,7 +1,3 @@
-//
-//  ActivityType.swift
-//  SocialMedia
-//
 
 public enum ActivityType: Int, CaseIterable, Identifiable, Codable {
     case like

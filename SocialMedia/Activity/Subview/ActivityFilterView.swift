@@ -7,7 +7,7 @@ import SwiftUI
 
 
 struct ActivityFilterView: View {
-    @Binding var selectedFilter: ActivityFilter
+    @Binding var currentFilter: ActivityFilter
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -28,14 +28,14 @@ struct ActivityFilterView: View {
     func activityFilterItem(for filter: ActivityFilter, proxy: ScrollViewProxy) -> some View {
        Button(action: {
            withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.8, blendDuration: 0.8)) {
-               selectedFilter = filter
+               currentFilter = filter
            }
            withAnimation {
               proxy.scrollTo(filter, anchor: .center)
            }
        }) {
            Text(filter.title)
-               .foregroundStyle(filter == selectedFilter ? Color.secondaryGroupedBackground : Color.primary)
+               .foregroundStyle(filter == currentFilter ? Color.secondaryGroupedBackground : Color.primary)
                .font(.subheadline)
                .fontWeight(.semibold)
                .frame(width: 100)
@@ -45,7 +45,7 @@ struct ActivityFilterView: View {
                    RoundedRectangle(cornerRadius: 8)
                        .stroke(Color.secondary, lineWidth: 1)
                }
-               .background(filter == selectedFilter ? Color.primary : Color.groupedBackground)
+               .background(filter == currentFilter ? Color.primary : Color.groupedBackground)
                .clipShape(RoundedRectangle(cornerRadius: 8))
        }
     }
@@ -57,7 +57,7 @@ struct ActivityFilterView: View {
         @State var selection: ActivityFilter = .all
         
         var body: some View {
-            ActivityFilterView(selectedFilter: $selection)
+            ActivityFilterView(currentFilter: $selection)
         }
     }
     return Example()

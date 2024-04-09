@@ -7,12 +7,12 @@ import SwiftUI
 import PhotosUI
 
 @MainActor
-class ImageData: ObservableObject {
+public class ImageData: ObservableObject {
     @Published var image: Image?
-    @Published var imageState: ImageState = .empty
-    @Published var newImageSet: Bool = false
+    @Published public var imageState: ImageState = .empty
+    @Published public var newImageSet: Bool = false
     
-    @Published var imageSelection: PhotosPickerItem? = nil {
+    @Published public var imageSelection: PhotosPickerItem? = nil {
         didSet {
             if let imageSelection {
                 Task {
@@ -24,12 +24,14 @@ class ImageData: ObservableObject {
         }
     }
     
-    enum ImageState {
+    public enum ImageState {
         case empty
         case loading
         case success(Data)
         case failure(Error)
     }
+    
+    public init() {}
 
     func loadTransferable(from imageSelection: PhotosPickerItem) async {
         guard imageSelection == self.imageSelection else {

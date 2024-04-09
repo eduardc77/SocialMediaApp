@@ -8,36 +8,76 @@ import SocialMediaNetwork
 
 @MainActor
 final class UserRelationsViewModel: ObservableObject {
-    @Published var users = [User]()
+    private let user: User
     @Published var currentStatString: String = ""
-    @Published var selectedFilter: UserRelationType = .followers {
-        didSet { updateRelationData() }
+    @Published var searchText = ""
+    @Published var isLoading = false
+    
+    var contentUnavailableTitle: String {
+        "No results for '\(searchText)'"
     }
     
-    private let user: User
+    var contentUnavailableText: String {
+        "Check the spelling or try a new search"
+    }
+    
+    @Published var sort = UserSortOrder.name
+    
+   
+    @Published private var users = [User]()
     private var followers = [User]()
     private var following = [User]()
     
-    init(user: User) {
-        self.user = user
-        Task { try await fetchUserFollowers() }
-        Task { try await fetchUserFollowing() }
+    var filteredUsers: [User] {
+        users(sortedBy: sort).filter { $0.matches(searchText: searchText) }
     }
     
-    private func fetchUserFollowers() async throws {
+    @Published var filterSelection: UserRelationType = .followers {
+        didSet { updateRelationData() }
+    }
+    
+    var mostPopularUsers: [User] {
+        users.lazy.sorted { $0.stats.followersCount > $1.stats.followersCount }
+    }
+    
+    init(user: User) {
+        self.user = user
+    }
+    
+    func loadUserRelations() async throws {
+        try await fetchUserFollowers()
+        try await fetchUserFollowing()
+    }
+}
+
+// MARK: - Private Methods
+
+private extension UserRelationsViewModel {
+    func users(sortedBy sort: UserSortOrder = .popularity) -> [User] {
+        switch sort {
+        case .popularity:
+            return users.sorted { $0.stats.followersCount > $1.stats.followersCount }
+        case .name:
+            return users.sorted { $0.fullName.localizedCompare($1.fullName) == .orderedAscending }
+        case .engagement:
+            return users.sorted { $0.stats.postsCount > $1.stats.postsCount }
+        }
+    }
+    
+    func fetchUserFollowers() async throws {
         guard let userID = user.id else { return }
         let followers = try await UserService.fetchUserFollowers(userID: userID)
         self.followers = await checkIfUsersAreFollowed(followers)
         self.updateRelationData()
     }
     
-    private func fetchUserFollowing() async throws {
+    func fetchUserFollowing() async throws {
         guard let userID = user.id else { return }
         var following = try await UserService.fetchUserFollowing(userID: userID)
         
         if user.isCurrentUser {
             for i in 0 ..< following.count {
-                following[i].isFollowed = true
+                following[i].followedByCurrentUser = true
             }
         }
         
@@ -46,8 +86,8 @@ final class UserRelationsViewModel: ObservableObject {
         self.following = await checkIfUsersAreFollowed(following)
     }
     
-   private func updateRelationData() {
-        switch selectedFilter {
+    func updateRelationData() {
+        switch filterSelection {
         case .followers:
             self.users = followers
             self.currentStatString = "\(user.stats.followersCount) followers"
@@ -57,14 +97,14 @@ final class UserRelationsViewModel: ObservableObject {
         }
     }
     
-    private func checkIfUsersAreFollowed(_ users: [User]) async -> [User] {
+    func checkIfUsersAreFollowed(_ users: [User]) async -> [User] {
         var result = users
         
         for i in 0 ..< result.count {
             let user = result[i]
             
             let isFollowed = await UserService.checkIfUserIsFollowed(user)
-            result[i].isFollowed = isFollowed
+            result[i].followedByCurrentUser = isFollowed
         }
         
         return result

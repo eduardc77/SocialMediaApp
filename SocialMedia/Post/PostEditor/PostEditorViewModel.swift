@@ -5,7 +5,7 @@
 
 import SwiftUI
 import PhotosUI
-import SocialMediaData
+import SocialMediaUI
 import SocialMediaNetwork
 import Firebase
 

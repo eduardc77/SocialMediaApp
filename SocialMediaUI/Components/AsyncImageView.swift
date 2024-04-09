@@ -1,7 +1,3 @@
-//
-//  AsyncImageView.swift
-//  SocialMedia
-//
 
 import SwiftUI
 
@@ -65,7 +61,7 @@ public struct AsyncImageView<Content: View>: View where Content: View {
                                 .resizable()
                                 .aspectRatio(aspectRatio, contentMode: contentMode)
                                 .frame(maxWidth: size.value.width, maxHeight: size.value.height)
-                                .task(priority: .background) {
+                                .onAppear {
                                     ImageCache[url] = image
                                 }
                         } else {
@@ -82,7 +78,7 @@ public struct AsyncImageView<Content: View>: View where Content: View {
 
 fileprivate final class ImageCache {
     static private var cache: [URL: Image] = [:]
-    static private let size = 300
+    static private let size = 1000
     
     static subscript(url: URL) -> Image? {
         get {
@@ -91,7 +87,7 @@ fileprivate final class ImageCache {
         set {
             let keys = cache.keys
             if keys.count > size {
-                ImageCache.cache.remove(at: keys.startIndex)
+                ImageCache.cache.removeAll(keepingCapacity: true)
             }
             ImageCache.cache[url] = newValue
         }

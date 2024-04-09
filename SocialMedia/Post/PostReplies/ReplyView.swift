@@ -63,10 +63,10 @@ struct ReplyView: View {
                         VStack(alignment: .leading) {
                             VStack(alignment: .leading, spacing: 4) {
                                 switch model.postType {
-                                case .post(let post):
+                                case .post:
                                     Text(model.currentUser?.username ?? "")
                                         .fontWeight(.semibold)
-                                case .reply(let reply):
+                                case .reply:
                                     Text(model.currentUser?.username ?? "")
                                         .fontWeight(.semibold)
                                 }

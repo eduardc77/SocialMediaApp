@@ -1,9 +1,5 @@
-//
-//  PostCategory.swift
-//  SocialMedia
-//
 
-import Foundation
+import SocialMediaUI
 
 public enum PostCategory: String, Codable, TopFilter {
     case affirmations

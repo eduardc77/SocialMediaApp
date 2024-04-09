@@ -5,6 +5,7 @@
 
 import SwiftUI
 import PhotosUI
+import SocialMediaUI
 
 struct EditProfileView: View {
     @ObservedObject var model: CurrentUserProfileHeaderModel

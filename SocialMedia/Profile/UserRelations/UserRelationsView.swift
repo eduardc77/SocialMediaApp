@@ -4,73 +4,81 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 import SocialMediaNetwork
 
 struct UserRelationsView: View {
-    @StateObject var viewModel: UserRelationsViewModel
-    @State private var searchText = ""
-    @Namespace var animation
-    @Environment(\.dismiss) private var dismiss
+    var router: any Router
+    @ObservedObject var model: UserRelationsViewModel
     
-    init(user: User) {
-        self._viewModel = StateObject(wrappedValue: UserRelationsViewModel(user: user))
+    @Binding var selection: Set<User.ID>
+    @Binding var layout: BrowserLayout
+
+    var tableImageSize: Double {
+#if os(macOS)
+        return 30
+#else
+        return 50
+#endif
     }
     
     var body: some View {
-        VStack {
-            // filter view
-            HStack {
-                ForEach(UserRelationType.allCases) { type in
-                    VStack {
-                        Text(type.title)
-                        
-                        if viewModel.selectedFilter == type {
-                            Rectangle()
-                                .foregroundStyle(Color.primary)
-                                .frame(width: 180, height: 1)
-                                .matchedGeometryEffect(id: "item", in: animation)
-                        } else {
-                            Rectangle()
-                                .foregroundStyle(.clear)
-                                .frame(width: 180, height: 1)
-                        }
-                    }
-                    .onTapGesture {
-                        withAnimation(.spring()) {
-                            viewModel.selectedFilter = type
-                        }
-                    }
+        Group {
+            if model.isLoading {
+                ProgressView()
+                
+            } else if model.filteredUsers.isEmpty, !model.searchText.isEmpty {
+                ContentUnavailableView(
+                    model.contentUnavailableTitle,
+                    systemImage: "magnifyingglass",
+                    description: Text(model.contentUnavailableText)
+                )
+            } else if model.filteredUsers.isEmpty, model.searchText.isEmpty {
+                ContentUnavailableView(
+                    "No Content",
+                    systemImage: "person.fill.questionmark.rtl",
+                    description: Text(model.filterSelection == .followers ? "You have no followers yet." : "You aren't following anyone yet.")
+                )
+            } else {
+                switch layout {
+                case .grid:
+                    grid
+                case .list:
+                    table
                 }
             }
-                        
+        }
+    }
+    
+    var grid: some View {
+        GeometryReader { geometryProxy in
             ScrollView {
-                LazyVStack {
-                    Text(viewModel.currentStatString)
-                        .font(.caption)
-                        .foregroundStyle(Color.secondary)
-                        .padding(4)
-                    
-                    ForEach(viewModel.users) { user in
-                        SearchRow(user: user, thumbnailSize: 30)
-                    }
-                }
-                .searchable(text: $searchText, prompt: "Search...")
+                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width)
             }
         }
-        .padding()
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
+    }
+    
+    var table: some View {
+        Table(model.filteredUsers, selection: $selection) {
+            TableColumn("Name") { user in
+                NavigationButton {
+                    router.push(user)
+                } label: {
+                    SearchRow(user: user, thumbnailSize: tableImageSize)
                 }
             }
         }
-#if os(macOS)
-        .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity)
-#endif
     }
 }
 
 #Preview {
-    UserRelationsView(user: Preview.user)
+    struct Example: View {
+        @State private var selection = Set<User.ID>()
+        @State private var layout = BrowserLayout.grid
+        
+        var body: some View {
+            UserRelationsView(router: ProfileViewRouter(), model: UserRelationsViewModel(user: Preview.user), selection: $selection, layout: $layout)
+        }
+    }
+    return Example()
 }

@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SocialMediaUI
-import SocialMediaData
 import SocialMediaNetwork
 
 enum PostType: Hashable {

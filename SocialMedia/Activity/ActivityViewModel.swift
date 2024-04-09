@@ -58,7 +58,7 @@ class ActivityViewModel: ObservableObject {
         
         if notification.type == .follow {
             async let isFollowed = await UserService.checkIfUserIsFollowed(userID: notification.senderUID)
-            user.isFollowed = await isFollowed
+            user.followedByCurrentUser = await isFollowed
         }
 
         self.notifications[indexOfNotification].user = user

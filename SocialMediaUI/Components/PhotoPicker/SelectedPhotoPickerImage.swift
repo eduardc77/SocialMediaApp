@@ -4,14 +4,19 @@
 //
 
 import SwiftUI
-import SocialMediaUI
 
-struct SelectedPhotoPickerImage: View {
-    let imageState: ImageData.ImageState
-    var size: ImageSize = .large
-    var contentMode: ContentMode = .fit
+public struct SelectedPhotoPickerImage: View {
+    private let imageState: ImageData.ImageState
+    private var size: ImageSize
+    private var contentMode: ContentMode
     
-    var body: some View {
+    public init(imageState: ImageData.ImageState, size: ImageSize = .large, contentMode: ContentMode = .fit) {
+        self.imageState = imageState
+        self.size = size
+        self.contentMode = contentMode
+    }
+    
+    public var body: some View {
         Group {
             switch imageState {
             case .success(let imageData):

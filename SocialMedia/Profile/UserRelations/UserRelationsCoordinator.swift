@@ -1,18 +1,19 @@
 //
-//  FeedCoordinator.swift
+//  UserRelationsCoordinator.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
 
-struct FeedCoordinator: View {
-    @StateObject private var router = FeedViewRouter()
-    @EnvironmentObject private var tabRouter: AppScreenRouter
-
+struct UserRelationsCoordinator: View {
+    var user: User
+    @StateObject private var router = ProfileViewRouter()
+    
     var body: some View {
+        
         NavigationStack(path: $router.path) {
-            FeedTabContainer()
+            UserRelationsTabsContainer(router: router, user: user)
                 .navigationDestination(for: AnyHashable.self) { destination in
                     switch destination {
                     case let user as User:
@@ -25,16 +26,11 @@ struct FeedCoordinator: View {
                         EmptyView()
                     }
                 }
-                .onReceive(tabRouter.$tabReselected) { tabReselected in
-                    guard tabReselected, tabRouter.selection == .home, !router.path.isEmpty else { return }
-                    router.popToRoot()
-                }
-                .environmentObject(router)
         }
+//        .environmentObject(router)
     }
 }
 
 #Preview {
-    FeedCoordinator()
-        .environmentObject(AppScreenRouter())
+    ProfileCoordinator()
 }

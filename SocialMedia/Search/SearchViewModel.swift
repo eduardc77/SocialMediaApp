@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 @MainActor
 final class SearchViewModel: ObservableObject {
-    @Published var users: [User] = []
+    @Published private var users = [User]()
     
     @Published var searchText = ""
     @Published var isLoading = false
@@ -34,7 +34,7 @@ final class SearchViewModel: ObservableObject {
     
     init() {}
     
-    public func users(sortedBy sort: UserSortOrder = .popularity) -> [User] {
+    func users(sortedBy sort: UserSortOrder = .popularity) -> [User] {
         switch sort {
         case .popularity:
             return users.sorted { $0.stats.followersCount > $1.stats.followersCount }
@@ -67,7 +67,7 @@ final class SearchViewModel: ObservableObject {
     
     func checkIfUserIsFollowed(user: User) async -> User {
         var result = user
-        result.isFollowed = await UserService.checkIfUserIsFollowed(user)
+        result.followedByCurrentUser = await UserService.checkIfUserIsFollowed(user)
         return result
     }
     
@@ -89,7 +89,7 @@ private extension SearchViewModel {
     func follow(user: User, at index: Int) async throws {
         guard let userID = user.id else { return }
         isLoading = true
-        users[index].isFollowed = true
+        users[index].followedByCurrentUser = true
         users[index].stats.followersCount += 1
         try await UserService.shared.follow(userID: userID)
         
@@ -99,7 +99,7 @@ private extension SearchViewModel {
     func unfollow(user: User, at index: Int) async throws {
         guard let userID = user.id else { return }
         isLoading = true
-        users[index].isFollowed = false
+        users[index].followedByCurrentUser = false
         users[index].stats.followersCount -= 1
         try await UserService.shared.unfollow(userID: userID)
         

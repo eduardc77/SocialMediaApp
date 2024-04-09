@@ -1,11 +1,6 @@
-//
-//  Post.swift
-//  SocialMedia
-//
 
 import Firebase
 import FirebaseFirestoreSwift
-import SocialMediaData
 
 public struct Post: Identifiable, Codable, Hashable {
     @DocumentID public var id: String?
@@ -22,6 +17,10 @@ public struct Post: Identifiable, Codable, Hashable {
     public var imageUrl: String?
     
     public var user: User?
+     
+    public var isLiked: Bool? = nil
+    public var isSaved: Bool? = nil
+    public var isReposed: Bool? = nil
     
     public init(id: String? = nil, caption: String, ownerUID: String, category: PostCategory, timestamp: Timestamp, likes: Int = 0, reposts: Int = 0, replies: Int = 0, replyDepthLevel: Int = 0, imageUrl: String? = nil, user: User? = nil) {
         self.id = id
@@ -35,11 +34,5 @@ public struct Post: Identifiable, Codable, Hashable {
         self.replyDepthLevel = replyDepthLevel
         self.imageUrl = imageUrl
         self.user = user
-    }
-}
-
-extension Post: Equatable {
-    public static func ==(lhs: Post, rhs: Post) -> Bool {
-        return lhs.id == rhs.id && lhs.ownerUID == rhs.ownerUID && lhs.caption == rhs.caption && lhs.category == rhs.category && lhs.imageUrl == rhs.imageUrl && lhs.likes == rhs.likes && lhs.replies == rhs.replies && lhs.reposts == rhs.reposts
     }
 }

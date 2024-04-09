@@ -9,7 +9,7 @@ import SocialMediaNetwork
 
 struct ProfileTabsContainer: View {
     var router: any Router
-    @State var user: User
+    var user: User
     var didNavigate: Bool
     
     @State private var selectedTab: ProfilePostFilter = .posts
@@ -55,7 +55,7 @@ struct ProfileTabsContainer: View {
                         router: router,
                         user: user,
                         tab: tab,
-                        contentUnavailable: user.privateProfile && !user.isFollowed
+                        contentUnavailable: user.privateProfile && !(user.isFollowed ?? false)
                     )
                     .containerTabItem(tab: tab, label: .primary(tab.title))
                 }

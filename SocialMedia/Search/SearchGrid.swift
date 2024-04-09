@@ -12,9 +12,6 @@ struct SearchGrid: View {
     var users: [User]
     var width: Double
     
-    var followedIndex: Int = 0
-    var isLoading: Bool = false
-    
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
 #endif

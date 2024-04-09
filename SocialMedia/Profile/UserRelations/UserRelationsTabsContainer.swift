@@ -1,5 +1,5 @@
 //
-//  SearchView.swift
+//  UserRelationsTabsContainer.swift
 //  SocialMedia
 //
 
@@ -7,56 +7,40 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
-struct SearchView: View {
-    @StateObject private var model = SearchViewModel()
+struct UserRelationsTabsContainer: View {
+    var router: any Router
+    @StateObject private var model: UserRelationsViewModel
     @State private var selection = Set<User.ID>()
     @State private var layout = BrowserLayout.grid
-    
-    @EnvironmentObject private var router: SearchViewRouter
-    
-    var tableImageSize: Double {
-#if os(macOS)
-        return 30
-#else
-        return 50
-#endif
+
+    @Environment(\.dismiss) private var dismiss
+
+    init(router: any Router, user: User) {
+        self.router = router
+        self._model = StateObject(wrappedValue: UserRelationsViewModel(user: user))
     }
     
     var body: some View {
-        Group {
-            if model.isLoading { 
-                ProgressView()
-                
-            } else if model.filteredUsers.isEmpty {
-                
-                ContentUnavailableView(
-                    model.contentUnavailableTitle,
-                    systemImage: "magnifyingglass",
-                    description: Text(model.contentUnavailableText)
-                )
-            } else {
-                Group {
-                    switch layout {
-                    case .grid:
-                        grid
-                    case .list:
-                        table
-                    }
-                }
-            }
+        VStack {
+            TopFilterBar(currentFilter: $model.filterSelection)
+            relationsTabView
         }
+#if os(macOS)
+        .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity)
+#endif
         .background(Color.groupedBackground)
-        .navigationTitle(AppScreen.search.title)
         .toolbar {
-            ToolbarItemGroup {
-                toolbarItems
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    dismiss()
+                }
             }
         }
         .task {
             do {
-                try await model.fetchUsers()
+                try await model.loadUserRelations()
             } catch {
-                print("DEBUG: Failed to fetch users in Search View.")
+                print("DEBUG: Failed to fetch user relations.")
             }
         }
         .searchable(text: $model.searchText)
@@ -67,29 +51,26 @@ struct SearchView: View {
         }
         .refreshable {
             Task {
-                try await model.refresh()
+                try await model.loadUserRelations()
             }
         }
     }
+}
+
+// MARK: - Subviews
+
+private extension UserRelationsTabsContainer {
     
-    var grid: some View {
-        GeometryReader { geometryProxy in
-            ScrollView {
-                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width)
-            }
+    var relationsTabView: some View {
+        TabView(selection: $model.filterSelection) {
+            UserRelationsView(router: router, model: model, selection: $selection, layout: $layout)
+                .tag(UserRelationType.followers)
+            UserRelationsView(router: router, model: model, selection: $selection, layout: $layout)
+                .tag(UserRelationType.following)
         }
-    }
-    
-    var table: some View {
-        Table(model.filteredUsers, selection: $selection) {
-            TableColumn("Name") { user in
-                NavigationButton {
-                    router.push(user)
-                } label: {
-                    SearchRow(user: user, thumbnailSize: tableImageSize)
-                }
-            }
-        }
+#if os(iOS)
+        .tabViewStyle(.page(indexDisplayMode: .never))
+#endif
     }
     
     @ViewBuilder
@@ -112,7 +93,6 @@ struct SearchView: View {
                     .tag(UserSortOrder.engagement)
             }
             .pickerStyle(.inline)
-            
         } label: {
             Label("Layout Options", systemImage: layout.imageName)
                 .labelStyle(.iconOnly)
@@ -124,5 +104,11 @@ struct SearchView: View {
             Text("**\(user.fullName)**")
                 .searchCompletion(user.fullName)
         }
+    }
+}
+
+#Preview {
+    NavigationView {
+        PostCategoryDetailView(router: FeedViewRouter(), category: .affirmations)
     }
 }

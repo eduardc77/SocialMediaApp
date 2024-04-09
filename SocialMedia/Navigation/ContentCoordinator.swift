@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SocialMediaUI
 import SocialMediaNetwork
 
 struct ContentCoordinator: View {
@@ -40,7 +41,7 @@ private func sheetContent(_ content: AnyIdentifiable) -> some View {
         case .editProfile(let model, let imageData):
             EditProfileView(model: model, imageData: imageData)
         case .userRelations(let user):
-            UserRelationsView(user: user)
+            UserRelationsCoordinator(user: user)
         }
     }
 }

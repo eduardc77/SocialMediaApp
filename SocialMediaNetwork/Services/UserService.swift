@@ -1,7 +1,3 @@
-//
-//  UserService.swift
-//  SocialMedia
-//
 
 import Firebase
 import FirebaseFirestoreSwift

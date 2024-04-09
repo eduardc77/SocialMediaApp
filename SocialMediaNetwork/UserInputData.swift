@@ -1,7 +1,3 @@
-//
-//  UserInputData.swift
-//  SocialMedia
-//
 
 public struct UserInputData {
     public var email: String

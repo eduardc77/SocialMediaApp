@@ -1,10 +1,9 @@
-//
-//  TopFilterBar.swift
-//  SocialMedia
-//
 
 import SwiftUI
-import SocialMediaData
+
+public protocol TopFilter: Hashable, CaseIterable, Identifiable {
+    var title: String { get }
+}
 
 public struct TopFilterBar<T: TopFilter>: View {
     @Binding private var currentFilter: T
@@ -20,7 +19,7 @@ public struct TopFilterBar<T: TopFilter>: View {
     public var body: some View {
         ZStack(alignment: .bottom) {
             HStack {
-                ForEach(Array(T.allCases), id: \.self) { filter in
+                ForEach(Array(T.allCases)) { filter in
                     feedFilterItem(for: filter)
                         .id(filter)
                         .frame(maxWidth: .infinity)
@@ -28,7 +27,6 @@ public struct TopFilterBar<T: TopFilter>: View {
             }
             Divider()
         }
-        .background(.bar)
         .onChange(of: currentFilter) { _, newValue in
             onSelection?()
         }

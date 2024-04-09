@@ -3,9 +3,9 @@
 //  SocialMedia
 //
 
-import Foundation
+import SocialMediaUI
 
-enum UserRelationType: String, Identifiable, CaseIterable {
+enum UserRelationType: String, TopFilter {
     case followers
     case following
     

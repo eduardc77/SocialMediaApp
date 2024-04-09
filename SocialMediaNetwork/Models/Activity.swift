@@ -1,7 +1,3 @@
-//
-//  Activity.swift
-//  SocialMedia
-//
 
 import Firebase
 import FirebaseFirestoreSwift

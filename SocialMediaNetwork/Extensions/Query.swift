@@ -1,7 +1,3 @@
-//
-//  Query+EXT.swift
-//  SocialMedia
-//
 
 import Combine
 import FirebaseFirestore
@@ -40,7 +36,7 @@ public extension Query {
     func addSnapshotListener<T>(as type: T.Type) -> (AnyPublisher<(DocChangeType<T>, DocumentSnapshot?), Error>, ListenerRegistration) where T : Decodable {
         let publisher = PassthroughSubject<(DocChangeType<T>, DocumentSnapshot?), Error>()
         let listener = self.addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
-//            guard querySnapshot?.documentChanges.count == 1 else { return }
+            guard querySnapshot?.documentChanges.count == 1 else { return }
             var documentChangeType: DocChangeType<T> = .none
             
             querySnapshot?.documentChanges.forEach { documentChange in

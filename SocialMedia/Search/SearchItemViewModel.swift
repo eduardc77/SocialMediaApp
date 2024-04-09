@@ -23,7 +23,7 @@ final class SearchItemViewModel: ObservableObject {
     @MainActor
     func toggleFollow() async throws {
         guard let userID = user.id else { return }
-        user.isFollowed.toggle()
+        user.followedByCurrentUser?.toggle()
         isLoading = true
         if user.isFollowed {
             try await UserService.shared.follow(userID: userID)

@@ -1,7 +1,3 @@
-//
-//  FirestoreConstants.swift
-//  SocialMedia
-//
 
 import Firebase
 

@@ -43,7 +43,6 @@ struct PostButton: View {
 #if os(iOS)
         .hapticFeedback(trigger: tapped)
 #endif
-        
         .onChange(of: count) { oldValue, newValue in
             guard oldValue != newValue else { return }
             countsDown = newValue < oldValue

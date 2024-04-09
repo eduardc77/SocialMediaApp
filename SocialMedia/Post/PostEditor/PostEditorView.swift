@@ -5,6 +5,7 @@
 
 import SwiftUI
 import PhotosUI
+import SocialMediaUI
 
 struct PostEditorView: View {
     @StateObject var model = PostEditorViewModel()

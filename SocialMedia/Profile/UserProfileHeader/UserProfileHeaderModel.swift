@@ -30,7 +30,7 @@ final class UserProfileHeaderModel: ObservableObject {
             self.user.stats = try await stats
             
             async let isFollowed = await checkIfUserIsFollowed()
-            self.user.isFollowed = await isFollowed
+            self.user.followedByCurrentUser = await isFollowed
             isLoading = false
         }
     }
@@ -42,7 +42,7 @@ extension UserProfileHeaderModel {
     func follow() async throws {
         guard let userID = user.id else { return }
         isLoading = true
-        user.isFollowed = true
+        user.followedByCurrentUser = true
         user.stats.followersCount += 1
         try await UserService.shared.follow(userID: userID)
         isLoading = false
@@ -51,7 +51,7 @@ extension UserProfileHeaderModel {
     func unfollow() async throws {
         guard let userID = user.id else { return }
         isLoading = true
-        user.isFollowed = false
+        user.followedByCurrentUser = false
         user.stats.followersCount -= 1
         try await UserService.shared.unfollow(userID: userID)
         isLoading = false

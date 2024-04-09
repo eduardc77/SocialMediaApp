@@ -1,7 +1,3 @@
-//
-//  Timestamp.swift
-//  SocialMedia
-//
 
 import Firebase
 

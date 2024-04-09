@@ -1,7 +1,3 @@
-//
-//  User.swift
-//  SocialMedia
-//
 
 import Firebase
 import FirebaseFirestoreSwift
@@ -17,14 +13,19 @@ public struct User: Identifiable, Codable, Hashable {
     public var aboutMe: String
     public var link: String
     public var stats: UserStats
-    public var isFollowed: Bool
     public var privateProfile: Bool
 
     public var isCurrentUser: Bool {
         return id == Auth.auth().currentUser?.uid
     }
     
-    public init(id: String? = nil, email: String, username: String, fullName: String, joinDate: Timestamp, profileImageURL: String = "", aboutMe: String = "", link: String = "", stats: UserStats = .init(), isFollowed: Bool = false, privateProfile: Bool = false) {
+    public var followedByCurrentUser: Bool? = nil
+    
+    public var isFollowed: Bool {
+        self.followedByCurrentUser ?? false
+    }
+    
+    public init(id: String? = nil, email: String, username: String, fullName: String, joinDate: Timestamp, profileImageURL: String = "", aboutMe: String = "", link: String = "", stats: UserStats = .init(), privateProfile: Bool = false) {
         self.id = id
         self.email = email
         self.username = username
@@ -34,7 +35,6 @@ public struct User: Identifiable, Codable, Hashable {
         self.aboutMe = aboutMe
         self.link = link
         self.stats = stats
-        self.isFollowed = isFollowed
         self.privateProfile = privateProfile
     }
     

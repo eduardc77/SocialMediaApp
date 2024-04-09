@@ -8,6 +8,8 @@ import SocialMediaNetwork
 
 struct UserProfileHeader: View {
     @StateObject private var model: UserProfileHeaderModel
+    @EnvironmentObject private var router: ProfileViewRouter
+    @EnvironmentObject private var modalRouter: ModalScreenRouter
     
     init(user: User) {
         self._model = StateObject(wrappedValue: UserProfileHeaderModel(user: user))
@@ -34,7 +36,7 @@ struct UserProfileHeader: View {
                             .font(.subheadline)
                     }
                     Button {
-                        model.showUserRelationSheet.toggle()
+                        modalRouter.presentSheet(destination: ProfileSheetDestination.userRelations(user: model.user))
                     } label: {
                         Text("\(model.user.stats.followersCount) followers")
                             .font(.subheadline)
@@ -55,9 +57,6 @@ struct UserProfileHeader: View {
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
-        .sheet(isPresented: $model.showUserRelationSheet) {
-            UserRelationsView(user: model.user)
-        }
     }
     
     func handleFollowTapped() {

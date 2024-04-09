@@ -64,7 +64,7 @@ struct PostGrid: View {
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
+                    ForEach(Array(posts.enumerated()), id: \.element) { index, post in
                         ZStack(alignment: .top) {
                             NavigationButton {
                                 router.push(PostType.post(post))

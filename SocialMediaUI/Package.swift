@@ -20,13 +20,11 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../SocialMediaData"),
     ],
     targets: [
         .target(
             name: "SocialMediaUI",
             dependencies: [
-                .product(name: "SocialMediaData", package: "SocialMediaData", condition: nil),
             ],
             path: "."
         )

@@ -14,7 +14,7 @@ struct ActivityView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
-                Section(header: ActivityFilterView(selectedFilter: $model.selectedFilter)) {
+                Section(header: ActivityFilterView(currentFilter: $model.selectedFilter)) {
                     if model.filteredNotifications.isEmpty, !model.isLoading {
                         ContentUnavailableView(
                             "No Content",
