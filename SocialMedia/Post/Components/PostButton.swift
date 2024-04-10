@@ -14,6 +14,7 @@ struct PostButton: View {
     
     @State private var tapped: Bool = false
     @State private var countsDown: Bool = false
+    @State private var tempCount: Int = 0
     
     var body: some View {
         Button {
@@ -25,11 +26,10 @@ struct PostButton: View {
                     .labelStyle(.iconOnly)
                     .symbolVariant(isActive ? .fill : .none)
                     .contentTransition(.symbolEffect(isActive ? .replace.upUp : .replace.downUp))
-                    
-                if count > 0, buttonType != .save {
-                    Text("\(count)")
+                
+                if tempCount > 0, buttonType != .save {
+                    Text("\(tempCount)")
                         .contentTransition(.numericText(countsDown: countsDown))
-                        .animation(.default, value: count)
                 }
             }
             .font(.footnote)
@@ -46,6 +46,16 @@ struct PostButton: View {
         .onChange(of: count) { oldValue, newValue in
             guard oldValue != newValue else { return }
             countsDown = newValue < oldValue
+            guard tempCount != newValue else { return }
+            withAnimation {
+                tempCount = newValue
+            }
+            
+        }
+        .onFirstAppear {
+            withAnimation {
+                tempCount = count
+            }
         }
     }
 }

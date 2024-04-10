@@ -10,15 +10,15 @@ public struct MainButtonStyle: ButtonStyle {
     private var buttonHeight: CGFloat
     private var foregroundColor: Color
     private var backgroundColor: Color
-    @Binding private var isLoading: Bool
+    private var loading: Bool
     @Environment(\.isEnabled) private var isEnabled
     
-    public init(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 44, foregroundColor: Color = Color.secondaryGroupedBackground, backgroundColor: Color = .primary, isLoading: Binding<Bool>) {
+    public init(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 44, foregroundColor: Color = Color.secondaryGroupedBackground, backgroundColor: Color = .primary, loading: Bool) {
         self.buttonWidth = buttonWidth
         self.buttonHeight = buttonHeight
         self.foregroundColor = foregroundColor
         self.backgroundColor = backgroundColor
-        self._isLoading = isLoading
+        self.loading = loading
     }
     
     public func makeBody(configuration: Configuration) -> some View {
@@ -37,7 +37,7 @@ public struct MainButtonStyle: ButtonStyle {
             )
             .opacity(isEnabled ? 1 : 0.5)
             .overlay {
-                if isLoading {
+                if loading {
                     ZStack {
                         backgroundColor.clipShape(RoundedRectangle(cornerRadius: 8))
                         ProgressView().tint(foregroundColor)
@@ -48,9 +48,9 @@ public struct MainButtonStyle: ButtonStyle {
 }
 
 public extension ButtonStyle where Self == MainButtonStyle {
-    static var main: MainButtonStyle { MainButtonStyle(isLoading: .constant(false)) }
+    static var main: MainButtonStyle { MainButtonStyle(loading: false) }
     
-    static func main(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 44, foregroundColor: Color = Color.secondaryGroupedBackground, backgroundColor: Color = .primary, isLoading: Binding<Bool>) -> MainButtonStyle {
-        MainButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, backgroundColor: backgroundColor, isLoading: isLoading)
+    static func main(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 44, foregroundColor: Color = Color.secondaryGroupedBackground, backgroundColor: Color = .primary, loading: Bool) -> MainButtonStyle {
+        MainButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, backgroundColor: backgroundColor, loading: loading)
     }
 }

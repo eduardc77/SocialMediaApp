@@ -6,12 +6,9 @@
 import Foundation
 import SocialMediaNetwork
 
-@MainActor
 final class PostButtonGroupViewModel: ObservableObject {
     var postType: PostType
-    
-    @Published var temporaryRepostCount: Int = 0
-    
+
     var numberOfLikes: Int {
         switch postType {
         case .post(let post):
@@ -101,26 +98,5 @@ final class PostButtonGroupViewModel: ObservableObject {
         guard reply.user?.isCurrentUser != nil else { return }
         let post = try await PostService.fetchPost(postID: reply.postID)
         try await ReplyService.deleteReply(for: reply.postID, maxReplyDepthLevel: post.replyDepthLevel)
-    }
-}
-
-// MARK: - Check User Activity
-
-extension PostButtonGroupViewModel {
-    
-    func didUserLike(post: Post) async throws -> Bool {
-        try await PostService.checkIfUserLikedPost(post)
-    }
-    
-    func didUserLike(reply: Reply) async throws -> Bool {
-        try await ReplyService.checkIfUserLikedReply(reply)
-    }
-    
-    func didUserSave(post: Post) async throws -> Bool {
-        try await PostService.checkIfUserSavedPost(post)
-    }
-    
-    func didUserSave(reply: Reply) async throws -> Bool {
-        try await ReplyService.checkIfUserSavedReply(reply)
     }
 }

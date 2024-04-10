@@ -10,7 +10,7 @@ import SocialMediaNetwork
 class ActivityViewModel: ObservableObject {
     var notifications = [Activity]()
     @Published var filteredNotifications = [Activity]()
-    @Published var isLoading = false
+    @Published var loading = false
     
     var contentUnavailableText: String {
         selectedFilter == .all ? "No activities yet." : "No \(selectedFilter.rawValue) activities yet."
@@ -33,9 +33,9 @@ class ActivityViewModel: ObservableObject {
 
     init() {
         Task {
-            self.isLoading = true
+            self.loading = true
             try await updateNotifications()
-            self.isLoading = false
+            self.loading = false
             filteredNotifications = notifications
         }
     }

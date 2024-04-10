@@ -9,7 +9,7 @@ import SocialMediaNetwork
 @MainActor
 final class ResetPasswordViewModel: ObservableObject {
     @Published var email = ""
-    @Published var isLoading: Bool = false
+    @Published var loading: Bool = false
     
     @Published var showEmailSentAlert: Bool = false
     @Published var showErrorAlert: Bool = false
@@ -35,15 +35,15 @@ final class ResetPasswordViewModel: ObservableObject {
     
     @MainActor
     func sendPasswordResetEmail() async throws {
-        isLoading = true
+        loading = true
         do {
             try await AuthService.sendPasswordResetEmail(toEmail: email)
-            isLoading = false
+            loading = false
             showEmailSentAlert = true
         } catch {
             authError = AuthError(error: error)
             showErrorAlert = true
-            isLoading = false
+            loading = false
         }
     }
 }

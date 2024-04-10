@@ -34,13 +34,13 @@ struct SearchGridItem: View {
                 } label: {
                     Text(model.isFollowed ? "Following" : "Follow")
                 }
-                .buttonStyle(.secondary(buttonWidth: nil, foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, isLoading: model.isLoading, isActive: model.isFollowed))
+                .buttonStyle(.secondary(buttonWidth: nil, foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, loading: model.loading, isActive: model.isFollowed))
                 .overlay {
-                    if model.isLoading {
+                    if model.loading {
                         ProgressView()
                     }
                 }
-                .disabled(model.isLoading)
+                .disabled(model.loading)
             }
         }
     }

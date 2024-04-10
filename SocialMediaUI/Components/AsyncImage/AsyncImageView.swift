@@ -5,7 +5,7 @@ import SwiftUI
 public struct AsyncImageView<Content: View>: View where Content: View {
     
     /// This view uses the shared URLSession instance to load an image from the specified URL.
-    private let url: URL?
+    private let url: URL
     
     /// Default is none which leaves the size nil to maintain the current size of the image.
     /// Using custom you can omit either width or height leaving it nil for the auto sizing.
@@ -26,7 +26,7 @@ public struct AsyncImageView<Content: View>: View where Content: View {
     /// The transaction to use when the phase changes. Use a transaction to pass an animation between views in a view hierarchy.
     private let transaction: Transaction
     
-    public init(url: URL?,
+    public init(url: URL,
                 size: ImageSize = .none,
                 @ViewBuilder placeholder: @escaping () -> Content? = { Rectangle().fill(.gray.opacity(0.5)) },
                 aspectRatio: CGFloat? = nil,
@@ -44,53 +44,30 @@ public struct AsyncImageView<Content: View>: View where Content: View {
     }
     
     public var body: some View {
-        if let url = url {
-                if let cachedImage = ImageCache[url] {
-                    cachedImage
-                        .resizable()
-                        .aspectRatio(aspectRatio, contentMode: contentMode)
-                        .frame(maxWidth: size.value.width, maxHeight: size.value.height)
-                    
-                } else {
-                    AsyncImage(url: url,
-                               scale: scale,
-                               transaction: transaction) { phase in
-                        
-                        if case .success(let image) = phase {
-                            image
-                                .resizable()
-                                .aspectRatio(aspectRatio, contentMode: contentMode)
-                                .frame(maxWidth: size.value.width, maxHeight: size.value.height)
-                                .onAppear {
-                                    ImageCache[url] = image
-                                }
-                        } else {
-                            placeholder()
-                                .aspectRatio(aspectRatio, contentMode: contentMode)
-                                .frame(maxWidth: size.value.width, maxHeight: size.value.height)
-                                .shimmering()
-                        }
-                    }
-                }
+        CacheAsyncImage(
+            url: url
+        ) { phase in
+            switch phase {
+            case .empty:
+                placeholderView
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(aspectRatio, contentMode: contentMode)
+                    .frame(maxWidth: size.value.width, maxHeight: size.value.height)
+            case .failure:
+                placeholderView
+            @unknown default:
+                fatalError()
+            }
         }
     }
-}
-
-fileprivate final class ImageCache {
-    static private var cache: [URL: Image] = [:]
-    static private let size = 1000
     
-    static subscript(url: URL) -> Image? {
-        get {
-            ImageCache.cache[url]
-        }
-        set {
-            let keys = cache.keys
-            if keys.count > size {
-                ImageCache.cache.removeAll(keepingCapacity: true)
-            }
-            ImageCache.cache[url] = newValue
-        }
+    private var placeholderView: some View {
+        placeholder()
+            .aspectRatio(aspectRatio, contentMode: contentMode)
+            .frame(maxWidth: size.value.width, maxHeight: size.value.height)
+            .shimmering()
     }
 }
 

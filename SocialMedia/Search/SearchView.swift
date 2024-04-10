@@ -24,7 +24,7 @@ struct SearchView: View {
     
     var body: some View {
         Group {
-            if model.isLoading { 
+            if model.loading { 
                 ProgressView()
                 
             } else if model.filteredUsers.isEmpty {

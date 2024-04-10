@@ -27,7 +27,7 @@ struct EditableCircularProfileImage: View {
             .overlay(alignment: .bottomTrailing) {
                 Image(systemName: "pencil.circle.fill")
                     .symbolRenderingMode(.multicolor)
-                    .font(.system(size: 30))
+                    .font(.system(size: 24))
                     .foregroundStyle(.tint)
             }
         }

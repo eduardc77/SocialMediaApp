@@ -11,7 +11,7 @@ import Firebase
 @MainActor
 class FeedViewModel: ObservableObject {
     @Published var posts = [Post]()
-    @Published var isLoading = false
+    @Published var loading = false
     var itemsPerPage: Int = 10
     
     var listenForAddUpdates: Bool = true

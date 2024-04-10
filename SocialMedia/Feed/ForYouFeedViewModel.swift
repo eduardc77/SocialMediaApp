@@ -14,13 +14,13 @@ final class ForYouFeedViewModel: FeedViewModel {
         guard !noMoreItemsToFetch else {
             return
         }
-        isLoading = true
+        loading = true
         
         let (newPosts, lastPostDocument) = try await PostService.fetchForYouPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
         
         guard !newPosts.isEmpty else {
             self.noMoreItemsToFetch = true
-            self.isLoading = false
+            self.loading = false
             self.lastPostDocument = nil
             return
         }
@@ -28,7 +28,7 @@ final class ForYouFeedViewModel: FeedViewModel {
         do {
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
-                    self?.isLoading = false
+                    self?.loading = false
                     return
                 }
                 var userDataPosts = [Post]()
@@ -49,7 +49,7 @@ final class ForYouFeedViewModel: FeedViewModel {
                 }
                 self.posts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 
-                self.isLoading = false
+                self.loading = false
             }
         } catch {
             print("Error fetching for you posts: \(error)")

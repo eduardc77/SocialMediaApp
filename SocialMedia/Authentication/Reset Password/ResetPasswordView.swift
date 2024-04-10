@@ -30,7 +30,7 @@ struct ResetPasswordView: View {
                     try await viewModel.sendPasswordResetEmail() 
                 }
             }
-            .buttonStyle(.main(isLoading: $viewModel.isLoading))
+            .buttonStyle(.main(loading: viewModel.loading))
             .disabled(!viewModel.validForm)
             .listRowInsets(.init())
             .listRowBackground(Color.clear)
@@ -41,7 +41,7 @@ struct ResetPasswordView: View {
             }
         }
         .formStyle(.grouped)
-        .disabled(viewModel.isLoading)
+        .disabled(viewModel.loading)
         .navigationTitle(AuthScreen.resetPassword.navigationTitle)
         .alert(isPresented: $viewModel.showEmailSentAlert) {
             Alert(title: Text(viewModel.emailSentAlertTitle),

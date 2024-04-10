@@ -29,7 +29,7 @@ import SocialMediaNetwork
 //                                .foregroundStyle(Color.secondary)
 //                        } else {
 //                            PostGrid(router: router, postGridType: .posts(model.posts),
-//                                     isLoading: .constant(false),
+//                                     loading: .constant(false),
 //                                     loadNewPage: {})
 //                            .transition(.move(edge: .leading))
 //                        }

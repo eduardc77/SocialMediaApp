@@ -23,7 +23,6 @@ struct ContentCoordinator: View {
             }
             .environmentObject(appRouter)
             .environmentObject(modalRouter)
-            .ignoresSafeArea(.keyboard)
     }
 }
 

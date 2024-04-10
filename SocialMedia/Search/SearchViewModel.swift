@@ -11,7 +11,7 @@ final class SearchViewModel: ObservableObject {
     @Published private var users = [User]()
     
     @Published var searchText = ""
-    @Published var isLoading = false
+    @Published var loading = false
     @Published var followedIndex: Int = 0
     
     var contentUnavailableTitle: String {
@@ -46,7 +46,7 @@ final class SearchViewModel: ObservableObject {
     }
     
     func fetchUsers() async throws {
-        self.isLoading = true
+        self.loading = true
         let users = try await UserService.fetchUsers()
         
         try await withThrowingTaskGroup(of: User.self, body: { group in
@@ -60,7 +60,7 @@ final class SearchViewModel: ObservableObject {
                 result.append(user)
             }
             
-            self.isLoading = false
+            self.loading = false
             self.users = result
         })
     }
@@ -88,22 +88,22 @@ public enum UserSortOrder: Hashable {
 private extension SearchViewModel {
     func follow(user: User, at index: Int) async throws {
         guard let userID = user.id else { return }
-        isLoading = true
+        loading = true
         users[index].followedByCurrentUser = true
         users[index].stats.followersCount += 1
         try await UserService.shared.follow(userID: userID)
         
-        isLoading = false
+        loading = false
     }
     
     func unfollow(user: User, at index: Int) async throws {
         guard let userID = user.id else { return }
-        isLoading = true
+        loading = true
         users[index].followedByCurrentUser = false
         users[index].stats.followersCount -= 1
         try await UserService.shared.unfollow(userID: userID)
         
-        isLoading = false
+        loading = false
     }
 }
 

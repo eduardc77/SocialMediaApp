@@ -35,7 +35,11 @@ private extension PostCategoryDetailView {
     var postsTabView: some View {
         TabView(selection: $model.currentFilter) {
             ScrollView {
-                PostGrid(router: router, postGridType: .posts(model.posts), isLoading: $model.isLoading, loadNewPage: model.loadMorePosts)
+                PostGrid(router: router,
+                         postGridType: .posts(model.posts),
+                         loading: $model.loading,
+                         endReached: model.noMoreItemsToFetch,
+                         loadNewPage: model.loadMorePosts)
             }
             .tag(CategoryFilter.hot)
             .refreshable {
@@ -52,7 +56,11 @@ private extension PostCategoryDetailView {
                 }
             }
             ScrollView {
-                PostGrid(router: router, postGridType: .posts(model.posts), isLoading: $model.isLoading, loadNewPage: model.loadMorePosts)
+                PostGrid(router: router,
+                         postGridType: .posts(model.posts),
+                         loading: $model.loading,
+                         endReached: model.noMoreItemsToFetch,
+                         loadNewPage: model.loadMorePosts)
             }
             .tag(CategoryFilter.new)
             .refreshable {

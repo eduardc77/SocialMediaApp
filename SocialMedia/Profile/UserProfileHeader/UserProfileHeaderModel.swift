@@ -9,7 +9,7 @@ import SocialMediaNetwork
 @MainActor
 final class UserProfileHeaderModel: ObservableObject {
     @Published var user: User
-    @Published var isLoading: Bool = false
+    @Published var loading: Bool = false
     
     @Published var selectedPostFilter: ProfilePostFilter = .posts
     @Published var showEditProfile = false
@@ -25,13 +25,13 @@ final class UserProfileHeaderModel: ObservableObject {
     func loadUserData() {
         guard let userID = user.id else { return }
         Task {
-            isLoading = true
+            loading = true
             async let stats = try await UserService.fetchUserStats(userID: userID)
             self.user.stats = try await stats
             
             async let isFollowed = await checkIfUserIsFollowed()
             self.user.followedByCurrentUser = await isFollowed
-            isLoading = false
+            loading = false
         }
     }
 }
@@ -41,20 +41,20 @@ final class UserProfileHeaderModel: ObservableObject {
 extension UserProfileHeaderModel {
     func follow() async throws {
         guard let userID = user.id else { return }
-        isLoading = true
+        loading = true
         user.followedByCurrentUser = true
         user.stats.followersCount += 1
         try await UserService.shared.follow(userID: userID)
-        isLoading = false
+        loading = false
     }
     
     func unfollow() async throws {
         guard let userID = user.id else { return }
-        isLoading = true
+        loading = true
         user.followedByCurrentUser = false
         user.stats.followersCount -= 1
         try await UserService.shared.unfollow(userID: userID)
-        isLoading = false
+        loading = false
     }
     
     func checkIfUserIsFollowed() async -> Bool {

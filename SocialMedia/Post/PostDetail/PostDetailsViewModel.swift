@@ -17,12 +17,12 @@ final class PostDetailsViewModel: ObservableObject {
     var contentUnavailableText = "Be the first to reply."
     
     @Published var replies = [Reply]()
-    @Published var isLoading = false
+    @Published var loading = false
     
     var itemsPerPage: Int = 10
-    private var noMoreItemsToFetch: Bool = false
-    private var lastDocument: DocumentSnapshot?
+    var noMoreItemsToFetch: Bool = false
     
+    private var lastDocument: DocumentSnapshot?
     private var cancellables = Set<AnyCancellable>()
     
      var user: SocialMediaNetwork.User? {
@@ -78,7 +78,7 @@ final class PostDetailsViewModel: ObservableObject {
     func loadMoreReplies() async throws {
         guard !noMoreItemsToFetch else { return }
         
-        isLoading = true
+        loading = true
         var (newReplies, lastReplyDocument): ([Reply], DocumentSnapshot?)
         
         switch postType {
@@ -93,7 +93,7 @@ final class PostDetailsViewModel: ObservableObject {
         
         guard !newReplies.isEmpty else {
             self.noMoreItemsToFetch = true
-            self.isLoading = false
+            self.loading = false
             self.lastDocument = nil
             return
         }
@@ -101,7 +101,7 @@ final class PostDetailsViewModel: ObservableObject {
         do {
             try await withThrowingTaskGroup(of: Reply.self) { [weak self] group in
                 guard let self = self else {
-                    self?.isLoading = false
+                    self?.loading = false
                     print("DEBUG: FeedViewModel object not found.")
                     return
                 }
@@ -123,7 +123,7 @@ final class PostDetailsViewModel: ObservableObject {
                 }
                 
                 self.replies.append(contentsOf: userDataReplies.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
-                self.isLoading = false
+                self.loading = false
                 
             }
         } catch {

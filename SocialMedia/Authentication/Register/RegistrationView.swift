@@ -64,7 +64,7 @@ private extension RegistrationView {
             }
             Task { try await viewModel.createUser() }
         }
-        .buttonStyle(.main(isLoading: $viewModel.isAuthenticating))
+        .buttonStyle(.main(loading: viewModel.isAuthenticating))
         .disabled(!viewModel.validForm)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)

@@ -13,12 +13,12 @@ final class UserPostsViewModel: ObservableObject {
     var user: SocialMediaNetwork.User
     
     @Published var posts = [Post]()
-    @Published var isLoading = false
+    @Published var loading = false
     @Published var refreshed: ProfilePostFilter = .posts
     
     var itemsPerPage: Int = 10
+    var noMoreItemsToFetch: Bool = false
     
-    private var noMoreItemsToFetch: Bool = false
     private var lastPostDocument: DocumentSnapshot?
     private var cancellables = Set<AnyCancellable>()
     
@@ -57,13 +57,13 @@ final class UserPostsViewModel: ObservableObject {
         guard !noMoreItemsToFetch, let userID = user.id else {
             return
         }
-        isLoading = true
+        loading = true
         
         let (newPosts, lastPostDocument) = try await PostService.fetchUserPosts(userID: userID, countLimit: itemsPerPage, descending: true, lastDocument: self.lastPostDocument)
         
         guard !newPosts.isEmpty else {
             self.noMoreItemsToFetch = true
-            self.isLoading = false
+            self.loading = false
             self.lastPostDocument = nil
             return
         }
@@ -71,7 +71,7 @@ final class UserPostsViewModel: ObservableObject {
         do {
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
-                    self?.isLoading = false
+                    self?.loading = false
                     return
                 }
                 var userDataPosts = [Post]()
@@ -92,7 +92,7 @@ final class UserPostsViewModel: ObservableObject {
                 }
                 self.posts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 
-                self.isLoading = false
+                self.loading = false
             }
         } catch {
             print("Error fetching user posts: \(error)")

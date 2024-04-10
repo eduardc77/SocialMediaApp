@@ -11,7 +11,7 @@ final class UserRelationsViewModel: ObservableObject {
     private let user: User
     @Published var currentStatString: String = ""
     @Published var searchText = ""
-    @Published var isLoading = false
+    @Published var loading = false
     
     var contentUnavailableTitle: String {
         "No results for '\(searchText)'"

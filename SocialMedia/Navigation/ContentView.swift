@@ -15,7 +15,7 @@ struct ContentView: View {
     var body: some View {
         Group {
             if model.userSession == nil || model.currentUser == nil {
-                if model.isLoading {
+                if model.loading {
                     ProgressView()
                 } else {
                     LoginView()

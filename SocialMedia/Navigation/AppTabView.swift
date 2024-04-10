@@ -7,7 +7,7 @@ import SwiftUI
 
 struct AppTabView: View {
     @EnvironmentObject private var appRouter: AppScreenRouter
-
+    
     var body: some View {
         TabView(selection: $appRouter.selection) {
             ForEach(AppScreen.allCases) { screen in
@@ -19,6 +19,7 @@ struct AppTabView: View {
                     }
             }
         }
+        
         .onAppear {
             appRouter.selection = .home
         }

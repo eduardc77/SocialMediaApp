@@ -15,11 +15,11 @@ final class PostCategoryViewModel: ObservableObject {
     
     @Published var posts = [Post]()
     @Published var currentFilter: CategoryFilter = .hot
-    @Published var isLoading = false
+    @Published var loading = false
     
     var itemsPerPage: Int = 10
+    var noMoreItemsToFetch: Bool = false
     
-    private var noMoreItemsToFetch: Bool = false
     private var lastPostDocument: DocumentSnapshot?
     private var cancellables = Set<AnyCancellable>()
     
@@ -57,13 +57,13 @@ final class PostCategoryViewModel: ObservableObject {
         guard !noMoreItemsToFetch else {
             return
         }
-        isLoading = true
+        loading = true
         
 
         let (newPosts, lastPostDocument) = try await PostService.fetchPosts(by: category, countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
         guard !newPosts.isEmpty else {
             self.noMoreItemsToFetch = true
-            self.isLoading = false
+            self.loading = false
             self.lastPostDocument = nil
             return
         }
@@ -71,7 +71,7 @@ final class PostCategoryViewModel: ObservableObject {
         do {
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
-                    self?.isLoading = false
+                    self?.loading = false
                     return
                 }
                 var userDataPosts = [Post]()
@@ -92,7 +92,7 @@ final class PostCategoryViewModel: ObservableObject {
                 }
                 self.posts.append(contentsOf: userDataPosts)
                 sortPosts()
-                self.isLoading = false
+                self.loading = false
             }
         } catch {
             print("Error fetching for you posts: \(error)")

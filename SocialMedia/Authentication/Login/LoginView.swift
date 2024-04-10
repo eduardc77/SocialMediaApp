@@ -70,7 +70,7 @@ private extension LoginView {
         Button(AuthScreen.login.buttonTitle) {
             Task { try await viewModel.login() }
         }
-        .buttonStyle(.main(isLoading: $viewModel.isAuthenticating))
+        .buttonStyle(.main(loading: viewModel.isAuthenticating))
         .disabled(!viewModel.validForm)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)

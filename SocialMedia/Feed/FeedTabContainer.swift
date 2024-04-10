@@ -35,6 +35,7 @@ private extension FeedTabContainer {
             FollowingFeedView()
                 .tag(FeedFilter.following)
         }
+        .ignoresSafeArea()
 #if !os(macOS)
         .tabViewStyle(.page(indexDisplayMode: .never))
 #endif

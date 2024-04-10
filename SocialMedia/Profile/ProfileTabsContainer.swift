@@ -47,7 +47,7 @@ struct ProfileTabsContainer: View {
                     )
             },
             headerBackground: { context in
-                Color.clear.background(.bar.opacity(0.7))
+                Color.clear.background(.bar)
             },
             content: {
                 ForEach(ProfilePostFilter.allCases) { tab in
@@ -55,7 +55,7 @@ struct ProfileTabsContainer: View {
                         router: router,
                         user: user,
                         tab: tab,
-                        contentUnavailable: user.privateProfile && !(user.isFollowed ?? false)
+                        contentUnavailable: user.privateProfile && !(user.isFollowed)
                     )
                     .containerTabItem(tab: tab, label: .primary(tab.title))
                 }

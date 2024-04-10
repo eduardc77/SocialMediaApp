@@ -59,13 +59,13 @@ final class UserSavedPostsViewModel: FeedViewModel {
         guard !noMoreItemsToFetch, let userID = user.id else {
             return
         }
-        isLoading = true
+        loading = true
         
         let (newPostIDs, lastPostDocument) = try await PostService.fetchUserSavedPosts(userID: userID, countLimit: itemsPerPage, lastDocument: self.lastPostDocument)
         
         guard !newPostIDs.isEmpty else {
             self.noMoreItemsToFetch = true
-            self.isLoading = false
+            self.loading = false
             self.lastPostDocument = nil
             return
         }
@@ -74,7 +74,7 @@ final class UserSavedPostsViewModel: FeedViewModel {
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 
                 guard let self = self else {
-                    self?.isLoading = false
+                    self?.loading = false
                     return
                 }
                 var userDataPosts = [Post]()
@@ -95,7 +95,7 @@ final class UserSavedPostsViewModel: FeedViewModel {
                 }
                 self.posts.append(contentsOf: userDataPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
                 
-                self.isLoading = false
+                self.loading = false
             }
         } catch {
             print("Error fetching user saved posts: \(error)")

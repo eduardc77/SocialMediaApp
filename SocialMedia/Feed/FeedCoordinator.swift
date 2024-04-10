@@ -13,6 +13,7 @@ struct FeedCoordinator: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             FeedTabContainer()
+                .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(for: AnyHashable.self) { destination in
                     switch destination {
                     case let user as User:

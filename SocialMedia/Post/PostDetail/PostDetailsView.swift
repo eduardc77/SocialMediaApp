@@ -89,7 +89,8 @@ struct PostDetailsView: View {
             Divider()
             
             PostGrid(router: router, postGridType: .replies(model.replies),
-                     isLoading: $model.isLoading,
+                     loading: $model.loading,
+                     endReached: model.noMoreItemsToFetch,
                      itemsPerPage: model.itemsPerPage,
                      contentUnavailableText: model.contentUnavailableText,
                      loadNewPage: model.loadMoreReplies)

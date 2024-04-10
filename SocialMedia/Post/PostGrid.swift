@@ -15,10 +15,10 @@ enum PostGridType {
 struct PostGrid: View {
     var router: any Router
     let postGridType: PostGridType
-    @Binding var isLoading: Bool
+    @Binding var loading: Bool
+    var endReached: Bool
     var itemsPerPage: Int = 20
     var contentUnavailableText: String = ""
-    
     var loadNewPage: (() async throws -> Void)? = nil
     
     @EnvironmentObject private var modalRouter: ModalScreenRouter
@@ -57,14 +57,14 @@ struct PostGrid: View {
         LazyVGrid(columns: gridItems) {
             switch postGridType {
             case .posts(let posts):
-                if posts.isEmpty, !isLoading {
+                if posts.isEmpty, !loading {
                     ContentUnavailableView(
                         "No Content",
                         systemImage: "doc.richtext",
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    ForEach(Array(posts.enumerated()), id: \.element) { index, post in
+                    ForEach(posts) { post in
                         ZStack(alignment: .top) {
                             NavigationButton {
                                 router.push(PostType.post(post))
@@ -79,28 +79,27 @@ struct PostGrid: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .contentShape(.containerRelative)
                         .containerShape(.rect(cornerRadius: 8))
-                        .onAppear {
-                            if let loadNewPage = loadNewPage, !isLoading, !posts.isEmpty, index == posts.count - 1 {
-                                isLoading = true
-                                
-                                Task {
-                                    try await loadNewPage()
-                                    isLoading = false
-                                }
+                    }
+                    if let loadNewPage = loadNewPage, !loading {
+                        FooterLoadingView(hidden: !posts.isEmpty && endReached, loading: loading) {
+                            loading = true
+                            Task {
+                                try await loadNewPage()
+                                loading = false
                             }
                         }
                     }
                 }
                 
             case .replies(let replies):
-                if replies.isEmpty, !isLoading {
+                if replies.isEmpty, !loading {
                     ContentUnavailableView(
                         "No Content",
                         systemImage: "doc.richtext",
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    ForEach(Array(replies.enumerated()), id: \.offset) { index, reply in
+                    ForEach(replies) { reply in
                         ZStack(alignment: .top) {
                             NavigationButton {
                                 router.push(PostType.reply(reply))
@@ -115,14 +114,13 @@ struct PostGrid: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .contentShape(.containerRelative)
                         .containerShape(.rect(cornerRadius: 8))
-                        .onAppear {
-                            if let loadNewPage = loadNewPage, !isLoading, !replies.isEmpty, index == replies.count - 1 {
-                                isLoading = true
-                                
-                                Task {
-                                    try await loadNewPage()
-                                    isLoading = false
-                                }
+                    }
+                    if let loadNewPage = loadNewPage, !loading {
+                        FooterLoadingView(hidden: !replies.isEmpty && endReached, loading: loading) {
+                            loading = true
+                            Task {
+                                try await loadNewPage()
+                                loading = false
                             }
                         }
                     }
@@ -131,16 +129,16 @@ struct PostGrid: View {
         }
         .padding(10)
         .overlay(alignment: .bottom) {
-            if isLoading { ProgressView() }
+            if loading { ProgressView() }
         }
     }
 }
 
 #Preview {
-    @State var isLoading: Bool = false
+    @State var loading: Bool = false
     
     return ScrollView {
-        PostGrid(router: FeedViewRouter(), postGridType: .posts([Preview.post, Preview.post2]), isLoading: $isLoading, itemsPerPage: 10)
+        PostGrid(router: FeedViewRouter(), postGridType: .posts([Preview.post, Preview.post2]), loading: $loading, endReached: false, itemsPerPage: 10)
             .environmentObject(FeedViewRouter())
             .environmentObject(ModalScreenRouter())
     }

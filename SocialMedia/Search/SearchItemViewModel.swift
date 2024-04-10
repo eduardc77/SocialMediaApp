@@ -9,7 +9,7 @@ import SocialMediaNetwork
 final class SearchItemViewModel: ObservableObject {
     @Published var user: User
     let thumbnailSize: CGFloat
-    @Published var isLoading: Bool = false
+    @Published var loading: Bool = false
     
     var isFollowed: Bool {
         user.isFollowed
@@ -24,12 +24,12 @@ final class SearchItemViewModel: ObservableObject {
     func toggleFollow() async throws {
         guard let userID = user.id else { return }
         user.followedByCurrentUser?.toggle()
-        isLoading = true
+        loading = true
         if user.isFollowed {
             try await UserService.shared.follow(userID: userID)
         } else {
             try await UserService.shared.unfollow(userID: userID)
         }
-        isLoading = false
+        loading = false
     }
 }

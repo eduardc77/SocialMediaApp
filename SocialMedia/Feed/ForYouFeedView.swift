@@ -12,7 +12,8 @@ struct ForYouFeedView: View {
     var body: some View {
         ScrollView {
             PostGrid(router: router, postGridType: .posts(model.posts),
-                     isLoading: $model.isLoading,
+                     loading: $model.loading,
+                     endReached: model.noMoreItemsToFetch,
                      itemsPerPage: model.itemsPerPage,
                      contentUnavailableText: model.contentUnavailableText,
                      loadNewPage: model.loadMorePosts)

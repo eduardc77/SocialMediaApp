@@ -20,6 +20,7 @@ struct ProfileCoordinator: View {
         NavigationStack(path: $router.path) {
             if let user = UserService.shared.currentUser {
                 ProfileTabsContainer(router: router, user: user, didNavigate: didNavigate)
+                    .toolbar(.hidden, for: .navigationBar)
                     .navigationDestination(for: AnyHashable.self) { destination in
                         switch destination {
                         case let user as User:

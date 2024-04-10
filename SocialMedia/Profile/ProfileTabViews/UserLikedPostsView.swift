@@ -21,7 +21,8 @@ struct UserLikedPostsView: View {
     var body: some View {
         PostGrid(router: router,
                  postGridType: .posts(model.posts),
-                 isLoading: $model.isLoading,
+                 loading: $model.loading,
+                 endReached: model.noMoreItemsToFetch,
                  itemsPerPage: model.itemsPerPage,
                  contentUnavailableText: contentUnavailableText,
                  loadNewPage: model.loadMorePosts)

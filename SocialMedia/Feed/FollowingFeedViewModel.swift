@@ -13,13 +13,13 @@ final class FollowingFeedViewModel: FeedViewModel {
     
     func loadMorePosts() async throws {
         guard !noMoreItemsToFetch else { return }
-        isLoading = true
+        loading = true
         
         let (newPostIDs, lastDocument) = try await PostService.fetchUserFollowingPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
         
         guard !newPostIDs.isEmpty else {
             self.noMoreItemsToFetch = true
-            self.isLoading = false
+            self.loading = false
             self.lastPostDocument = nil
             return
         }
@@ -31,7 +31,7 @@ final class FollowingFeedViewModel: FeedViewModel {
                 
                 guard !newPostIDs.isEmpty else {
                     self.noMoreItemsToFetch = true
-                    self.isLoading = false
+                    self.loading = false
                     return
                 }
                 for postID in newPostIDs {
@@ -48,7 +48,7 @@ final class FollowingFeedViewModel: FeedViewModel {
                 }
                 
                 self.posts.append(contentsOf: followingPosts.sorted(by: { $0.timestamp.dateValue() > $1.timestamp.dateValue() }))
-                self.isLoading = false
+                self.loading = false
             }
         } catch {
             print("Error fetching following posts: \(error)")

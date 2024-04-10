@@ -15,7 +15,7 @@ struct ActivityView: View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
                 Section(header: ActivityFilterView(currentFilter: $model.selectedFilter)) {
-                    if model.filteredNotifications.isEmpty, !model.isLoading {
+                    if model.filteredNotifications.isEmpty, !model.loading {
                         ContentUnavailableView(
                             "No Content",
                             systemImage: "doc.richtext",
@@ -49,7 +49,7 @@ struct ActivityView: View {
         .navigationTitle("Activity")
         .background(Color.groupedBackground)
         .overlay {
-            if model.isLoading {
+            if model.loading {
                 ProgressView()
             }
         }
