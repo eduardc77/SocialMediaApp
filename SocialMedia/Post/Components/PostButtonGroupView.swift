@@ -25,7 +25,7 @@ struct PostButtonGroupView: View {
                 switch buttonType {
                 case .like:
                     PostButton(count: model.numberOfLikes,
-                               isActive: post.didLike,
+                               active: post.didLike,
                                buttonType: buttonType) {
                         Task {
                             try await likeButtonTapped()
@@ -35,7 +35,7 @@ struct PostButtonGroupView: View {
                     
                 case .reply:
                     PostButton(count: model.numberOfReplies,
-                               isActive: false,
+                               active: false,
                                buttonType: buttonType) {
                         onReplyTapped(model.postType)
                     }
@@ -43,7 +43,7 @@ struct PostButtonGroupView: View {
                     
                 case .repost:
                     PostButton(count: model.numberOfReposts,
-                               isActive: false,
+                               active: false,
                                buttonType: buttonType) {
                     
                     }
@@ -51,7 +51,7 @@ struct PostButtonGroupView: View {
                     
                 case .save:
                     PostButton(count: post.didSave ? 1 : 0,
-                               isActive: post.didSave,
+                               active: post.didSave,
                                buttonType: buttonType) {
                         Task {
                             try await saveButtonTapped()
@@ -61,13 +61,7 @@ struct PostButtonGroupView: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        
-        .onChange(of: model.postType, { _, _ in
-            guard !loading else { return }
-            Task {
-                await checkForUserActivity()
-            }
-        })
+
         .task {
             guard !loading else { return }
             await checkForUserActivity()
@@ -79,9 +73,9 @@ struct PostButtonGroupView: View {
         loading = true
         
         if post.didLike {
+            post.didLike = false
             try await model.unlikePost()
             loading = false
-            post.didLike = false
         } else {
             post.didLike = true
             try await model.likePost()
@@ -94,12 +88,12 @@ struct PostButtonGroupView: View {
         loading = true
         
         if post.didSave {
-            try await model.unsavePost()
             post.didSave = false
+            try await model.unsavePost()
             loading = false
         } else {
-            try await model.savePost()
             post.didSave = true
+            try await model.savePost()
             loading = false
         }
     }

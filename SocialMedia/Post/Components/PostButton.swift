@@ -7,9 +7,8 @@ import SwiftUI
 
 struct PostButton: View {
     var count: Int
-    var isActive: Bool
+    var active: Bool
     let buttonType: PostButtonType
-    
     var action: () -> Void
     
     @State private var tapped: Bool = false
@@ -24,8 +23,8 @@ struct PostButton: View {
             HStack {
                 Label(buttonType.title, systemImage: buttonType.icon)
                     .labelStyle(.iconOnly)
-                    .symbolVariant(isActive ? .fill : .none)
-                    .contentTransition(.symbolEffect(isActive ? .replace.upUp : .replace.downUp))
+                    .symbolVariant(active ? .fill : .none)
+                    .contentTransition(.symbolEffect(active ? .replace.upUp : .replace.downUp))
                 
                 if tempCount > 0, buttonType != .save {
                     Text("\(tempCount)")
@@ -37,7 +36,7 @@ struct PostButton: View {
             .padding(.top, 6)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity)
-            .foregroundStyle(!isActive ? Color.secondary : buttonType.color)
+            .foregroundStyle(!active ? Color.secondary : buttonType.color)
         }
         .buttonStyle(.borderless)
 #if os(iOS)
@@ -53,16 +52,18 @@ struct PostButton: View {
             
         }
         .onFirstAppear {
-            withAnimation {
+            guard tempCount != count else { return }
+            withAnimation(.none) {
                 tempCount = count
             }
+           
         }
     }
 }
 
 #Preview {
     PostButton(count: 2,
-               isActive: false,
+               active: false,
                buttonType: .like,
                action: {})
 }
