@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var viewModel = LoginViewModel()
+    @StateObject private var viewModel = LoginViewModel()
     @FocusState private var focusedField: LoginField?
     
     var body: some View {
@@ -70,7 +70,7 @@ private extension LoginView {
         Button(AuthScreen.login.buttonTitle) {
             Task { try await viewModel.login() }
         }
-        .buttonStyle(.main(loading: viewModel.isAuthenticating))
+        .buttonStyle(.primary(loading: viewModel.isAuthenticating))
         .disabled(!viewModel.validForm)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)

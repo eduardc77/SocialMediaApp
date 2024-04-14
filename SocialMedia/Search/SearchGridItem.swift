@@ -34,7 +34,7 @@ struct SearchGridItem: View {
                 } label: {
                     Text(model.isFollowed ? "Following" : "Follow")
                 }
-                .buttonStyle(.secondary(buttonWidth: nil, foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, loading: model.loading, isActive: model.isFollowed))
+                .buttonStyle(.secondary(buttonWidth: nil, loading: model.loading, isActive: model.isFollowed))
                 .overlay {
                     if model.loading {
                         ProgressView()

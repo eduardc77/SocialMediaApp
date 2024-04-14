@@ -111,14 +111,14 @@
 		88D20A672BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A662BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift */; };
 		88D20A692BB0AECC00E62054 /* AppDetailColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D20A682BB0AECC00E62054 /* AppDetailColumn.swift */; };
 		88D750492BC45BE6003867A3 /* PreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D750482BC45BE6003867A3 /* PreviewProvider.swift */; };
-		88D7504B2BC45D36003867A3 /* SocialMediaUI in Frameworks */ = {isa = PBXBuildFile; productRef = 88D7504A2BC45D36003867A3 /* SocialMediaUI */; };
-		88D7504C2BC45D36003867A3 /* SocialMediaUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 88D7504A2BC45D36003867A3 /* SocialMediaUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		88D7504F2BC45DA6003867A3 /* SocialMediaNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = 88D7504E2BC45DA6003867A3 /* SocialMediaNetwork */; };
-		88D750502BC45DA6003867A3 /* SocialMediaNetwork in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 88D7504E2BC45DA6003867A3 /* SocialMediaNetwork */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		88D750522BC462DA003867A3 /* CategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D750512BC462DA003867A3 /* CategoryFilter.swift */; };
 		88E804772BBDF78600729A3D /* CurrentUserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E804762BBDF78600729A3D /* CurrentUserProfileHeader.swift */; };
 		88FA979D2BBB5943005E940E /* SearchGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA979B2BBB5943005E940E /* SearchGrid.swift */; };
 		88FA97A12BBB82CD005E940E /* SearchGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA97A02BBB82CD005E940E /* SearchGridItem.swift */; };
+		DD8C2E4F2BCBCFB1001123AF /* SocialMediaUI in Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */; };
+		DD8C2E502BCBCFB1001123AF /* SocialMediaUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		DD8C2E522BCBD225001123AF /* SocialMediaNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E512BCBD225001123AF /* SocialMediaNetwork */; };
+		DD8C2E532BCBD225001123AF /* SocialMediaNetwork in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E512BCBD225001123AF /* SocialMediaNetwork */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,8 +145,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				88D7504C2BC45D36003867A3 /* SocialMediaUI in Embed Frameworks */,
-				88D750502BC45DA6003867A3 /* SocialMediaNetwork in Embed Frameworks */,
+				DD8C2E502BCBCFB1001123AF /* SocialMediaUI in Embed Frameworks */,
+				DD8C2E532BCBD225001123AF /* SocialMediaNetwork in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -167,7 +167,6 @@
 		8848263A2BABACEB000D3E95 /* AppScreenRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppScreenRouter.swift; sourceTree = "<group>"; };
 		8848263C2BABAD07000D3E95 /* ModalScreenRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalScreenRouter.swift; sourceTree = "<group>"; };
 		8848263E2BABB559000D3E95 /* NewPostCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostCoordinator.swift; sourceTree = "<group>"; };
-		8863543D2BC41E8A00DFCCF7 /* SocialMediaUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SocialMediaUI; sourceTree = "<group>"; };
 		88721E922BBC85FD001B609A /* FeedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCoordinator.swift; sourceTree = "<group>"; };
 		88721E942BBC8724001B609A /* FeedViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewRouter.swift; sourceTree = "<group>"; };
 		88721E972BBC89DA001B609A /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -211,7 +210,6 @@
 		8895C5742BA6091200F7C28A /* UserRelationsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRelationsViewModel.swift; sourceTree = "<group>"; };
 		8895C5752BA6091200F7C28A /* UserRelationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRelationType.swift; sourceTree = "<group>"; };
 		8895C5772BA6091200F7C28A /* CurrentUserProfileHeaderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUserProfileHeaderModel.swift; sourceTree = "<group>"; };
-		8895C58C2BA60A1E00F7C28A /* SocialMediaNetwork */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SocialMediaNetwork; sourceTree = "<group>"; };
 		8895C5942BA60D5D00F7C28A /* SearchRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRow.swift; sourceTree = "<group>"; };
 		8895C5972BA60D5D00F7C28A /* PostCategoryDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCategoryDetailView.swift; sourceTree = "<group>"; };
 		8895C5992BA60D5D00F7C28A /* PostCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCategoryViewModel.swift; sourceTree = "<group>"; };
@@ -269,6 +267,8 @@
 		88E804762BBDF78600729A3D /* CurrentUserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserProfileHeader.swift; sourceTree = "<group>"; };
 		88FA979B2BBB5943005E940E /* SearchGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchGrid.swift; sourceTree = "<group>"; };
 		88FA97A02BBB82CD005E940E /* SearchGridItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchGridItem.swift; sourceTree = "<group>"; };
+		DD8C2E4C2BCBCF0F001123AF /* SocialMediaNetwork */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SocialMediaNetwork; sourceTree = "<group>"; };
+		DD8C2E4D2BCBCF74001123AF /* SocialMediaUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SocialMediaUI; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,8 +276,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88D7504B2BC45D36003867A3 /* SocialMediaUI in Frameworks */,
-				88D7504F2BC45DA6003867A3 /* SocialMediaNetwork in Frameworks */,
+				DD8C2E4F2BCBCFB1001123AF /* SocialMediaUI in Frameworks */,
+				DD8C2E522BCBD225001123AF /* SocialMediaNetwork in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,8 +355,8 @@
 				8895C4DD2BA5F10000F7C28A /* SocialMedia */,
 				8895C4EE2BA5F10100F7C28A /* SocialMediaTests */,
 				8895C4F82BA5F10200F7C28A /* SocialMediaUITests */,
-				8863543D2BC41E8A00DFCCF7 /* SocialMediaUI */,
-				8895C58C2BA60A1E00F7C28A /* SocialMediaNetwork */,
+				DD8C2E4D2BCBCF74001123AF /* SocialMediaUI */,
+				DD8C2E4C2BCBCF0F001123AF /* SocialMediaNetwork */,
 				8895C4DC2BA5F10000F7C28A /* Products */,
 				8895C58E2BA60CE400F7C28A /* Frameworks */,
 			);
@@ -578,6 +578,7 @@
 		8895C5DE2BA6121500F7C28A /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				8895C5E82BA6121500F7C28A /* RegistrationView.swift */,
 				8895C5DD2BA6121500F7C28A /* AuthTextField.swift */,
 			);
 			path = Components;
@@ -595,7 +596,6 @@
 		8895C5EA2BA6121500F7C28A /* Register */ = {
 			isa = PBXGroup;
 			children = (
-				8895C5E82BA6121500F7C28A /* RegistrationView.swift */,
 				8895C5E92BA6121500F7C28A /* RegistrationViewModel.swift */,
 			);
 			path = Register;
@@ -733,8 +733,8 @@
 			);
 			name = SocialMedia;
 			packageProductDependencies = (
-				88D7504A2BC45D36003867A3 /* SocialMediaUI */,
-				88D7504E2BC45DA6003867A3 /* SocialMediaNetwork */,
+				DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */,
+				DD8C2E512BCBD225001123AF /* SocialMediaNetwork */,
 			);
 			productName = SocialMedia;
 			productReference = 8895C4DB2BA5F10000F7C28A /* SocialMedia.app */;
@@ -1116,8 +1116,8 @@
 				CODE_SIGN_ENTITLEMENTS = SocialMedia/SocialMedia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SocialMedia/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_ASSET_PATHS = "SocialMedia/Resources/Preview\\ Content";
+				DEVELOPMENT_TEAM = 2XHLK46L96;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SocialMedia/Info.plist;
@@ -1154,8 +1154,8 @@
 				CODE_SIGN_ENTITLEMENTS = SocialMedia/SocialMedia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SocialMedia/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_ASSET_PATHS = "SocialMedia/Resources/Preview\\ Content";
+				DEVELOPMENT_TEAM = 2XHLK46L96;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SocialMedia/Info.plist;
@@ -1314,11 +1314,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		88D7504A2BC45D36003867A3 /* SocialMediaUI */ = {
+		DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocialMediaUI;
 		};
-		88D7504E2BC45DA6003867A3 /* SocialMediaNetwork */ = {
+		DD8C2E512BCBD225001123AF /* SocialMediaNetwork */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocialMediaNetwork;
 		};

@@ -7,8 +7,8 @@ import SwiftUI
 import SocialMediaUI
 
 struct ResetPasswordView: View {
-    @StateObject var viewModel = ResetPasswordViewModel()
-    @Environment(\.dismiss) var dismiss
+    @StateObject private var viewModel = ResetPasswordViewModel()
+    @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Bool
     
     var body: some View {
@@ -30,7 +30,7 @@ struct ResetPasswordView: View {
                     try await viewModel.sendPasswordResetEmail() 
                 }
             }
-            .buttonStyle(.main(loading: viewModel.loading))
+            .buttonStyle(.primary(loading: viewModel.loading))
             .disabled(!viewModel.validForm)
             .listRowInsets(.init())
             .listRowBackground(Color.clear)

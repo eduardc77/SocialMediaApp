@@ -6,9 +6,9 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @StateObject var viewModel = RegistrationViewModel()
+    @StateObject private var viewModel = RegistrationViewModel()
     @FocusState private var focusedField: RegisterField?
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         Form {
@@ -64,7 +64,7 @@ private extension RegistrationView {
             }
             Task { try await viewModel.createUser() }
         }
-        .buttonStyle(.main(loading: viewModel.isAuthenticating))
+        .buttonStyle(.primary(loading: viewModel.isAuthenticating))
         .disabled(!viewModel.validForm)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)

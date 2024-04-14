@@ -58,7 +58,7 @@ struct SearchGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 20) {
-            ForEach(Array(users.enumerated()), id: \.element) { index, user in
+            ForEach(users, id: \.self) { user in
                 VStack {
                     NavigationButton {
                         router.push(user)

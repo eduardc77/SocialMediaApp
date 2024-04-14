@@ -6,36 +6,36 @@
 import SwiftUI
 
 public struct SecondaryButtonStyle: ButtonStyle {
-    let buttonWidth: CGFloat?
-    let buttonHeight: CGFloat
-    let foregroundColor: Color
-    let activeBackgroundColor: Color
-    let inactiveBackgroundColor: Color
-    var loading: Bool
-    var isActive: Bool
+    var buttonWidth: CGFloat? = .infinity
+    var buttonHeight: CGFloat = 32
+    var foregroundColor: Color = Color.primary
+    var activeBackgroundColor: Color = .clear
+    var inactiveBackgroundColor: Color = Color.accentColor
+    var loading: Bool = false
+    var isActive: Bool = false
     @Environment(\.isEnabled) var isEnabled
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.subheadline)
             .fontWeight(.semibold)
-            .foregroundStyle(!configuration.isPressed ? foregroundColor : Color.secondary)
+            .foregroundStyle(isActive ? foregroundColor : Color.white)
             .frame(maxWidth: buttonWidth, minHeight: buttonHeight, idealHeight: buttonHeight)
             .padding(.horizontal)
             .background(
-                (configuration.isPressed || isActive ? activeBackgroundColor : inactiveBackgroundColor)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                (configuration.isPressed || isActive ? activeBackgroundColor : inactiveBackgroundColor),
+                in: .rect(cornerRadius: 8)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.secondary, lineWidth: 1)
+                    .stroke(isActive ? Color.secondary : Color.clear, lineWidth: 1)
             )
             .opacity(isEnabled ? 1 : 0.5)
             .overlay {
                 if loading {
                     ZStack {
-                        inactiveBackgroundColor.clipShape(RoundedRectangle(cornerRadius: 8)).zIndex(1)
-                        ProgressView().tint(Color.secondaryGroupedBackground).zIndex(2)
+                        inactiveBackgroundColor.clipShape(RoundedRectangle(cornerRadius: 8))
+                        ProgressView()
                     }
                 }
             }
@@ -43,7 +43,9 @@ public struct SecondaryButtonStyle: ButtonStyle {
 }
 
 public extension ButtonStyle where Self == SecondaryButtonStyle {
-    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.secondaryGroupedBackground, activeBackgroundColor: Color = .groupedBackground, inactiveBackgroundColor: Color = Color.primary, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
+    static var secondary: SecondaryButtonStyle { SecondaryButtonStyle(loading: false, isActive: false) }
+    
+    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, activeBackgroundColor: Color = .clear, inactiveBackgroundColor: Color = Color.accentColor, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
         SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, activeBackgroundColor: activeBackgroundColor, inactiveBackgroundColor: inactiveBackgroundColor, loading: loading, isActive: isActive)
     }
 }

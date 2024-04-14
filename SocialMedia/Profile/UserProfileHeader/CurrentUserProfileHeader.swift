@@ -84,14 +84,14 @@ struct CurrentUserProfileHeader: View {
             } label: {
                 Text("Edit Profile")
             }
-            .buttonStyle(.secondary(foregroundColor: Color.primary))
+            .buttonStyle(.secondary)
             
             Button {
                 print("Share Profile button tapped.")
             } label: {
                 Text("Share Profile")
             }
-            .buttonStyle(.secondary(foregroundColor: Color.primary))
+            .buttonStyle(.secondary)
         }
         .onFirstAppear {
             model.loadUserData()
