@@ -16,7 +16,7 @@ struct UserProfileHeader: View {
     }
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -54,9 +54,6 @@ struct UserProfileHeader: View {
             }
             .buttonStyle(.secondary(foregroundColor: model.isFollowed ? Color.primary : Color.secondaryGroupedBackground, loading: model.loading, isActive: model.isFollowed))
         }
-#if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
-#endif
     }
     
     func handleFollowTapped() {

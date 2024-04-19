@@ -58,6 +58,7 @@ extension AppScreen {
             ActivityCoordinator()
         case .profile:
             ProfileCoordinator()
+                .toolbar(.hidden, for: .navigationBar)
         }
     }
 }

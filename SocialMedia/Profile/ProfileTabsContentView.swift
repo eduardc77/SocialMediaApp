@@ -52,57 +52,48 @@ struct ProfileTabsContentView<Content: View>: View {
     }
     
     var body: some View {
-        TabContainerScroll(
-            tab: tab, refreshableAction: onRefresh) { _ in
-                LazyVStack(spacing: 0) {
-                    info()
-                        .padding([.leading, .trailing, .top], 20)
-                        .id(0)
+        LazyVStack(spacing: 0) {
+            info()
+                .padding([.leading, .trailing, .top], 20)
+                .id(0)
+            
+            if !contentUnavailable {
+                switch tab {
+                case .posts:
+                    UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .posts))
                     
-                    if !contentUnavailable {
-                        switch tab {
-                        case .posts:
-                            UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .posts))
-                            
-                        case .replies:
-                            Group {
-                                if model.replies.isEmpty {
-                                    VStack {
-                                        Text(model.contentUnavailableText(filter: .replies))
-                                            .font(.subheadline)
-                                            .foregroundStyle(Color.secondary)
-                                    }
-                                } else {
-                                    ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
-                                        ReplyRow(reply: reply, onReplyTapped: {_ in })
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 10)
-                                    }
-                                }
+                case .replies:
+                    Group {
+                        if model.replies.isEmpty {
+                            VStack {
+                                Text(model.contentUnavailableText(filter: .replies))
+                                    .font(.subheadline)
+                                    .foregroundStyle(Color.secondary)
                             }
-                            
-                        case .liked:
-                            UserLikedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .liked))
-                            
-                        case .saved:
-                            UserSavedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .saved))
+                        } else {
+                            ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
+                                ReplyRow(reply: reply, onReplyTapped: {_ in })
+                                    .padding(.vertical, 5)
+                                    .padding(.horizontal, 10)
+                            }
                         }
-                    } else {
-                        ContentUnavailableView(
-                            "Private Account",
-                            systemImage: "lock.fill",
-                            description: Text("Follow this account to see their content.")
-                        )
                     }
+                    
+                case .liked:
+                    UserLikedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .liked))
+                    
+                case .saved:
+                    UserSavedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .saved))
                 }
-                .padding(.vertical, 5)
-                .scrollTargetLayout()
+            } else {
+                ContentUnavailableView(
+                    "Private Account",
+                    systemImage: "lock.fill",
+                    description: Text("Follow this account to see their content.")
+                )
             }
-#if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
-            .background(Color.groupedBackground)
-            .environmentObject(refreshedFilterModel)
+        }
+        .environmentObject(refreshedFilterModel)
     }
     
     func onRefresh() {

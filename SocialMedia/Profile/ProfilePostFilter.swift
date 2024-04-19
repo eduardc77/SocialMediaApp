@@ -4,8 +4,9 @@
 //
 
 import Foundation
+import SocialMediaUI
 
-enum ProfilePostFilter: String, Identifiable, CaseIterable {
+enum ProfilePostFilter: String, Identifiable, CaseIterable, TopFilter {
     case posts
     case replies
     case liked
