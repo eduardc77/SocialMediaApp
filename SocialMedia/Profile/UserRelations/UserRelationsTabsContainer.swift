@@ -28,7 +28,6 @@ struct UserRelationsTabsContainer: View {
 #if os(macOS)
         .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity)
 #endif
-        .background(Color.groupedBackground)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {

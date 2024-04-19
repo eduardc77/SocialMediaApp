@@ -24,7 +24,7 @@ struct PostButton: View {
                 Label(buttonType.title, systemImage: buttonType.icon)
                     .labelStyle(.iconOnly)
                     .symbolVariant(active ? .fill : .none)
-                    .contentTransition(.symbolEffect(active ? .replace.upUp : .replace.downUp))
+                    .contentTransition(tapped ? .symbolEffect(active ? .replace.upUp : .replace.downUp) : .identity)
                 
                 if tempCount > 0, buttonType != .save {
                     Text("\(tempCount)")

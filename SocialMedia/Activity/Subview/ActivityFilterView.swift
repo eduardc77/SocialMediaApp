@@ -19,7 +19,6 @@ struct ActivityFilterView: View {
                     }
                 }
                 .padding(.horizontal)
-                .background(Color.groupedBackground)
             }
         }
     }
@@ -45,7 +44,7 @@ struct ActivityFilterView: View {
                    RoundedRectangle(cornerRadius: 8)
                        .stroke(Color.secondary, lineWidth: 1)
                }
-               .background(filter == currentFilter ? Color.primary : Color.groupedBackground)
+               .background(filter == currentFilter ? Color.primary : Color.secondaryGroupedBackground)
                .clipShape(RoundedRectangle(cornerRadius: 8))
        }
     }

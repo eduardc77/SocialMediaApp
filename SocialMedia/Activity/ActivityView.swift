@@ -13,7 +13,7 @@ struct ActivityView: View {
     
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
+            LazyVStack(pinnedViews: .sectionHeaders) {
                 Section(header: ActivityFilterView(currentFilter: $model.selectedFilter)) {
                     if model.filteredNotifications.isEmpty, !model.loading {
                         ContentUnavailableView(
@@ -23,13 +23,14 @@ struct ActivityView: View {
                         )
                     } else {
                         ForEach(model.filteredNotifications) { activityModel in
-                            
                             switch activityModel.type {
-                            case .follow, .like:
+                            case .like, .follow:
                                 NavigationButton {
-                                    router.push(activityModel.user)
+                                    if let user = activityModel.user {
+                                        router.push(user)
+                                    }
                                 } label: {
-                                    ActivityRowView(router: router, model: activityModel)
+                                    ActivityRowView(router: router, activity: activityModel)
                                 }
                                 
                             case .reply:
@@ -38,19 +39,39 @@ struct ActivityView: View {
                                         router.push(PostType.post(post))
                                     }
                                 } label: {
-                                    ActivityRowView(router: router, model: activityModel)
+                                    ActivityRowView(router: router, activity: activityModel)
                                 }
                             }
+                            
+                            Divider()
+                                .padding(.leading)
+                                .padding(.leading, 10)
+                                .padding(.leading, ImageSize.small.value.width)
                         }
                     }
                 }
             }
         }
+        .onChange(of: model.selectedFilter) { oldValue, newValue in
+            guard oldValue != newValue else { return }
+            model.setupFilteredNotifications()
+        }
         .navigationTitle("Activity")
-        .background(Color.groupedBackground)
         .overlay {
             if model.loading {
                 ProgressView()
+            }
+        }
+        .task {
+            do {
+                try await model.refresh()
+            } catch {
+                print("DEBUG: Failed to fetch notifications in Activity View.")
+            }
+        }
+        .refreshable {
+            Task {
+                try await model.refresh()
             }
         }
     }

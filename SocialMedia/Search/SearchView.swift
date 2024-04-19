@@ -45,7 +45,6 @@ struct SearchView: View {
                 }
             }
         }
-        .background(Color.groupedBackground)
         .navigationTitle(AppScreen.search.title)
         .toolbar {
             ToolbarItemGroup {

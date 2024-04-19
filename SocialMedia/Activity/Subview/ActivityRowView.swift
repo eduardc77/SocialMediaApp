@@ -8,81 +8,62 @@ import SocialMediaUI
 import SocialMediaNetwork
 
 struct ActivityRowView: View {
-    var router: any Router
-    let model: Activity
+    private var router: any Router
+    @ObservedObject private var model: ActivityRowViewModel
     
-    private var activityMessage: String {
-        switch model.type {
-        case .like:
-            return model.post?.caption ?? ""
-        case .follow:
-            return "Followed you"
-        case .reply:
-            return "Replied to one of your posts"
-        }
-    }
-    
-    private var isFollowed: Bool {
-        return model.user?.isFollowed ?? false
+    init(router: any Router, activity: Activity) {
+        self.router = router
+        model = ActivityRowViewModel(activity: activity)
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(spacing: 16) {
-                NavigationButton {
-                    router.push(model.user)
-                } label: {
-                    ZStack(alignment: .bottomTrailing) {
-                        CircularProfileImageView(profileImageURL: model.user?.profileImageURL)
-                        ActivityBadgeView(type: model.type)
-                            .offset(x: 8, y: 4)
-                    }
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 4) {
-                        Text(model.user?.username ?? "")
-                            .bold()
-                            .foregroundStyle(Color.primary)
-                        
-                        Text(model.timestamp.timestampString())
-                            .foregroundStyle(Color.secondary)
-                    }
-                    
-                    Text(activityMessage)
-                        .foregroundStyle(Color.secondary)
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(2)
-                }
-                .font(.footnote)
-                
-                Spacer()
-                
-                if model.type == .follow {
-                    Button {
-                        
-                    } label: {
-                        Text(isFollowed ? "Following" : "Follow")
-                            .foregroundStyle(isFollowed ? Color.secondary : Color.primary)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .frame(width: 100, height: 32)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.secondary, lineWidth: 1)
-                            }
-                    }
+        HStack(spacing: 10) {
+            NavigationButton {
+                router.push(model.activity.user)
+            } label: {
+                ZStack(alignment: .bottomTrailing) {
+                    CircularProfileImageView(profileImageURL: model.activity.user?.profileImageURL)
+                    ActivityBadgeView(type: model.activity.type)
+                        .offset(x: 8, y: 4)
                 }
             }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
             
-            Divider()
-                .padding(.leading, 80)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 4) {
+                    Text(model.activity.user?.username ?? "")
+                        .bold()
+                        .foregroundStyle(Color.primary)
+                    
+                    Text(model.activity.timestamp.timestampString())
+                        .foregroundStyle(Color.secondary)
+                }
+                
+                Text(model.activityMessage)
+                    .foregroundStyle(Color.secondary)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            .font(.footnote)
+            
+            Spacer()
+            
+            if model.activity.type == .follow {
+                Button {
+                    Task {
+                        try await model.toggleFollow()
+                    }
+                } label: {
+                    Text(model.isFollowed ? "Following" : "Follow")
+                }
+                .buttonStyle(.secondary(buttonWidth: nil, loading: model.loading, isActive: model.isFollowed))
+                .disabled(model.loading)
+            }
         }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
     }
 }
 
 #Preview {
-    ActivityRowView(router: ActivityViewRouter(), model: Preview.activityModel)
+    ActivityRowView(router: ActivityViewRouter(), activity: Preview.activityModel)
 }

@@ -16,27 +16,28 @@ class ActivityViewModel: ObservableObject {
         selectedFilter == .all ? "No activities yet." : "No \(selectedFilter.rawValue) activities yet."
     }
     
-    @Published var selectedFilter: ActivityFilter = .all {
-        didSet {
-            switch selectedFilter {
-            case .all:
-                filteredNotifications = notifications
-            case .follow:
-                filteredNotifications = notifications.filter({ $0.type == .follow })
-            case .reply:
-                filteredNotifications = notifications.filter({ $0.type == .reply })
-            case .like:
-                filteredNotifications = notifications.filter({ $0.type == .like })
-            }
-        }
-    }
+    @Published var selectedFilter: ActivityFilter = .all
 
-    init() {
-        Task {
-            self.loading = true
-            try await updateNotifications()
-            self.loading = false
+    init() {}
+    
+    func refresh() async throws {
+        self.loading = true
+        try await updateNotifications()
+        self.loading = false
+        filteredNotifications = notifications
+        setupFilteredNotifications()
+    }
+    
+    func setupFilteredNotifications() {
+        switch selectedFilter {
+        case .all:
             filteredNotifications = notifications
+        case .follow:
+            filteredNotifications = notifications.filter({ $0.type == .follow })
+        case .reply:
+            filteredNotifications = notifications.filter({ $0.type == .reply })
+        case .like:
+            filteredNotifications = notifications.filter({ $0.type == .like })
         }
     }
     

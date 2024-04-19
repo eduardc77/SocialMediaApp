@@ -29,7 +29,7 @@ struct ActivityBadgeView: View {
         ZStack {
             Circle()
                 .frame(width: 24, height: 24)
-                .foregroundStyle(Color.groupedBackground)
+                .foregroundStyle(Color.secondaryGroupedBackground)
             
             ZStack {
                 Circle()

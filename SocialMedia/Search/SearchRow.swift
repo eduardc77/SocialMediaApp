@@ -7,10 +7,10 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct SearchRow: View {
-    @ObservedObject var model: SearchItemViewModel
+    @ObservedObject private var model: SearchItemViewModel
     
     init(user: User, thumbnailSize: CGFloat) {
-        self.model = SearchItemViewModel(user: user, thumbnailSize: thumbnailSize)
+        model = SearchItemViewModel(user: user, thumbnailSize: thumbnailSize)
     }
     
     var body: some View {
@@ -37,11 +37,6 @@ struct SearchRow: View {
                     Text(model.isFollowed ? "Following" : "Follow")
                 }
                 .buttonStyle(.secondary(buttonWidth: nil, loading: model.loading, isActive: model.isFollowed))
-                .overlay {
-                    if model.loading {
-                        ProgressView()
-                    }
-                }
                 .disabled(model.loading)
             }
         }

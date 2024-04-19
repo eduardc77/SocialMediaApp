@@ -7,7 +7,7 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct SearchGridItem: View {
-    @ObservedObject var model: SearchItemViewModel
+    @ObservedObject private var model: SearchItemViewModel
     
     init(user: User, thumbnailSize: CGFloat) {
         self.model = SearchItemViewModel(user: user, thumbnailSize: thumbnailSize)
@@ -35,11 +35,6 @@ struct SearchGridItem: View {
                     Text(model.isFollowed ? "Following" : "Follow")
                 }
                 .buttonStyle(.secondary(buttonWidth: nil, loading: model.loading, isActive: model.isFollowed))
-                .overlay {
-                    if model.loading {
-                        ProgressView()
-                    }
-                }
                 .disabled(model.loading)
             }
         }

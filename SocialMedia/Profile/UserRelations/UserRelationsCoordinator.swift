@@ -11,7 +11,6 @@ struct UserRelationsCoordinator: View {
     @StateObject private var router = ProfileViewRouter()
     
     var body: some View {
-        
         NavigationStack(path: $router.path) {
             UserRelationsTabsContainer(router: router, user: user)
                 .navigationDestination(for: AnyHashable.self) { destination in
@@ -27,7 +26,6 @@ struct UserRelationsCoordinator: View {
                     }
                 }
         }
-//        .environmentObject(router)
     }
 }
 

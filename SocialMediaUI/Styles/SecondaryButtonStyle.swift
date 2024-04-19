@@ -9,7 +9,7 @@ public struct SecondaryButtonStyle: ButtonStyle {
     var buttonWidth: CGFloat? = .infinity
     var buttonHeight: CGFloat = 32
     var foregroundColor: Color = Color.primary
-    var activeBackgroundColor: Color = .clear
+    var activeBackgroundColor: Color = .tertiaryGroupedBackground
     var inactiveBackgroundColor: Color = Color.accentColor
     var loading: Bool = false
     var isActive: Bool = false
@@ -23,7 +23,7 @@ public struct SecondaryButtonStyle: ButtonStyle {
             .frame(maxWidth: buttonWidth, minHeight: buttonHeight, idealHeight: buttonHeight)
             .padding(.horizontal)
             .background(
-                (configuration.isPressed || isActive ? activeBackgroundColor : inactiveBackgroundColor),
+                (configuration.isPressed || isActive ? activeBackgroundColor.secondary : inactiveBackgroundColor.secondary),
                 in: .rect(cornerRadius: 8)
             )
             .overlay(
@@ -45,7 +45,7 @@ public struct SecondaryButtonStyle: ButtonStyle {
 public extension ButtonStyle where Self == SecondaryButtonStyle {
     static var secondary: SecondaryButtonStyle { SecondaryButtonStyle(loading: false, isActive: false) }
     
-    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, activeBackgroundColor: Color = .clear, inactiveBackgroundColor: Color = Color.accentColor, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
+    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, activeBackgroundColor: Color = .tertiaryGroupedBackground, inactiveBackgroundColor: Color = Color.accentColor, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
         SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, activeBackgroundColor: activeBackgroundColor, inactiveBackgroundColor: inactiveBackgroundColor, loading: loading, isActive: isActive)
     }
 }

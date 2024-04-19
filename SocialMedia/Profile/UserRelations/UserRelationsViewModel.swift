@@ -45,8 +45,10 @@ final class UserRelationsViewModel: ObservableObject {
     }
     
     func loadUserRelations() async throws {
+        loading = true
         try await fetchUserFollowers()
         try await fetchUserFollowing()
+        loading = false
     }
 }
 
