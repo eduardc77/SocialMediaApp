@@ -37,23 +37,15 @@ The app is still work in progress.
 
 ## Features:
 
-• User Authentication: Users can sign up for new accounts or log in with existing credentials using secure Firebase Authentication.
-
-• Thread Creation: Users can create threads with titles and optional images to spark discussions on various topics.
-
-• Feed View: Browse a scrollable feed displaying all created threads in real-time.
-
-• Search View: Search for specific threads by title for easy navigation.
-
-• Activity View: View user activity, including threads created and interactions.
-
-• User Profiles: View user profiles and see their activity history.
-
-• Real-time Updates: Enjoy real-time updates when new threads or posts are created.
-
-• Settings View: Manage user profile and account settings.
-
-• Session Management: Combine publishers and subscribers ensure seamless user session handling throughout the app.
+* User Authentication: Users can sign up for new accounts or log in with existing credentials using secure Firebase Authentication.
+* Thread Creation: Users can create threads with titles and optional images to spark discussions on various topics.
+* Feed View: Browse a scrollable feed displaying all created threads in real-time.
+* Search View: Search for specific threads by title for easy navigation.
+* Activity View: View user activity, including threads created and interactions.
+* User Profiles: View user profiles and see their activity history.
+* Real-time Updates: Enjoy real-time updates when new threads or posts are created.
+* Settings View: Manage user profile and account settings.
+* Session Management: Combine publishers and subscribers ensure seamless user session handling throughout the app.
 
 ## Built with:
 - SwiftUI
