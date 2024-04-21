@@ -30,7 +30,7 @@
 
 
 ## Description
-This project aims to replicate the core functionalities of a popular social media app like Threads or X, emphasizing user authentication, thread creation, real-time updates using firebase listeners, and a user-friendly interface built with SwiftUI. It leverages Firebase's robust backend services for seamless data management and real-time interactions.
+This project aims to replicate the core functionalities of any popular social media app, emphasizing user authentication, thread creation, real-time updates using firebase listeners, and a user-friendly interface built with SwiftUI. It leverages Firebase's robust backend services for seamless data management and real-time interactions.
 This app was created for educational purposes and as a demonstration of SwiftUI and Firebase integration.
 
 The app is still work in progress.
