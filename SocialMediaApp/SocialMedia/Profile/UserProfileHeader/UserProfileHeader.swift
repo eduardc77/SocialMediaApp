@@ -53,6 +53,7 @@ struct UserProfileHeader: View {
                 Text(model.isFollowed ? "Following" : "Follow")
             }
             .buttonStyle(.secondary(loading: model.loading, isActive: model.isFollowed))
+            .disabled(model.loading)
         }
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
