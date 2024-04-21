@@ -1,27 +1,35 @@
 //
-//  ReplyRow.swift
+//  ReplyGridItem.swift
 //  SocialMedia
 //
 
 import SwiftUI
 import SocialMediaNetwork
+import SocialMediaUI
 
-struct ReplyRow: View {
+struct ReplyGridItem: View {
+    let router: any Router
     let reply: Reply
+    let hasConnectionLine: Bool = true
     let onReplyTapped: (PostType) -> Void
     
-    @State private var showReplySheet = false
-    
     var body: some View {
-        if let post = reply.post {
-            VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 16) {
+            if let post = reply.post, let user = reply.post?.user {
                 HStack(alignment: .top) {
-                    VStack {
-                        CircularProfileImageView(profileImageURL: reply.post?.user?.profileImageURL)
-                        
-                        Rectangle()
-                            .fill(Color.secondary)
-                            .frame(maxWidth: 2, maxHeight: .infinity)
+                    NavigationButton {
+                        router.push(user)
+                    } label: {
+                        VStack {
+                            CircularProfileImageView(profileImageURL: reply.post?.user?.profileImageURL)
+                            
+                            if hasConnectionLine {
+                                Rectangle()
+                                    .fill(Color.secondary)
+                                    .frame(maxWidth: 2, maxHeight: .infinity)
+                                    .padding(.bottom, -10)
+                            }
+                        }
                     }
                     
                     VStack(alignment: .leading) {
@@ -36,37 +44,43 @@ struct ReplyRow: View {
                         .font(.footnote)
                         
                         PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)), onReplyTapped: onReplyTapped)
-                            .frame(height: 20)
                         
-                        Spacer()
+                        Divider()
                     }
                 }
+            }
+            
+            
+            
+            if let user = reply.user {
                 HStack(alignment: .top) {
-                    CircularProfileImageView(profileImageURL: reply.user?.profileImageURL)
+                    NavigationButton {
+                        router.push(user)
+                    } label: {
+                        CircularProfileImageView(profileImageURL: reply.user?.profileImageURL)
+                    }
                     
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(reply.user?.username ?? "")
                                 .fontWeight(.semibold)
                                 .lineLimit(1)
-                            Text(reply.replyText)
+                            Text(reply.caption)
                                 .lineLimit(10)
                         }
                         PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)), onReplyTapped: onReplyTapped)
-                            .frame(height: 20)
                         
-                        Spacer()
                     }
                     .font(.footnote)
+                    
                 }
-                
-                Divider()
             }
-            
         }
+        .padding(.top, 10)
+        .padding(.leading, 10)
     }
 }
 
 #Preview {
-    ReplyRow(reply: Preview.reply, onReplyTapped: {_ in })
+    ReplyGridItem(router: ProfileViewRouter(), reply: Preview.reply, onReplyTapped: {_ in })
 }

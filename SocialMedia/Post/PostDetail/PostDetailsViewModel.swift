@@ -39,7 +39,7 @@ final class PostDetailsViewModel: ObservableObject {
             case .post:
                 return post?.caption
             case .reply:
-                return reply?.replyText
+                return reply?.caption
         }
     }
  

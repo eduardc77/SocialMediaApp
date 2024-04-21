@@ -16,9 +16,9 @@ struct UserProfileHeader: View {
     }
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(model.user.fullName)
                             .font(.title2)
@@ -30,21 +30,21 @@ struct UserProfileHeader: View {
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
                     }
-                    
-                    if model.user.aboutMe.isEmpty {
-                        Text(model.user.aboutMe)
-                            .font(.subheadline)
-                    }
-                    Button {
-                        modalRouter.presentSheet(destination: ProfileSheetDestination.userRelations(user: model.user))
-                    } label: {
-                        Text("\(model.user.stats.followersCount) followers")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
                 }
                 Spacer()
                 CircularProfileImageView(profileImageURL: model.user.profileImageURL, size: .medium)
+            }
+            
+            if !model.user.aboutMe.isEmpty {
+                Text(model.user.aboutMe)
+                    .font(.subheadline)
+            }
+            Button {
+                modalRouter.presentSheet(destination: ProfileSheetDestination.userRelations(user: model.user))
+            } label: {
+                Text("\(model.user.stats.followersCount) followers")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
             
             Button {

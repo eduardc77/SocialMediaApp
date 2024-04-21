@@ -51,7 +51,7 @@ struct PostDetailsView: View {
                 }
                 
                 VStack(alignment: .leading) {
-                    Text(model.post?.caption ?? model.reply?.replyText ?? "")
+                    Text(model.post?.caption ?? model.reply?.caption ?? "")
                         .font(.subheadline)
                     
                     switch model.postType {

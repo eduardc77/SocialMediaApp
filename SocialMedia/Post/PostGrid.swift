@@ -54,7 +54,7 @@ struct PostGrid: View {
     }
     
     var body: some View {
-        LazyVGrid(columns: gridItems) {
+        Group {
             switch postGridType {
             case .posts(let posts):
                 if posts.isEmpty, !loading {
@@ -64,28 +64,30 @@ struct PostGrid: View {
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    ForEach(posts) { post in
-                        ZStack(alignment: .top) {
-                            NavigationButton {
-                                router.push(PostType.post(post))
-                            } label: {
-                                Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                    LazyVGrid(columns: gridItems) {
+                        ForEach(posts) { post in
+                            ZStack(alignment: .top) {
+                                NavigationButton {
+                                    router.push(PostType.post(post))
+                                } label: {
+                                    Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                                }
+                                
+                                PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize, onReplyTapped: { postType in
+                                    modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                                })
                             }
-                            
-                            PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize, onReplyTapped: { postType in
-                                modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
-                            })
+                            .fixedSize(horizontal: false, vertical: true)
+                            .contentShape(.containerRelative)
+                            .containerShape(.rect(cornerRadius: 8))
                         }
-                        .fixedSize(horizontal: false, vertical: true)
-                        .contentShape(.containerRelative)
-                        .containerShape(.rect(cornerRadius: 8))
-                    }
-                    if let loadNewPage = loadNewPage, !loading {
-                        FooterLoadingView(hidden: !posts.isEmpty && endReached, loading: loading) {
-                            loading = true
-                            Task {
-                                try await loadNewPage()
-                                loading = false
+                        if let loadNewPage = loadNewPage, !loading {
+                            FooterLoadingView(hidden: !posts.isEmpty && endReached, loading: loading) {
+                                loading = true
+                                Task {
+                                    try await loadNewPage()
+                                    loading = false
+                                }
                             }
                         }
                     }
@@ -99,28 +101,30 @@ struct PostGrid: View {
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    ForEach(replies) { reply in
-                        ZStack(alignment: .top) {
-                            NavigationButton {
-                                router.push(PostType.reply(reply))
-                            } label: {
-                                Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                    LazyVGrid(columns: gridItems) {
+                        ForEach(replies) { reply in
+                            ZStack(alignment: .top) {
+                                NavigationButton {
+                                    router.push(PostType.reply(reply))
+                                } label: {
+                                    Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                                }
+                                
+                                PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize, onReplyTapped: { postType in
+                                    modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                                })
                             }
-                            
-                            PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize, onReplyTapped: { postType in
-                                modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
-                            })
+                            .fixedSize(horizontal: false, vertical: true)
+                            .contentShape(.containerRelative)
+                            .containerShape(.rect(cornerRadius: 8))
                         }
-                        .fixedSize(horizontal: false, vertical: true)
-                        .contentShape(.containerRelative)
-                        .containerShape(.rect(cornerRadius: 8))
-                    }
-                    if let loadNewPage = loadNewPage, !loading {
-                        FooterLoadingView(hidden: !replies.isEmpty && endReached, loading: loading) {
-                            loading = true
-                            Task {
-                                try await loadNewPage()
-                                loading = false
+                        if let loadNewPage = loadNewPage, !loading {
+                            FooterLoadingView(hidden: !replies.isEmpty && endReached, loading: loading) {
+                                loading = true
+                                Task {
+                                    try await loadNewPage()
+                                    loading = false
+                                }
                             }
                         }
                     }

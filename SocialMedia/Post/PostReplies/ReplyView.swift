@@ -48,7 +48,7 @@ struct ReplyView: View {
                                 case .reply(let reply):
                                     Text(reply.user?.username ?? "")
                                         .fontWeight(.semibold)
-                                    Text(reply.replyText)
+                                    Text(reply.caption)
                                         .multilineTextAlignment(.leading)
                                 }
                             }

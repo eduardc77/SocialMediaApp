@@ -62,7 +62,7 @@ class Preview {
     )
 
     static var reply = Reply(
-        replyText: "Great things in business are never done by one person. They're done by a team of people.",
+        caption: "Great things in business are never done by one person. They're done by a team of people.",
         ownerUID: UUID().uuidString,
         replyID: UUID().uuidString,
         timestamp: Timestamp(),

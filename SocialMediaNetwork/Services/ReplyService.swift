@@ -11,12 +11,17 @@ public struct ReplyService {
         ReplyService.currentListener?.remove()
         ReplyService.currentListener = nil
     }
+    
+    public static func fetchReply(replyID: String) async throws -> Reply {
+        let snapshot = try await FirestoreConstants.replies().document(replyID).getDocument()
+        return try snapshot.data(as: Reply.self)
+    }
 
     public static func replyToPost(_ post: Post, replyText: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         
         let reply = Reply(
-            replyText: replyText,
+            caption: replyText,
             ownerUID: currentUID,
             replyID: postID,
             timestamp: Timestamp(),
@@ -35,7 +40,7 @@ public struct ReplyService {
         guard let currentUID = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         
         let newReply = Reply(
-            replyText: replyText,
+            caption: replyText,
             ownerUID: currentUID,
             replyID: replyID,
             timestamp: Timestamp(),

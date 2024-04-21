@@ -31,6 +31,8 @@
 		88721EA42BBC949C001B609A /* ActivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88721EA22BBC949C001B609A /* ActivityCoordinator.swift */; };
 		88721EA62BBC9802001B609A /* ProfileViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88721EA52BBC9802001B609A /* ProfileViewRouter.swift */; };
 		88893C572BA657EB00662718 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 88893C562BA657EB00662718 /* GoogleService-Info.plist */; };
+		8891DAAF2BD558F80028B19B /* UserRepliesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891DAAE2BD558F80028B19B /* UserRepliesView.swift */; };
+		8891DAB12BD559090028B19B /* UserRepliesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891DAB02BD559090028B19B /* UserRepliesViewModel.swift */; };
 		8891EF412BBE71980001A68C /* FollowingFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891EF402BBE71980001A68C /* FollowingFeedViewModel.swift */; };
 		8891EF432BBE735D0001A68C /* ForYouFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891EF422BBE735D0001A68C /* ForYouFeedView.swift */; };
 		8891EF452BBE736B0001A68C /* FollowingFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891EF442BBE736B0001A68C /* FollowingFeedView.swift */; };
@@ -48,9 +50,8 @@
 		8895C55A2BA5F85600F7C28A /* ProfileTabsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5592BA5F85600F7C28A /* ProfileTabsContentView.swift */; };
 		8895C57A2BA6091200F7C28A /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5622BA6091200F7C28A /* ProfileCoordinator.swift */; };
 		8895C57B2BA6091200F7C28A /* ProfileInputData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5642BA6091200F7C28A /* ProfileInputData.swift */; };
-		8895C57D2BA6091200F7C28A /* ReplyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5672BA6091200F7C28A /* ReplyRow.swift */; };
-		8895C57E2BA6091200F7C28A /* UserContentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5682BA6091200F7C28A /* UserContentListView.swift */; };
-		8895C57F2BA6091200F7C28A /* UserContentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5692BA6091200F7C28A /* UserContentListViewModel.swift */; };
+		8895C57D2BA6091200F7C28A /* ReplyGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5672BA6091200F7C28A /* ReplyGridItem.swift */; };
+		8895C57F2BA6091200F7C28A /* ProfileTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C5692BA6091200F7C28A /* ProfileTabsViewModel.swift */; };
 		8895C5802BA6091200F7C28A /* EditableCircularProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C56B2BA6091200F7C28A /* EditableCircularProfileImage.swift */; };
 		8895C5812BA6091200F7C28A /* CircularProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C56C2BA6091200F7C28A /* CircularProfileImageView.swift */; };
 		8895C5822BA6091200F7C28A /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895C56E2BA6091200F7C28A /* EditProfileView.swift */; };
@@ -179,6 +180,8 @@
 		88721EA22BBC949C001B609A /* ActivityCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCoordinator.swift; sourceTree = "<group>"; };
 		88721EA52BBC9802001B609A /* ProfileViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewRouter.swift; sourceTree = "<group>"; };
 		88893C562BA657EB00662718 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8891DAAE2BD558F80028B19B /* UserRepliesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepliesView.swift; sourceTree = "<group>"; };
+		8891DAB02BD559090028B19B /* UserRepliesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepliesViewModel.swift; sourceTree = "<group>"; };
 		8891EF402BBE71980001A68C /* FollowingFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingFeedViewModel.swift; sourceTree = "<group>"; };
 		8891EF422BBE735D0001A68C /* ForYouFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForYouFeedView.swift; sourceTree = "<group>"; };
 		8891EF442BBE736B0001A68C /* FollowingFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingFeedView.swift; sourceTree = "<group>"; };
@@ -199,9 +202,8 @@
 		8895C5592BA5F85600F7C28A /* ProfileTabsContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTabsContentView.swift; sourceTree = "<group>"; };
 		8895C5622BA6091200F7C28A /* ProfileCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		8895C5642BA6091200F7C28A /* ProfileInputData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileInputData.swift; sourceTree = "<group>"; };
-		8895C5672BA6091200F7C28A /* ReplyRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyRow.swift; sourceTree = "<group>"; };
-		8895C5682BA6091200F7C28A /* UserContentListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserContentListView.swift; sourceTree = "<group>"; };
-		8895C5692BA6091200F7C28A /* UserContentListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserContentListViewModel.swift; sourceTree = "<group>"; };
+		8895C5672BA6091200F7C28A /* ReplyGridItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyGridItem.swift; sourceTree = "<group>"; };
+		8895C5692BA6091200F7C28A /* ProfileTabsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTabsViewModel.swift; sourceTree = "<group>"; };
 		8895C56B2BA6091200F7C28A /* EditableCircularProfileImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableCircularProfileImage.swift; sourceTree = "<group>"; };
 		8895C56C2BA6091200F7C28A /* CircularProfileImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProfileImageView.swift; sourceTree = "<group>"; };
 		8895C56E2BA6091200F7C28A /* EditProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
@@ -344,6 +346,8 @@
 			children = (
 				88929B112BB4DBB700BE7079 /* UserPostsView.swift */,
 				88929B132BB4DBDC00BE7079 /* UserPostsViewModel.swift */,
+				8891DAAE2BD558F80028B19B /* UserRepliesView.swift */,
+				8891DAB02BD559090028B19B /* UserRepliesViewModel.swift */,
 				883F64152BB4E5C700C12811 /* UserLikedPostsView.swift */,
 				883F64172BB4E5DB00C12811 /* UserLikedPostsViewModel.swift */,
 				883F64192BB4E5EE00C12811 /* UserSavedPostsView.swift */,
@@ -433,9 +437,7 @@
 			children = (
 				8895C56B2BA6091200F7C28A /* EditableCircularProfileImage.swift */,
 				8895C56C2BA6091200F7C28A /* CircularProfileImageView.swift */,
-				8895C5672BA6091200F7C28A /* ReplyRow.swift */,
-				8895C5682BA6091200F7C28A /* UserContentListView.swift */,
-				8895C5692BA6091200F7C28A /* UserContentListViewModel.swift */,
+				8895C5672BA6091200F7C28A /* ReplyGridItem.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -470,6 +472,7 @@
 				88721EA52BBC9802001B609A /* ProfileViewRouter.swift */,
 				8895C5552BA5F7D800F7C28A /* ProfileTabsContainer.swift */,
 				8895C5592BA5F85600F7C28A /* ProfileTabsContentView.swift */,
+				8895C5692BA6091200F7C28A /* ProfileTabsViewModel.swift */,
 				8895C56E2BA6091200F7C28A /* EditProfileView.swift */,
 				8895C56F2BA6091200F7C28A /* ProfilePostFilter.swift */,
 				8895C5722BA6091200F7C28A /* UserProfileHeader */,
@@ -864,7 +867,7 @@
 				884826232BAB8FA0000D3E95 /* SettingsLabel.swift in Sources */,
 				8895C5B52BA60D5D00F7C28A /* PostButton.swift in Sources */,
 				8895C60E2BA612A400F7C28A /* FeedTabContainer.swift in Sources */,
-				8895C57F2BA6091200F7C28A /* UserContentListViewModel.swift in Sources */,
+				8895C57F2BA6091200F7C28A /* ProfileTabsViewModel.swift in Sources */,
 				8895C4E12BA5F10000F7C28A /* ContentView.swift in Sources */,
 				8895C5FE2BA6128500F7C28A /* AppTabView.swift in Sources */,
 				8895C5AF2BA60D5D00F7C28A /* PostCategoryDetailView.swift in Sources */,
@@ -873,7 +876,7 @@
 				883F64182BB4E5DB00C12811 /* UserLikedPostsViewModel.swift in Sources */,
 				8895C61B2BA612B000F7C28A /* PostEditorView.swift in Sources */,
 				88FA97A12BBB82CD005E940E /* SearchGridItem.swift in Sources */,
-				8895C57D2BA6091200F7C28A /* ReplyRow.swift in Sources */,
+				8895C57D2BA6091200F7C28A /* ReplyGridItem.swift in Sources */,
 				8895C6312BA6161600F7C28A /* ActivityViewModel.swift in Sources */,
 				8848263B2BABACEC000D3E95 /* AppScreenRouter.swift in Sources */,
 				88A6EEAF2BC2E1B4004CD9C9 /* SettingsView.swift in Sources */,
@@ -895,6 +898,7 @@
 				88721EA02BBC9387001B609A /* SearchViewRouter.swift in Sources */,
 				8895C5D02BA60FB200F7C28A /* SearchView.swift in Sources */,
 				884826372BABA4B9000D3E95 /* FeedFilter.swift in Sources */,
+				8891DAB12BD559090028B19B /* UserRepliesViewModel.swift in Sources */,
 				8895C60F2BA612A400F7C28A /* ForYouFeedViewModel.swift in Sources */,
 				8895C5C32BA60E1300F7C28A /* PostDetailsView.swift in Sources */,
 				88A6EEB32BC356DD004CD9C9 /* SearchItemViewModel.swift in Sources */,
@@ -940,12 +944,12 @@
 				883F641C2BB4E5F600C12811 /* UserSavedPostsViewModel.swift in Sources */,
 				88A64BBB2BA630F80048259D /* PlaceholderText.swift in Sources */,
 				8895C5F12BA6121500F7C28A /* LoginViewModel.swift in Sources */,
+				8891DAAF2BD558F80028B19B /* UserRepliesView.swift in Sources */,
 				8895C5562BA5F7D800F7C28A /* ProfileTabsContainer.swift in Sources */,
 				88A64BC92BA640680048259D /* ReplyView.swift in Sources */,
 				883D58972BD3126800BFEEF5 /* ActivityRowViewModel.swift in Sources */,
 				8895C57B2BA6091200F7C28A /* ProfileInputData.swift in Sources */,
 				88721E9E2BBC936A001B609A /* SearchCoordinator.swift in Sources */,
-				8895C57E2BA6091200F7C28A /* UserContentListView.swift in Sources */,
 				8895C5842BA6091200F7C28A /* UserProfileHeader.swift in Sources */,
 				88D20A672BB0AE4D00E62054 /* PrefersTabNavigationEnvironmentKey.swift in Sources */,
 				88FA979D2BBB5943005E940E /* SearchGrid.swift in Sources */,

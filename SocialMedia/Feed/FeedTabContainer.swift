@@ -13,7 +13,7 @@ struct FeedTabContainer: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TopFilterBar(currentFilter: $currentFilter)
+            TopFilterBar(currentFilter: $currentFilter).background(.bar)
             feedTabView
         }
 #if !os(macOS)
@@ -35,7 +35,7 @@ private extension FeedTabContainer {
             FollowingFeedView()
                 .tag(FeedFilter.following)
         }
-        .ignoresSafeArea()
+        .ignoresSafeArea(edges: .vertical)
 #if !os(macOS)
         .tabViewStyle(.page(indexDisplayMode: .never))
 #endif

@@ -12,7 +12,7 @@ final class RefreshedFilterModel: ObservableObject {
 }
 
 struct ProfileTabsContentView<Content: View>: View {
-    @StateObject private var model: UserContentListViewModel
+    @StateObject private var model: ProfileTabsViewModel
     @StateObject private var refreshedFilterModel = RefreshedFilterModel()
     var router: any Router
     var contentUnavailable: Bool = false
@@ -40,7 +40,7 @@ struct ProfileTabsContentView<Content: View>: View {
     }
     
     init(router: any Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false, @ViewBuilder info: @escaping () -> Content) {
-        self._model = StateObject(wrappedValue: UserContentListViewModel(user: user))
+        self._model = StateObject(wrappedValue: ProfileTabsViewModel(user: user))
         self.router = router
         self.tab = tab
         self.contentUnavailable = contentUnavailable
@@ -65,21 +65,7 @@ struct ProfileTabsContentView<Content: View>: View {
                             UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .posts))
                             
                         case .replies:
-                            Group {
-                                if model.replies.isEmpty {
-                                    VStack {
-                                        Text(model.contentUnavailableText(filter: .replies))
-                                            .font(.subheadline)
-                                            .foregroundStyle(Color.secondary)
-                                    }
-                                } else {
-                                    ForEach(Array(model.replies.enumerated()), id: \.element) { index, reply in
-                                        ReplyRow(reply: reply, onReplyTapped: {_ in })
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 10)
-                                    }
-                                }
-                            }
+                            UserRepliesView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .replies))
                             
                         case .liked:
                             UserLikedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .liked))

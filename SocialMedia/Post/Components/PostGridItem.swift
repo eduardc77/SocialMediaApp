@@ -45,7 +45,7 @@ struct PostGridItem: View {
         case .post(let post):
             return post.caption
         case .reply(let reply):
-            return reply.replyText
+            return reply.caption
         }
     }
     

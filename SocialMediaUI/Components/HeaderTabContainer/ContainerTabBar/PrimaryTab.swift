@@ -16,33 +16,27 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         public var underlineStyle: (any ShapeStyle)?
         public var underlineThickness: CGFloat
         public var underlineShape: (any View & Shape)?
-        public var bottomRuleStyle: (any ShapeStyle)?
-        public var bottomRuleThickness: CGFloat
         public var backgroundStyle: (any ShapeStyle)?
         public var padding: EdgeInsets
         public var contentPadding: EdgeInsets
         public var contentSpacing: CGFloat
         
         public init(
-            font: Font? =  .system(size: 14, weight: .semibold),
+            font: Font? = .system(size: 14, weight: .semibold),
             titleStyle: (any ShapeStyle)? = nil,
             underlineStyle: (any ShapeStyle)? = nil,
             underlineThickness: CGFloat = 1.5,
             underlineShape: (any View & Shape)? = Rectangle(),
-            bottomRuleStyle: (any ShapeStyle)? = Color.secondary.opacity(0.7),
-            bottomRuleThickness: CGFloat = 0.6,
             backgroundStyle: (any ShapeStyle)? = nil,
-            padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0),
+            padding: EdgeInsets = EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10),
             contentPadding: EdgeInsets = EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0),
-            contentSpacing: CGFloat = 3
+            contentSpacing: CGFloat = 0
         ) {
             self.font = font
             self.titleStyle = titleStyle
             self.underlineStyle = underlineStyle
             self.underlineThickness = underlineThickness
             self.underlineShape = underlineShape
-            self.bottomRuleStyle = bottomRuleStyle
-            self.bottomRuleThickness = bottomRuleThickness
             self.backgroundStyle = backgroundStyle
             self.padding = padding
             self.contentPadding = contentPadding
@@ -101,17 +95,13 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         case false: deselectedConfig
         }
     }
-    
-    private var bottomRuleStyle: AnyShapeStyle {
-        activeConfig.bottomRuleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint.opacity(0.35))
-    }
-    
+
     private var titleStyle: AnyShapeStyle {
-        activeConfig.titleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint)
+        activeConfig.titleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.primary)
     }
     
     private var underlineStyle: AnyShapeStyle {
-        activeConfig.underlineStyle.map { AnyShapeStyle($0) } ?? titleStyle
+        activeConfig.underlineStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint)
     }
     
     private var underlineShape: AnyShape? {
@@ -139,6 +129,7 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.borderless)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(alignment: .bottom) {
                     if let underlineShape {
                         underlineShape
@@ -155,8 +146,8 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
                 }
             }
             .padding(activeConfig.padding)
-            Rectangle().fill(bottomRuleStyle)
-                .frame(height: activeConfig.bottomRuleThickness)
+            Divider()
+                .padding(.horizontal, -500)
         }
         .transaction(value: context.selectedTab) { transform in
             transform.animation = .snappy(duration: 0.35, extraBounce: 0.07)

@@ -10,7 +10,7 @@ public struct SecondaryButtonStyle: ButtonStyle {
     var buttonHeight: CGFloat = 32
     var foregroundColor: Color = Color.primary
     var activeBackgroundColor: Color = .tertiaryGroupedBackground
-    var inactiveBackgroundColor: Color = Color.accentColor
+    var inactiveBackgroundColor: Color = Color.gray
     var loading: Bool = false
     var isActive: Bool = false
     @Environment(\.isEnabled) var isEnabled
@@ -19,17 +19,10 @@ public struct SecondaryButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline)
             .fontWeight(.semibold)
-            .foregroundStyle(isActive ? foregroundColor : Color.white)
+            .foregroundStyle(isActive ? foregroundColor : Color.accentColor)
             .frame(maxWidth: buttonWidth, minHeight: buttonHeight, idealHeight: buttonHeight)
             .padding(.horizontal)
-            .background(
-                (configuration.isPressed || isActive ? activeBackgroundColor.secondary : inactiveBackgroundColor.secondary),
-                in: .rect(cornerRadius: 8)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isActive ? Color.secondary : Color.clear, lineWidth: 1)
-            )
+            .background(.fill.secondary, in: .rect(cornerRadius: 8))
             .opacity(isEnabled ? 1 : 0.5)
             .overlay {
                 if loading {
@@ -45,7 +38,7 @@ public struct SecondaryButtonStyle: ButtonStyle {
 public extension ButtonStyle where Self == SecondaryButtonStyle {
     static var secondary: SecondaryButtonStyle { SecondaryButtonStyle(loading: false, isActive: false) }
     
-    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, activeBackgroundColor: Color = .tertiaryGroupedBackground, inactiveBackgroundColor: Color = Color.accentColor, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
+    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, activeBackgroundColor: Color = .tertiaryGroupedBackground, inactiveBackgroundColor: Color = Color.gray, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
         SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, activeBackgroundColor: activeBackgroundColor, inactiveBackgroundColor: inactiveBackgroundColor, loading: loading, isActive: isActive)
     }
 }
