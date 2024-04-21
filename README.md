@@ -63,6 +63,7 @@ The app is still work in progress.
 - Create support for adding multiple images when creating a post and viewing them in a horizontal paging scroll view. 
 - Create support for adding and playing video media in posts.
 - Displaying post replies bellow every post in posts grids. For now the replies are only visibile in the Post Detail screen.
+- Enable Apple and Google authentication.
 
 <!-- FOOTER -->
 <!-- Permanent links -->
