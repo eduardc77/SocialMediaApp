@@ -584,7 +584,6 @@
 		8895C5DE2BA6121500F7C28A /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				8895C5E82BA6121500F7C28A /* RegistrationView.swift */,
 				8895C5DD2BA6121500F7C28A /* AuthTextField.swift */,
 			);
 			path = Components;
@@ -602,6 +601,7 @@
 		8895C5EA2BA6121500F7C28A /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				8895C5E82BA6121500F7C28A /* RegistrationView.swift */,
 				8895C5E92BA6121500F7C28A /* RegistrationViewModel.swift */,
 			);
 			path = Register;

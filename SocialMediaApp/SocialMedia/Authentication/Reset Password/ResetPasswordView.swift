@@ -7,17 +7,17 @@ import SwiftUI
 import SocialMediaUI
 
 struct ResetPasswordView: View {
-    @StateObject private var viewModel = ResetPasswordViewModel()
+    @StateObject private var model = ResetPasswordViewModel()
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Bool
     
     var body: some View {
         Form {
             Section {
-                AuthTextField(type: .email, text: $viewModel.email)
+                AuthTextField(type: .email, text: $model.email)
                     .focused($focusedField)
             } footer: {
-                Text(viewModel.footerText)
+                Text(model.footerText)
                     .frame(maxWidth: .infinity, alignment: .leading)
 #if os(iOS)
                     .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
@@ -27,25 +27,25 @@ struct ResetPasswordView: View {
             Button(AuthScreen.resetPassword.buttonTitle) {
                 focusedField = false
                 Task {
-                    try await viewModel.sendPasswordResetEmail() 
+                    try await model.sendPasswordResetEmail()
                 }
             }
-            .buttonStyle(.primary(loading: viewModel.loading))
-            .disabled(!viewModel.validForm)
+            .buttonStyle(.primary(loading: model.loading))
+            .disabled(!model.validForm || model.loading)
             .listRowInsets(.init())
             .listRowBackground(Color.clear)
             
-            .alert(isPresented: $viewModel.showErrorAlert) {
+            .alert(isPresented: $model.showErrorAlert) {
                 Alert(title: Text(AuthScreen.resetPassword.errorAlertTitle),
-                      message: Text(viewModel.authError?.description ?? ""))
+                      message: Text(model.authError?.description ?? ""))
             }
         }
         .formStyle(.grouped)
-        .disabled(viewModel.loading)
+        .disabled(model.loading)
         .navigationTitle(AuthScreen.resetPassword.navigationTitle)
-        .alert(isPresented: $viewModel.showEmailSentAlert) {
-            Alert(title: Text(viewModel.emailSentAlertTitle),
-                  message: Text(viewModel.emailSentAlertMessage),
+        .alert(isPresented: $model.showEmailSentAlert) {
+            Alert(title: Text(model.emailSentAlertTitle),
+                  message: Text(model.emailSentAlertMessage),
                   dismissButton: .default(Text("Done"), action: { dismiss() }))
         }
     }

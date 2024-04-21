@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var viewModel = LoginViewModel()
+    @StateObject private var model = LoginViewModel()
     @FocusState private var focusedField: LoginField?
     
     var body: some View {
@@ -17,11 +17,11 @@ struct LoginView: View {
                 loginButton
             }
             .formStyle(.grouped)
-            .disabled(viewModel.isAuthenticating)
+            .disabled(model.loading)
             .navigationTitle(AuthScreen.login.navigationTitle)
-            .alert(isPresented: $viewModel.showAlert) {
+            .alert(isPresented: $model.showAlert) {
                 Alert(title: Text(AuthScreen.login.errorAlertTitle),
-                      message: Text(viewModel.authError?.description ?? ""))
+                      message: Text(model.authError?.description ?? ""))
             }
         }
     }
@@ -45,17 +45,17 @@ private extension LoginView {
     
     var textfieldsSection: some View {
         Section {
-            AuthTextField(type: .email, text: $viewModel.user.email)
+            AuthTextField(type: .email, text: $model.user.email)
                 .focused($focusedField, equals: .email)
-            AuthTextField(type: .password, text: $viewModel.user.password)
+            AuthTextField(type: .password, text: $model.user.password)
                 .focused($focusedField, equals: .password)
         } footer: {
             HStack {
-                SwiftUI.NavigationLink(AuthScreen.resetPassword.buttonTitle) {
+                NavigationLink(AuthScreen.resetPassword.buttonTitle) {
                     ResetPasswordView()
                 }
                 Spacer()
-                SwiftUI.NavigationLink(AuthScreen.register.buttonTitle) {
+                NavigationLink(AuthScreen.register.buttonTitle) {
                     RegistrationView()
                 }
             }
@@ -68,10 +68,10 @@ private extension LoginView {
     
     var loginButton: some View {
         Button(AuthScreen.login.buttonTitle) {
-            Task { try await viewModel.login() }
+            Task { try await model.login() }
         }
-        .buttonStyle(.primary(loading: viewModel.isAuthenticating))
-        .disabled(!viewModel.validForm)
+        .buttonStyle(.primary(loading: model.loading))
+        .disabled(!model.validForm || model.loading)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)
     }
