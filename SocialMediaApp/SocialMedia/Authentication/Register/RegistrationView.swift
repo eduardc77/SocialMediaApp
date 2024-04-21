@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @StateObject private var viewModel = RegistrationViewModel()
+    @StateObject private var model = RegistrationViewModel()
     @FocusState private var focusedField: RegisterField?
     @Environment(\.dismiss) private var dismiss
     
@@ -16,11 +16,11 @@ struct RegistrationView: View {
             registerButton
         }
         .formStyle(.grouped)
-        .disabled(viewModel.isAuthenticating)
+        .disabled(model.loading)
         .navigationTitle(AuthScreen.register.navigationTitle)
-        .alert(isPresented: $viewModel.showAlert) {
+        .alert(isPresented: $model.showAlert) {
             Alert(title: Text(AuthScreen.register.errorAlertTitle),
-                  message: Text(viewModel.authError?.description ?? ""))
+                  message: Text(model.authError?.description ?? ""))
         }
     }
 }
@@ -31,18 +31,18 @@ private extension RegistrationView {
     
     var textfieldsSection: some View {
         Section {
-            AuthTextField(type: .email, text: $viewModel.user.email)
+            AuthTextField(type: .email, text: $model.user.email)
                 .focused($focusedField, equals: .email)
-            AuthTextField(type: .password, text: $viewModel.user.password)
+            AuthTextField(type: .password, text: $model.user.password)
                 .focused($focusedField, equals: .password)
-            AuthTextField(type: .name, text: $viewModel.user.fullName)
+            AuthTextField(type: .name, text: $model.user.fullName)
                 .focused($focusedField, equals: .fullName)
-            AuthTextField(type: .username, text: $viewModel.user.username)
+            AuthTextField(type: .username, text: $model.user.username)
                 .focused($focusedField, equals: .username)
             
         } footer: {
-            Toggle(isOn: $viewModel.isAgreementChecked) {
-                Text(.init(viewModel.agreementText))
+            Toggle(isOn: $model.isAgreementChecked) {
+                Text(.init(model.agreementText))
                     .multilineTextAlignment(.leading)
             }
             .toggleStyle(.checkboxStyle)
@@ -50,22 +50,22 @@ private extension RegistrationView {
 #if os(iOS)
             .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
 #endif
-            .alert(isPresented: $viewModel.showAgreementAlert, content: {
-                Alert(title: Text(viewModel.agreementAlertTitle), message: Text(viewModel.agreementAlertMessage), dismissButton: .cancel())
+            .alert(isPresented: $model.showAgreementAlert, content: {
+                Alert(title: Text(model.agreementAlertTitle), message: Text(model.agreementAlertMessage), dismissButton: .cancel())
             })
         }
     }
     
     var registerButton: some View {
         Button(AuthScreen.register.buttonTitle.capitalized) {
-            guard viewModel.isAgreementChecked else {
-                viewModel.showAgreementAlert = true
+            guard model.isAgreementChecked else {
+                model.showAgreementAlert = true
                 return
             }
-            Task { try await viewModel.createUser() }
+            Task { try await model.createUser() }
         }
-        .buttonStyle(.primary(loading: viewModel.isAuthenticating))
-        .disabled(!viewModel.validForm)
+        .buttonStyle(.primary(loading: model.loading))
+        .disabled(!model.validForm || model.loading)
         .listRowInsets(.init())
         .listRowBackground(Color.clear)
     }

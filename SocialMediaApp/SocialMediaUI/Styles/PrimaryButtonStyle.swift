@@ -16,7 +16,8 @@ public struct PrimaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundStyle(!loading ? foregroundColor : backgroundColor)
+            .foregroundStyle(foregroundColor)
+            .opacity(!loading ? 1 : 0)
             .frame(maxWidth: buttonWidth, minHeight: buttonHeight, idealHeight: buttonHeight)
             .background(backgroundColor, in: .rect(cornerRadius: 8))
             .opacity(!configuration.isPressed ? 1 : 0.5)

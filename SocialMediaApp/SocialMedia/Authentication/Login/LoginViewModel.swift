@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 final class LoginViewModel: ObservableObject {
     @Published var user = UserInputData()
-    @Published var isAuthenticating = false
+    @Published var loading = false
     @Published var showAlert = false
     @Published var authError: AuthError?
     
@@ -21,13 +21,13 @@ final class LoginViewModel: ObservableObject {
     @MainActor
     func login() async throws {
         do {
-            isAuthenticating = true
+            loading = true
             try await AuthService.shared.login(withUser: user)
-            isAuthenticating = false
+            loading = false
         } catch {
             authError = AuthError(error: error)
             showAlert = true
-            isAuthenticating = false
+            loading = false
         }
     }
 }

@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 final class RegistrationViewModel: ObservableObject {
     @Published var user = UserInputData()
-    @Published var isAuthenticating = false
+    @Published var loading = false
     @Published var showAlert = false
     @Published var authError: AuthError?
     
@@ -37,14 +37,14 @@ final class RegistrationViewModel: ObservableObject {
     
     @MainActor
     func createUser() async throws {
-        isAuthenticating = true
+        loading = true
         do {
             try await AuthService.shared.registerUser(withData: user)
-            isAuthenticating = false
+            loading = false
         } catch {
             authError = AuthError(error: error)
             showAlert = true
-            isAuthenticating = false
+            loading = false
         }
     }
 }
