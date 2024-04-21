@@ -71,7 +71,7 @@ struct CacheAsyncImage_Previews: PreviewProvider {
             case .success(let image):
                 image.resizable().frame(width: 300, height: 300)
             case .failure:
-                Rectangle().fill(.gray.opacity(0.5)).frame(width: 300, height: 300)
+                Rectangle().fill(.secondary.opacity(0.5)).frame(width: 300, height: 300)
             @unknown default:
                 fatalError()
             }
