@@ -50,8 +50,6 @@ struct ReplyGridItem: View {
                 }
             }
             
-            
-            
             if let user = reply.user {
                 HStack(alignment: .top) {
                     NavigationButton {
@@ -72,7 +70,6 @@ struct ReplyGridItem: View {
                         
                     }
                     .font(.footnote)
-                    
                 }
             }
         }

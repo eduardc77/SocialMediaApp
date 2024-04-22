@@ -12,7 +12,7 @@ import SocialMediaNetwork
 @MainActor
 final class CurrentUserProfileHeaderModel: ObservableObject {
     @Published var currentUser: SocialMediaNetwork.User?
-   
+    
     @Published var profileInputData = ProfileInputData()
     @Published var updatingProfile: Bool = false
     

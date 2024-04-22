@@ -14,7 +14,7 @@ final class ActivityRowViewModel: ObservableObject {
         activity.user?.isFollowed ?? false
     }
     
-   var activityMessage: String {
+    var activityMessage: String {
         switch activity.type {
         case .like:
             return activity.post?.caption ?? ""
@@ -33,7 +33,7 @@ final class ActivityRowViewModel: ObservableObject {
     func toggleFollow() async throws {
         guard let userID = activity.user?.id else { return }
         activity.user?.followedByCurrentUser?.toggle()
-    
+        
         loading = true
         if let user = activity.user, user.isFollowed {
             activity.user?.stats.followersCount += 1

@@ -43,7 +43,7 @@ class FeedViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
+    
     func fetchPostUserData(post: Post) async throws -> Post {
         var result = post
         async let user = try await UserService.fetchUser(userID: post.ownerUID)

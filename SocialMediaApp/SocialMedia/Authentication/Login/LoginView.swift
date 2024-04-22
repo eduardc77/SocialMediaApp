@@ -30,13 +30,14 @@ struct LoginView: View {
 // MARK: - Subviews
 
 private extension LoginView {
-
+    
     var logoImage: some View {
         Section {
-            Image(systemName: "questionmark.app.fill")
-                .resizable()
-                .frame(width: 66, height: 66)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            Image(systemName: "shareplay")
+                .font(.system(size: 36))
+                .padding(.vertical)
+                .padding(.horizontal, 4)
+                .background(.tint.secondary, in: .rect(cornerRadius: 8))
         }
         .frame(maxWidth: .infinity)
         .listRowInsets(.init())

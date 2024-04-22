@@ -45,7 +45,7 @@ struct PostButtonGroupView: View {
                     PostButton(count: model.numberOfReposts,
                                active: false,
                                buttonType: buttonType) {
-                    
+                        
                     }
                     Divider().padding(.vertical, 5)
                     
@@ -61,7 +61,7 @@ struct PostButtonGroupView: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-
+        
         .task {
             guard !loading else { return }
             await checkForUserActivity()

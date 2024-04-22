@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 final class PostButtonGroupViewModel: ObservableObject {
     var postType: PostType
-
+    
     var numberOfLikes: Int {
         switch postType {
         case .post(let post):

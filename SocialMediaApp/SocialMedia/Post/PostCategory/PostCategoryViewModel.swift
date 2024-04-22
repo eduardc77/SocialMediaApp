@@ -59,7 +59,7 @@ final class PostCategoryViewModel: ObservableObject {
         }
         loading = true
         
-
+        
         let (newPosts, lastPostDocument) = try await PostService.fetchPosts(by: category, countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
         guard !newPosts.isEmpty else {
             self.noMoreItemsToFetch = true
@@ -98,7 +98,7 @@ final class PostCategoryViewModel: ObservableObject {
             print("Error fetching for you posts: \(error)")
         }
     }
-
+    
     func refresh() async throws {
         posts.removeAll()
         noMoreItemsToFetch = false
@@ -109,10 +109,10 @@ final class PostCategoryViewModel: ObservableObject {
     func sortPosts() {
         posts = posts.sorted {
             switch currentFilter {
-                case .hot:
-                    return $0.likes > $1.likes
-                case .new:
-                    return $0.timestamp.dateValue() > $1.timestamp.dateValue()
+            case .hot:
+                return $0.likes > $1.likes
+            case .new:
+                return $0.timestamp.dateValue() > $1.timestamp.dateValue()
             }
         }
     }

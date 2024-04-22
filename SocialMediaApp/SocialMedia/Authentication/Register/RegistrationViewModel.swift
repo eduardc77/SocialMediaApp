@@ -32,6 +32,7 @@ final class RegistrationViewModel: ObservableObject {
         && user.email.validEmail
         && !user.password.isEmpty
         && !user.fullName.isEmpty
+        && !user.username.isEmpty
         && user.password.count > 5
     }
     

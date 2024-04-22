@@ -19,7 +19,6 @@ struct AppTabView: View {
                     }
             }
         }
-        
         .onAppear {
             appRouter.selection = .home
         }

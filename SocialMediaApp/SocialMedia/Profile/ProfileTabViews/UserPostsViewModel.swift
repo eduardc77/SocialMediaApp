@@ -98,7 +98,7 @@ final class UserPostsViewModel: ObservableObject {
             print("Error fetching user posts: \(error)")
         }
     }
-
+    
     func refresh() async throws {
         posts.removeAll()
         noMoreItemsToFetch = false

@@ -17,7 +17,7 @@ public struct Post: Identifiable, Codable, Hashable {
     public var imageUrl: String?
     
     public var user: User?
-     
+    
     public var isLiked: Bool? = nil
     public var isSaved: Bool? = nil
     public var isReposed: Bool? = nil

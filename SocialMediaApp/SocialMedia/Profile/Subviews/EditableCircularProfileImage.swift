@@ -33,8 +33,8 @@ struct EditableCircularProfileImage: View {
         }
         .buttonStyle(.borderless)
         .onDisappear {
-            imageData.imageSelection = nil
-            imageData.newImageSet = false
+           imageData.imageSelection = nil
+           imageData.newImageSet = false
         }
     }
 }

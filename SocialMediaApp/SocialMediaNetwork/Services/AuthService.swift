@@ -3,12 +3,26 @@ import Firebase
 
 public class AuthService: AuthServiceable {
     @Published public var userSession: FirebaseAuth.User?
+    @Published public var loading: Bool = false
     
     public static let shared = AuthService()
     
     public init() {
-        self.userSession = Auth.auth().currentUser
-        Task { try await UserService.shared.fetchCurrentUser() }
+        self.loading = true
+        Task {
+            try await UserService.shared.fetchCurrentUser()
+            guard let userID = Auth.auth().currentUser?.uid, try await FirestoreConstants.users.document(userID).getDocument().exists else {
+                await MainActor.run {
+                    self.loading = false
+                }
+                return
+            }
+            
+            await MainActor.run {
+                self.userSession = Auth.auth().currentUser
+                self.loading = false
+            }
+        }
     }
     
     @MainActor
@@ -63,7 +77,7 @@ public class AuthService: AuthServiceable {
 public extension AuthService {
     
     @MainActor
-     private static func uploadUserData(_ userData: UserInputData, userId: String) async throws {
+    private static func uploadUserData(_ userData: UserInputData, userId: String) async throws {
         let user = User(id: userId, email: userData.email, username: userData.username.lowercased(), fullName: userData.fullName, joinDate: Timestamp())
         guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
         try await FirestoreConstants.users.document(userId).setData(encodedUser)

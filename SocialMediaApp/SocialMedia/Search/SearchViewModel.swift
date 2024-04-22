@@ -12,7 +12,6 @@ final class SearchViewModel: ObservableObject {
     
     @Published var searchText = ""
     @Published var loading = false
-    @Published var followedIndex: Int = 0
     
     var contentUnavailableTitle: String {
         "No results for '\(searchText)'"

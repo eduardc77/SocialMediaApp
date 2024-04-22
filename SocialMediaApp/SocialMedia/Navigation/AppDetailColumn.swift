@@ -7,7 +7,7 @@ import SwiftUI
 
 struct AppDetailColumn: View {
     var screen: AppScreen?
-
+    
     var body: some View {
         Group {
             if let screen {
@@ -16,10 +16,10 @@ struct AppDetailColumn: View {
                 ContentUnavailableView("Select a screen", systemImage: "list.clipboard.fill", description: Text("Pick something from the list."))
             }
         }
-        #if os(macOS)
+#if os(macOS)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background()
-        #endif
+#endif
     }
 }
 

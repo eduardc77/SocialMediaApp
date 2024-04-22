@@ -9,7 +9,7 @@ import SocialMediaNetwork
 struct ActivityCoordinator: View {
     @StateObject private var router = ActivityViewRouter()
     @EnvironmentObject private var tabRouter: AppScreenRouter
-
+    
     var body: some View {
         NavigationStack(path: $router.path) {
             ActivityView()

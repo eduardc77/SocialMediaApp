@@ -32,7 +32,7 @@ public class ImageData: ObservableObject {
     }
     
     public init() {}
-
+    
     func loadTransferable(from imageSelection: PhotosPickerItem) async {
         guard imageSelection == self.imageSelection else {
             print("DEBUG: Failed to get the selected item.")
@@ -65,11 +65,11 @@ extension NSImage {
     func jpegData(compressionQuality: Double) -> Data? {
         guard let tiff = tiffRepresentation else { return nil }
         guard let imageRep = NSBitmapImageRep(data: tiff) else { return nil }
-
+        
         let options: [NSBitmapImageRep.PropertyKey: Any] = [
             .compressionFactor: compressionQuality
         ]
-
+        
         return imageRep.representation(using: .jpeg, properties: options)
     }
 }

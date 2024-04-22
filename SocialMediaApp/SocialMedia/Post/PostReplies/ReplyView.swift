@@ -15,7 +15,7 @@ struct ReplyView: View {
     init(postType: PostType) {
         _model = StateObject(wrappedValue: ReplyViewModel(postType: postType))
     }
-
+    
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
@@ -29,7 +29,7 @@ struct ReplyView: View {
                             case .reply(let reply):
                                 CircularProfileImageView(profileImageURL: reply.user?.profileImageURL)
                             }
-
+                            
                             Rectangle()
                                 .fill(Color.secondary)
                                 .frame(maxWidth: 2, minHeight: rowSpacing, maxHeight: .infinity)
@@ -70,7 +70,7 @@ struct ReplyView: View {
                                     Text(model.currentUser?.username ?? "")
                                         .fontWeight(.semibold)
                                 }
-
+                                
                                 TextField("Add your reply...", text: $model.replyText, axis: .vertical)
                                     .tint(Color.primary)
                                     .padding(2)

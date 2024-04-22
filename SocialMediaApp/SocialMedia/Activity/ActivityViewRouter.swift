@@ -7,7 +7,7 @@ import Foundation
 
 final class ActivityViewRouter: Router {
     @Published var path = [AnyHashable]()
-
+    
     init() {}
     
     func push(_ screen: AnyHashable) {

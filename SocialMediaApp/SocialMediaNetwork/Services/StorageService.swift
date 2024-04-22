@@ -64,7 +64,7 @@ public struct StorageService {
         return image
     }
 #endif
-
+    
     public static func uploadImage(imageData: Data, type: UploadType) async throws -> String {
         do {
             let storageReference = type.filePath
@@ -83,7 +83,7 @@ public struct StorageService {
             throw URLError(.badServerResponse)
         }
     }
-
+    
     public static func deleteImage(path: String) async throws {
         try await getPathForImage(path: path).delete()
     }
