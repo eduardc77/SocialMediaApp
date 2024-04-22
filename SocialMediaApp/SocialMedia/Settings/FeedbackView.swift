@@ -58,7 +58,7 @@ struct FeedbackView: View {
         .onTapGesture {
             focusedField = nil
         }
-        .navigationBar(title: "Feedback")
+        .navigationTitle("Feedback")
         .background(Color.groupedBackground)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

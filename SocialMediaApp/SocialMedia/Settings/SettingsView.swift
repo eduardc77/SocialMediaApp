@@ -65,7 +65,7 @@ struct SettingsView: View {
             .listRowBackground(Color.clear)
         }
         .formStyle(.grouped)
-        .navigationBar(title: "Settings")
+        .navigationTitle("Settings")
         .environment(\.defaultMinListHeaderHeight, 0)
         .environment(\.defaultMinListRowHeight, 20)
     }

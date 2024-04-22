@@ -23,7 +23,7 @@ struct PostCategoryDetailView: View {
             })
             postsTabView
         }
-        .navigationBar(title: "\(model.category.icon) \(model.category.rawValue.capitalized)")
+        .navigationTitle("\(model.category.icon) \(model.category.rawValue.capitalized)")
         .background(Color.groupedBackground)
     }
 }
