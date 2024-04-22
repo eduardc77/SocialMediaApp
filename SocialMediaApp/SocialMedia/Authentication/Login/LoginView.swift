@@ -34,6 +34,8 @@ private extension LoginView {
     var logoImage: some View {
         Section {
             Image(systemName: "shareplay")
+                .foregroundStyle(.white)
+                .colorMultiply(.white)
                 .font(.system(size: 36))
                 .padding(.vertical)
                 .padding(.horizontal, 4)
@@ -52,17 +54,17 @@ private extension LoginView {
                 .focused($focusedField, equals: .password)
         } footer: {
             HStack {
-                NavigationLink(AuthScreen.resetPassword.buttonTitle) {
-                    ResetPasswordView()
-                }
-                Spacer()
                 NavigationLink(AuthScreen.register.buttonTitle) {
                     RegistrationView()
+                }
+                Spacer()
+                NavigationLink(AuthScreen.resetPassword.buttonTitle) {
+                    ResetPasswordView()
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 #if os(iOS)
-            .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
+            .listRowInsets(.init(top: 10, leading: 5, bottom: 10, trailing: 5))
 #endif
         }
     }

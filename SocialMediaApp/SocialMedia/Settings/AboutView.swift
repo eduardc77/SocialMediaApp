@@ -25,7 +25,7 @@ struct AboutView: View {
         }
         .formStyle(.grouped)
         .frame(alignment: .leading)
-        .navigationBar(title: "About")
+        .navigationTitle("About")
         .background(Color.groupedBackground)
     }
 }

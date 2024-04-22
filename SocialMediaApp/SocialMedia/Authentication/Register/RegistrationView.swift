@@ -48,7 +48,7 @@ private extension RegistrationView {
             .toggleStyle(.checkboxStyle)
             .frame(maxWidth: .infinity, alignment: .leading)
 #if os(iOS)
-            .listRowInsets(.init(top: 10, leading: 4, bottom: 10, trailing: 0))
+            .listRowInsets(.init(top: 10, leading: 5, bottom: 10, trailing: 0))
 #endif
             .alert(isPresented: $model.showAgreementAlert, content: {
                 Alert(title: Text(model.agreementAlertTitle), message: Text(model.agreementAlertMessage), dismissButton: .cancel())

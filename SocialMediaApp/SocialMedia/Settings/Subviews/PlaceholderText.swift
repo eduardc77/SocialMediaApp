@@ -14,7 +14,7 @@ struct PlaceholderText: View {
             Text(AboutSocialMedia.lorem)
                 .padding()
         }
-        .navigationBar(title: title.rawValue.capitalized)
+        .navigationTitle(title.rawValue.capitalized)
     }
 }
 
