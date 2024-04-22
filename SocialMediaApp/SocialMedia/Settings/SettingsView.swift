@@ -10,7 +10,7 @@ import SocialMediaNetwork
 struct SettingsView: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.requestReview) var requestReview
-   
+    
     
     var body: some View {
         Form {
@@ -31,7 +31,7 @@ struct SettingsView: View {
             
             Section {
                 Button {
-                
+                    
                 } label: {
                     SettingsLabel(settingsOption: .feedback)
                 }
@@ -55,7 +55,7 @@ struct SettingsView: View {
             } header: {
                 VStack {
                     Text("Social Media")
-                
+                    
                 }
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
@@ -99,7 +99,7 @@ struct SettingsView: View {
     
     var aboutRow: some View {
         Button {
-          
+            
         } label: {
             SettingsLabel(settingsOption: .about)
         }
@@ -145,14 +145,14 @@ struct SettingsView: View {
     var moreSectionRows: some View {
         Group {
             Button {
-              
+                
             } label: {
                 SettingsLabel(settingsOption: .termsOfUse)
             }
             .tint(Color.primary)
             
-           Button {
-      
+            Button {
+                
             } label: {
                 SettingsLabel(settingsOption: .privacyPolicy)
             }

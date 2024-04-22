@@ -17,7 +17,7 @@ class ActivityViewModel: ObservableObject {
     }
     
     @Published var selectedFilter: ActivityFilter = .all
-
+    
     init() {}
     
     func refresh() async throws {
@@ -61,7 +61,7 @@ class ActivityViewModel: ObservableObject {
             async let isFollowed = await UserService.checkIfUserIsFollowed(userID: notification.senderUID)
             user.followedByCurrentUser = await isFollowed
         }
-
+        
         self.notifications[indexOfNotification].user = user
         
         if let postID = notification.postID {

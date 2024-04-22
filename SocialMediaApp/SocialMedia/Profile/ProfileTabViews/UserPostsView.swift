@@ -11,7 +11,7 @@ struct UserPostsView: View {
     var router: any Router
     let contentUnavailableText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
-  
+    
     init(router: any Router, user: User, contentUnavailableText: String) {
         self.router = router
         self._model = StateObject(wrappedValue: UserPostsViewModel(user: user))

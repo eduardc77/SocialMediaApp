@@ -9,7 +9,6 @@ import SocialMediaNetwork
 
 final class ContentViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
-    @Published var currentUser: SocialMediaNetwork.User?
     @Published var loading: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
@@ -19,18 +18,15 @@ final class ContentViewModel: ObservableObject {
     }
     
     private func setupSubscribers() {
-        loading = true
+        AuthService.shared.$loading.sink { [weak self] loading in
+            self?.loading = loading
+        }
+        .store(in: &cancellables)
+        
         AuthService.shared.$userSession.sink { [weak self] session in
             self?.userSession = session
         }
         .store(in: &cancellables)
-        
-        UserService.shared.$currentUser.sink { [weak self] user in
-            self?.currentUser = user
-            if self?.currentUser != nil || self?.userSession == nil {
-                self?.loading = false
-            }
-        }
-        .store(in: &cancellables)
+
     }
 }

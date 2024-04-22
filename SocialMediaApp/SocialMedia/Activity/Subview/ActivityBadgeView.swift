@@ -11,17 +11,17 @@ struct ActivityBadgeView: View {
     
     private var badgeColor: Color {
         switch type {
-            case .like: return .pink
-            case .follow: return .indigo
-            case .reply: return .blue
+        case .like: return .pink
+        case .follow: return .indigo
+        case .reply: return .blue
         }
     }
     
     private var badgeImageName: String {
         switch type {
-            case .like: return "heart.fill"
-            case .follow: return "person.fill"
-            case .reply: return "arrowshape.turn.up.backward.fill"
+        case .like: return "heart.fill"
+        case .follow: return "person.fill"
+        case .reply: return "arrowshape.turn.up.backward.fill"
         }
     }
     

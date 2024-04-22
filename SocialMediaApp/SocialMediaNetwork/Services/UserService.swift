@@ -7,11 +7,12 @@ public class UserService: UserServiceable {
     
     public static let shared = UserService()
     private static let userCache = NSCache<NSString, NSData>()
-
+    
     @MainActor
     public func fetchCurrentUser() async throws {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let snapshot = try await FirestoreConstants.users.document(uid).getDocument()
+        guard snapshot.exists else { return }
         let user = try snapshot.data(as: User.self)
         self.currentUser = user
     }
@@ -75,7 +76,7 @@ public extension UserService {
             .collection("userFollowing")
             .document(userID)
             .delete()
-
+        
         try await FirestoreConstants
             .followers
             .document(userID)
@@ -106,12 +107,12 @@ public extension UserService {
         async let followingSnapshot = FirestoreConstants.following.document(userID).collection("userFollowing").getDocuments()
         async let followerSnapshot = FirestoreConstants.followers.document(userID).collection("userFollowers").getDocuments()
         async let postsSnapshot = FirestoreConstants.posts.whereField("ownerUID", isEqualTo: userID).getDocuments()
-
+        
         return .init(followersCount: try await followerSnapshot.count,
                      followingCount: try await followingSnapshot.count,
                      postsCount: try await postsSnapshot.count)
     }
-        
+    
     static func fetchUserFollowers(userID: String) async throws -> [User] {
         let snapshot = try await FirestoreConstants
             .followers
@@ -120,7 +121,7 @@ public extension UserService {
             .getDocuments()
         
         return try await fetchUsers(snapshot)
-
+        
     }
     
     static func fetchUserFollowing(userID: String) async throws -> [User] {

@@ -26,39 +26,39 @@ final class UserRepliesViewModel: ObservableObject {
         self.user = user
     }
     
-//    func addListenerForPostUpdates() {
-//        guard let userID = user.id else { return }
-//        
-//        PostService.addListenerForUserReplies(forUserID: userID)
-//            .sink { completion in
-//                
-//            } receiveValue: { [weak self] documentChangeType, lastDocument in
-//                guard let self = self else { return }
-//                
-//                Task {
-//                    switch documentChangeType {
-//                    case .added(let reply):
-//                        try await self.add(reply)
-//                        
-//                    case .modified(let reply):
-//                        try await self.modify(reply)
-//                        
-//                    case .removed(let reply):
-//                        self.remove(reply)
-//                        
-//                    case .none: break
-//                    }
-//                }
-//            }
-//            .store(in: &cancellables)
-//    }
+    //    func addListenerForPostUpdates() {
+    //        guard let userID = user.id else { return }
+    //
+    //        PostService.addListenerForUserReplies(forUserID: userID)
+    //            .sink { completion in
+    //
+    //            } receiveValue: { [weak self] documentChangeType, lastDocument in
+    //                guard let self = self else { return }
+    //
+    //                Task {
+    //                    switch documentChangeType {
+    //                    case .added(let reply):
+    //                        try await self.add(reply)
+    //
+    //                    case .modified(let reply):
+    //                        try await self.modify(reply)
+    //
+    //                    case .removed(let reply):
+    //                        self.remove(reply)
+    //
+    //                    case .none: break
+    //                    }
+    //                }
+    //            }
+    //            .store(in: &cancellables)
+    //    }
     
     func loadMoreReplies() async throws {
         guard !noMoreItemsToFetch, let userID = user.id, !userID.isEmpty else {
             return
         }
         loading = true
-  
+        
         let (newReplies, lastPostDocument) = try await ReplyService.fetchPostReplies(forUser: user, countLimit: itemsPerPage, descending: true, lastDocument:  self.lastPostDocument)
         
         guard !newReplies.isEmpty else {
@@ -99,14 +99,14 @@ final class UserRepliesViewModel: ObservableObject {
                         reply.post = post
                     }
                 }
-                    
+                
                 self.loading = false
             }
         } catch {
             print("Error fetching user posts: \(error)")
         }
     }
-
+    
     func refresh() async throws {
         replies.removeAll()
         noMoreItemsToFetch = false
@@ -177,33 +177,3 @@ private extension UserRepliesViewModel {
         return postCopy
     }
 }
-
-
-
-// MARK: - User Replies
-
-//    func fetchUserReplies() async throws {
-//        self.replies = try await PostService.fetchPostReplies(forUser: user)
-//        try await fetchReplyMetadata()
-//    }
-//
-//    private func fetchReplyMetadata() async throws {
-//        await withThrowingTaskGroup(of: Void.self, body: { group in
-//            for reply in self.replies {
-//                group.addTask { try await self.fetchReplyData(for: reply) }
-//            }
-//        })
-//    }
-//
-//    private func fetchReplyData(for reply: Reply) async throws {
-//        guard let replyIndex = replies.firstIndex(where: { $0.id == reply.id }) else { return }
-//
-//        async let post = try await PostService.fetchPost(postID: reply.postID)
-//
-//        let postOwnerUID = try await post.ownerUID
-//        async let user = try await UserService.fetchUser(userID: postOwnerUID)
-//
-//        var postCopy = try await post
-//        postCopy.user = try await user
-//        replies[replyIndex].post = postCopy
-//    }

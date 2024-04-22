@@ -25,24 +25,24 @@ final class PostDetailsViewModel: ObservableObject {
     private var lastDocument: DocumentSnapshot?
     private var cancellables = Set<AnyCancellable>()
     
-     var user: SocialMediaNetwork.User? {
+    var user: SocialMediaNetwork.User? {
         switch postType {
-            case .post:
-                return post?.user
-            case .reply:
-                return reply?.user
+        case .post:
+            return post?.user
+        case .reply:
+            return reply?.user
         }
     }
     
-     var caption: String? {
+    var caption: String? {
         switch postType {
-            case .post:
-                return post?.caption
-            case .reply:
-                return reply?.caption
+        case .post:
+            return post?.caption
+        case .reply:
+            return reply?.caption
         }
     }
- 
+    
     init(postType: PostType) {
         self.postType = postType
         
@@ -85,7 +85,7 @@ final class PostDetailsViewModel: ObservableObject {
         case .post:
             guard let post = post else { return }
             (newReplies, lastReplyDocument) = try await ReplyService.fetchPostReplies(forPost: post, countLimit: itemsPerPage, lastDocument: lastDocument)
-    
+            
         case .reply:
             guard let reply = reply else { return }
             (newReplies, lastReplyDocument) = try await ReplyService.fetchReplyReplies(forReply: reply, countLimit: itemsPerPage, lastDocument: lastDocument)
@@ -200,15 +200,15 @@ private extension PostDetailsViewModel {
         
         guard replies[index].id == reply.id, replies[index] != reply else { return }
         
-                if replies[index].likes != reply.likes {
-                    replies[index].likes = reply.likes
-                }
-                if replies[index].replies != reply.replies {
-                    replies[index].replies = reply.replies
-                }
-                if replies[index].reposts != reply.reposts {
-                    replies[index].reposts = reply.reposts
-                }
+        if replies[index].likes != reply.likes {
+            replies[index].likes = reply.likes
+        }
+        if replies[index].replies != reply.replies {
+            replies[index].replies = reply.replies
+        }
+        if replies[index].reposts != reply.reposts {
+            replies[index].reposts = reply.reposts
+        }
     }
     
     func remove(_ reply: Reply) {

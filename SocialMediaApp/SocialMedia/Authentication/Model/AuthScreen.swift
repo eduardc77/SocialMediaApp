@@ -14,7 +14,7 @@ enum AuthScreen: String {
             return self.rawValue.capitalized
         }
     }
-
+    
     var navigationTitle: String {
         switch self {
         case .login:

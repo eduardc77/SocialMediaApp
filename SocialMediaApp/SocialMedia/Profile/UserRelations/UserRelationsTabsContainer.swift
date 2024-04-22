@@ -12,9 +12,9 @@ struct UserRelationsTabsContainer: View {
     @StateObject private var model: UserRelationsViewModel
     @State private var selection = Set<User.ID>()
     @State private var layout = BrowserLayout.grid
-
+    
     @Environment(\.dismiss) private var dismiss
-
+    
     init(router: any Router, user: User) {
         self.router = router
         self._model = StateObject(wrappedValue: UserRelationsViewModel(user: user))

@@ -13,26 +13,21 @@ struct ContentView: View {
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     var body: some View {
-        Group {
-            if model.userSession == nil || model.currentUser == nil {
-                if model.loading {
-                    ProgressView()
-                } else {
-                    LoginView()
-                }
+        if model.loading {
+            ProgressView()
+        } else if model.userSession == nil {
+            LoginView()
+        } else {
+            if prefersTabNavigation {
+                AppTabView()
             } else {
-                if prefersTabNavigation {
-                    AppTabView()
-                } else {
-                    NavigationSplitView {
-                        AppSidebarList(selection: $appRouter.selection)
-                    } detail: {
-                        AppDetailColumn(screen: appRouter.selection)
-                    }
+                NavigationSplitView {
+                    AppSidebarList(selection: $appRouter.selection)
+                } detail: {
+                    AppDetailColumn(screen: appRouter.selection)
                 }
             }
         }
-        
     }
 }
 

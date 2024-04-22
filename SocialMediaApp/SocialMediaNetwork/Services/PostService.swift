@@ -8,7 +8,7 @@ public struct PostService {
     private static var feedListener: ListenerRegistration? = nil
     private static var likedPostsListener: ListenerRegistration? = nil
     private static var savedPostsListener: ListenerRegistration? = nil
-
+    
     public static func uploadPost(_ post: Post) async throws {
         guard let postData = try? Firestore.Encoder().encode(post) else { return }
         let documentReference = try await FirestoreConstants.posts.addDocument(data: postData)
@@ -24,7 +24,7 @@ public struct PostService {
         guard !listenersRemoved else { return }
         PostService.feedListener?.remove()
         PostService.feedListener = nil
-
+        
         self.feedListener = listener
     }
     
@@ -53,7 +53,7 @@ public struct PostService {
         
         return publisher
     }
- 
+    
     // MARK: - Following Feed
     
     public static func fetchUserFollowingPosts(countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
@@ -83,7 +83,7 @@ public struct PostService {
         }
         try await FirestoreConstants.users.document(uid).collection("userFeed").document(postID).setData([:])
     }
-
+    
     // MARK: - User Posts
     
     public static func fetchUserPosts(userID: String, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documents: [Post], lastDocument: DocumentSnapshot?) {
@@ -145,7 +145,7 @@ public extension PostService {
     
     static func unlikePost(_ post: Post) async throws {
         guard let userID = Auth.auth().currentUser?.uid, let postID = post.id else { return }
-       
+        
         try await FirestoreConstants.posts.document(postID).collection("postLikes").document(userID).delete()
         try await FirestoreConstants.users.document(userID).collection("userLikedPosts").document(postID).delete()
         try await FirestoreConstants.posts.document(postID).updateData(["likes": post.likes - 1])
@@ -243,7 +243,7 @@ public extension PostService {
         async let deletePostUserData: Void = deletePostUserData(for: userID, postID: postID)
         async let deletePostLikes: Void = deletePostLikes(for: postID)
         async let deletePostReplies: Void = deletePostReplies(for: postID)
-
+        
         _ = try await [deletePostUserData, deletePostLikes, deletePostReplies, deletePost]
     }
     

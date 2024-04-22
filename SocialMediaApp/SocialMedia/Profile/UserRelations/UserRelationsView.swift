@@ -13,7 +13,7 @@ struct UserRelationsView: View {
     
     @Binding var selection: Set<User.ID>
     @Binding var layout: BrowserLayout
-
+    
     var tableImageSize: Double {
 #if os(macOS)
         return 30

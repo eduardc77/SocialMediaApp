@@ -7,7 +7,7 @@ import Foundation
 
 final class FeedViewRouter: Router {
     @Published var path = [AnyHashable]()
-
+    
     init() {}
     
     func push(_ screen: AnyHashable) {

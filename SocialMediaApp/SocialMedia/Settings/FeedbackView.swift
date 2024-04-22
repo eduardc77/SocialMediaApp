@@ -36,7 +36,7 @@ struct FeedbackView: View {
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
 #endif
-            
+                
 #if DEBUG
                     .autocorrectionDisabled()
 #endif

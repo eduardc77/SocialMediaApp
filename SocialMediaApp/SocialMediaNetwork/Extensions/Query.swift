@@ -61,7 +61,7 @@ public extension Query {
         let listener = self.addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
             guard querySnapshot?.documentChanges.count == 1 else { return }
             var documentChangeType: DocIDChangeType = .none
-           
+            
             querySnapshot?.documentChanges.forEach { documentChange in
                 let documentID = documentChange.document.documentID
                 

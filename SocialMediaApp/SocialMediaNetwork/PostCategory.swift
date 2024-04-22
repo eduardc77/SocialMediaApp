@@ -85,9 +85,6 @@ public extension PostCategory {
         case .health:
             return "🫀"
             
-        case .heartbroken:
-            return "💔"
-            
         case .leadership:
             return "🧑‍✈️"
             
@@ -99,6 +96,9 @@ public extension PostCategory {
             
         case .men:
             return "🚹"
+            
+        case .heartbroken:
+            return "💔"
             
         case .money:
             return "💰"

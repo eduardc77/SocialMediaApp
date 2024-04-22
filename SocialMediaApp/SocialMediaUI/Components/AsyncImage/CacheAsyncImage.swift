@@ -6,7 +6,7 @@ struct CacheAsyncImage<Content>: View where Content: View {
     private let scale: CGFloat
     private let transaction: Transaction
     private let content: (AsyncImagePhase) -> Content
-
+    
     init(
         url: URL,
         scale: CGFloat = 1.0,
@@ -18,7 +18,7 @@ struct CacheAsyncImage<Content>: View where Content: View {
         self.transaction = transaction
         self.content = content
     }
-
+    
     var body: some View {
         if let cached = ImageCache[url] {
             content(.success(cached))
@@ -32,12 +32,12 @@ struct CacheAsyncImage<Content>: View where Content: View {
             }
         }
     }
-
+    
     func cacheAndRender(phase: AsyncImagePhase) -> some View {
         if case .success(let image) = phase {
             ImageCache[url] = image
         }
-
+        
         return content(phase)
     }
 }

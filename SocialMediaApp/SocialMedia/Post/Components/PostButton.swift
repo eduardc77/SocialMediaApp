@@ -56,7 +56,7 @@ struct PostButton: View {
             withAnimation(.none) {
                 tempCount = count
             }
-           
+            
         }
     }
 }

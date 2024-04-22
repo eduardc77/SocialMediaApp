@@ -59,7 +59,7 @@ final class UserLikedPostsViewModel: FeedViewModel {
         addListenerForPostUpdates()
         addListenerForLikedPosts()
     }
-
+    
     func loadMorePosts() async throws {
         guard !noMoreItemsToFetch, let userID = user.id else {
             return
@@ -105,7 +105,7 @@ final class UserLikedPostsViewModel: FeedViewModel {
             print("Error fetching user liked posts: \(error)")
         }
     }
-
+    
     func refresh() async throws {
         reset()
         try await loadMorePosts()

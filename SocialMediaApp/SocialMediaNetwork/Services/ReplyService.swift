@@ -16,7 +16,7 @@ public struct ReplyService {
         let snapshot = try await FirestoreConstants.replies().document(replyID).getDocument()
         return try snapshot.data(as: Reply.self)
     }
-
+    
     public static func replyToPost(_ post: Post, replyText: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid, let postID = post.id else { return }
         
@@ -35,7 +35,7 @@ public struct ReplyService {
         ])
         ActivityService.uploadNotification(toUID: post.ownerUID, type: .reply, postID: postID)
     }
-
+    
     public static func replyToReply(_ reply: Reply, replyText: String) async throws {
         guard let currentUID = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         
@@ -49,7 +49,7 @@ public struct ReplyService {
             depthLevel: reply.depthLevel + 1
         )
         guard let data = try? Firestore.Encoder().encode(newReply) else { return }
-
+        
         try await FirestoreConstants.replies(newReply.depthLevel).document().setData(data)
         try await FirestoreConstants.replies(reply.depthLevel).document(replyID).updateData([
             "replies": reply.replies + 1
@@ -57,7 +57,7 @@ public struct ReplyService {
         try await FirestoreConstants.posts.document(reply.postID).updateData([
             "replyDepthLevel": newReply.depthLevel
         ])
-
+        
         ActivityService.uploadNotification(toUID: reply.ownerUID, type: .reply, postID: replyID)
     }
     
@@ -96,7 +96,7 @@ public struct ReplyService {
         
         return snapshotQuery
     }
-  
+    
     public static func addListenerForPostReplies(postID: String, depthLevel: Int) -> (AnyPublisher<(DocChangeType<Reply>, DocumentSnapshot?), Error>) {
         let field = depthLevel == 0 ? "postID" : "replyID"
         let (publisher, listener) =
@@ -109,7 +109,7 @@ public struct ReplyService {
         
         return publisher
     }
-
+    
 }
 
 // MARK: - Likes
@@ -178,7 +178,7 @@ public extension ReplyService {
         guard let uid = Auth.auth().currentUser?.uid, let replyID = reply.id else { return }
         try await FirestoreConstants.users.document(uid).collection("userSavedReplies").document(replyID).delete()
     }
-
+    
     static func checkIfUserSavedReply(_ reply: Reply) async throws -> Bool {
         guard let uid = Auth.auth().currentUser?.uid, let replyID = reply.id else { return false }
         
@@ -187,7 +187,7 @@ public extension ReplyService {
     }
     
     static func fetchUserSavedReplies(userID: String, countLimit: Int, descending: Bool = true, lastDocument: DocumentSnapshot?) async throws -> (documentIDs: [String], lastDocument: DocumentSnapshot?) {
-    
+        
         let querySnapshot = try await FirestoreConstants.users
             .document(userID)
             .collection("userSavedReplies")
@@ -266,7 +266,7 @@ public extension ReplyService {
             _ = try await [deleteUserLikes, deleteUserSaves]
         }
     }
-
+    
     private static func deleteReplyLikes(for replyID: String, currentReplyLevel: Int) async throws {
         let replyLikes = try await FirestoreConstants.replies(currentReplyLevel)
             .document(replyID)

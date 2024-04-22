@@ -9,7 +9,7 @@ import SocialMediaNetwork
 struct FeedCoordinator: View {
     @StateObject private var router = FeedViewRouter()
     @EnvironmentObject private var tabRouter: AppScreenRouter
-
+    
     var body: some View {
         NavigationStack(path: $router.path) {
             FeedTabContainer()

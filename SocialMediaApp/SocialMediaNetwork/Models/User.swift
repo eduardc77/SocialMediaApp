@@ -14,7 +14,7 @@ public struct User: Identifiable, Codable, Hashable {
     public var link: String
     public var stats: UserStats
     public var privateProfile: Bool
-
+    
     public var isCurrentUser: Bool {
         return id == Auth.auth().currentUser?.uid
     }

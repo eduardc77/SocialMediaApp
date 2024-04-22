@@ -24,15 +24,20 @@ struct SearchView: View {
     
     var body: some View {
         Group {
-            if model.loading { 
+            if model.loading {
                 ProgressView()
                 
-            } else if model.filteredUsers.isEmpty {
-                
+            } else if model.filteredUsers.isEmpty, !model.searchText.isEmpty {
                 ContentUnavailableView(
                     model.contentUnavailableTitle,
                     systemImage: "magnifyingglass",
                     description: Text(model.contentUnavailableText)
+                )
+            } else if model.filteredUsers.isEmpty, model.searchText.isEmpty {
+                ContentUnavailableView(
+                    "No Content",
+                    systemImage: "person.fill.questionmark.rtl",
+                    description: Text("There are currently no other users in the app. Invite your friends or check back later.")
                 )
             } else {
                 Group {

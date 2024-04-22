@@ -23,7 +23,7 @@ final class UserRelationsViewModel: ObservableObject {
     
     @Published var sort = UserSortOrder.name
     
-   
+    
     @Published private var users = [User]()
     private var followers = [User]()
     private var following = [User]()

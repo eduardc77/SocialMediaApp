@@ -54,7 +54,7 @@ final class UserSavedPostsViewModel: FeedViewModel {
             }
         }
     }
-
+    
     func loadMorePosts() async throws {
         guard !noMoreItemsToFetch, let userID = user.id else {
             return

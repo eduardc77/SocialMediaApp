@@ -30,10 +30,10 @@ final class PostEditorViewModel: ObservableObject {
     }
     
     @Published var imageState: ImageData.ImageState = .empty
-
+    
     func uploadPost() async throws {
         guard let userID = user?.id else { return }
-     
+        
         var post = Post(
             caption: caption,
             ownerUID: userID,
