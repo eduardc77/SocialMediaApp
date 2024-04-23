@@ -11,9 +11,10 @@
 <!-- BODY -->
 
 ## Preview
-
-https://github.com/eduardc77/SocialMediaApp/assets/36419167/2fea9472-262f-4b51-bb77-b241eeb5f63e
-https://github.com/eduardc77/SocialMediaApp/assets/36419167/568218f7-8171-42da-b07c-084d9f5059cf
+<p align="left">
+<img src=https://github.com/eduardc77/SocialMediaApp/assets/36419167/2fea9472-262f-4b51-bb77-b241eeb5f63e width="180" height="400"/>
+<img src=https://github.com/eduardc77/SocialMediaApp/assets/36419167/568218f7-8171-42da-b07c-084d9f5059cf width="180" height="400"/>
+</p>
 
 <p align="left">
 	<img src="./Preview/ProfileScreen_Followers_Screenshot.png" width="180" height="400"/>
