@@ -12,8 +12,8 @@
 
 ## Preview
 <p align="left">
-<img src=https://github.com/eduardc77/SocialMediaApp/assets/36419167/2fea9472-262f-4b51-bb77-b241eeb5f63e width="250" height="400"/>
-<img src=https://github.com/eduardc77/SocialMediaApp/assets/36419167/568218f7-8171-42da-b07c-084d9f5059cf width="250" height="400"/>
+<img src=https://github.com/eduardc77/SocialMediaApp/assets/36419167/2fea9472-262f-4b51-bb77-b241eeb5f63e width="210" height="400"/>
+<img src=https://github.com/eduardc77/SocialMediaApp/assets/36419167/568218f7-8171-42da-b07c-084d9f5059cf width="210" height="400"/>
 </p>
 
 <p align="left">
