@@ -33,6 +33,7 @@ extension AboutSocialMedia {
                 answer: """
 - You can like posts.
 - You can save posts.
+- You can delete posts.
 - You can see other profiles.
 - You can search for users.
 - You can filter posts by category.

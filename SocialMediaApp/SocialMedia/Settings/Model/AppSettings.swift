@@ -112,7 +112,6 @@ extension AppSettings.Theme {
 extension AppSettings {
     
     struct AppVersion {
-        
         private let bundle: Bundle
         
         init(bundle: Bundle = .main) {
