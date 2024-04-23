@@ -31,7 +31,7 @@ struct PostDetailsView: View {
                             .fontWeight(.semibold)
                             .lineLimit(1)
                         
-                        Text(model.user?.username ?? "")
+                        Text("@\(model.user?.username ?? "")")
                             .font(.caption)
                             .foregroundStyle(Color.secondary)
                             .lineLimit(1)

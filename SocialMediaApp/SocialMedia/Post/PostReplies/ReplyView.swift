@@ -72,12 +72,9 @@ struct ReplyView: View {
                                 }
                                 
                                 TextField("Add your reply...", text: $model.replyText, axis: .vertical)
-                                    .tint(Color.primary)
+                                    .fixedSize(horizontal: false, vertical: true)
                                     .padding(2)
                                     .multilineTextAlignment(.leading)
-#if DEBUG
-                                    .autocorrectionDisabled()
-#endif
                             }
                         }
                         .font(.footnote)

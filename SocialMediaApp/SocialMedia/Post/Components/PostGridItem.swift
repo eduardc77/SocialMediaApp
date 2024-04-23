@@ -67,7 +67,7 @@ struct PostGridItem: View {
             }
             Text(caption)
                 .font(.callout)
-                .lineLimit(10)
+                .lineLimit(12)
                 .allowsHitTesting(false)
             
             if let imageURLString = post?.imageUrl, let postImageURL = URL(string: imageURLString) {
