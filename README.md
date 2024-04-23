@@ -48,6 +48,8 @@ https://github.com/eduardc77/SocialMediaApp/assets/36419167/568218f7-8171-42da-b
 This project aims to replicate the core functionalities of any popular social media app, emphasizing user authentication, thread creation, real-time updates using firebase listeners, and a user-friendly interface built with SwiftUI. It leverages Firebase's robust backend services for seamless data management and real-time interactions.
 This app was created for educational purposes and as a demonstration of SwiftUI and Firebase integration.
 
+This multiplatform app can be build on iOS, macOS, visionOS, iPadOS.
+
 The app is still work in progress.
 
 ## Features:
