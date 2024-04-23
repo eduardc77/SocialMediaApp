@@ -31,13 +31,15 @@ extension AboutSocialMedia {
             AboutSocialMedia(
                 question: "What features does SocialMedia offer?",
                 answer: """
-- You can like posts
-- You can save posts
-- You can see other profiles
-- You can search for users
-- You can filter posts by category
-- You can customize the app color
-- You can edit your profile
+- You can like posts.
+- You can save posts.
+- You can see other profiles.
+- You can search for users.
+- You can filter posts by category.
+- You can customize the app color.
+- You can edit your profile.
+- You can reply to posts and other replies.
+- You can see all of your activities.
 
 and much more...
 """

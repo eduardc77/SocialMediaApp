@@ -5,12 +5,13 @@
 
 import SwiftUI
 import StoreKit
+import SocialMediaUI
 import SocialMediaNetwork
 
 struct SettingsView: View {
     @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var router: ProfileViewRouter
     @Environment(\.requestReview) var requestReview
-    
     
     var body: some View {
         Form {
@@ -30,13 +31,13 @@ struct SettingsView: View {
             }
             
             Section {
-                Button {
-                    
+                NavigationButton {
+                    router.push(SettingsDestination.feedback)
                 } label: {
                     SettingsLabel(settingsOption: .feedback)
                 }
                 .tint(Color.primary)
-                linkRow
+                followLinkRow
             } header: {
                 Text("Developer")
             }
@@ -55,7 +56,7 @@ struct SettingsView: View {
             } header: {
                 VStack {
                     Text("Social Media")
-                    
+                    Text(settings.appVersion ?? "")
                 }
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
@@ -98,8 +99,8 @@ struct SettingsView: View {
     }
     
     var aboutRow: some View {
-        Button {
-            
+        NavigationButton {
+            router.push(SettingsDestination.about)
         } label: {
             SettingsLabel(settingsOption: .about)
         }
@@ -120,7 +121,7 @@ struct SettingsView: View {
         }
     }
     
-    var linkRow: some View {
+    var followLinkRow: some View {
         HStack {
             Link(destination: URL(string: "https://github.com/eduardc77")!) {
                 SettingsLabel(settingsOption: .follow)
@@ -144,15 +145,15 @@ struct SettingsView: View {
     
     var moreSectionRows: some View {
         Group {
-            Button {
-                
+            NavigationButton {
+                router.push(SettingsDestination.termsOfUse)
             } label: {
                 SettingsLabel(settingsOption: .termsOfUse)
             }
             .tint(Color.primary)
             
-            Button {
-                
+            NavigationButton {
+                router.push(SettingsDestination.privacyPolicy)
             } label: {
                 SettingsLabel(settingsOption: .privacyPolicy)
             }

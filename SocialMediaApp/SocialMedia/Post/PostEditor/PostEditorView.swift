@@ -8,8 +8,8 @@ import PhotosUI
 import SocialMediaUI
 
 struct PostEditorView: View {
-    @StateObject var model = PostEditorViewModel()
-    @StateObject var imageData = ImageData()
+    @StateObject private var model = PostEditorViewModel()
+    @StateObject private var imageData = ImageData()
     
     @EnvironmentObject private var tabRouter: AppScreenRouter
     @EnvironmentObject private var settings: AppSettings
@@ -35,9 +35,6 @@ struct PostEditorView: View {
                         Spacer()
                     }
                     TextField("Write a post...", text: $model.caption, axis: .vertical)
-#if DEBUG
-                        .autocorrectionDisabled()
-#endif
                         .font(.footnote)
                     
                     SelectedPhotoPickerImage(imageState: imageData.imageState, size: .none)
