@@ -14,32 +14,19 @@
 ## Preview
 
 <p align="left">
-	<img src="./Preview/ProfileScreen_Followers_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/ProfileScreen_Replies_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/ProfileScreen_EditProfile_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/PostDetails_Replies_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/ReplyPost_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/NewPost_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/Settings_Screen_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/Activity_Screen_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/Profile_Screen_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/Search_Screen_List_View_Screenshot.png" width="120" height="300"/>
-	<img src="./Preview/Search_Screen_Icons_View_Screenshot.png" width="120" height="300"/>
+	<img src="./Preview/ProfileScreen_Followers_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/ProfileScreen_Replies_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/ProfileScreen_EditProfile_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/PostDetails_Replies_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/ReplyPost_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/NewPost_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/Settings_Screen_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/Activity_Screen_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/Profile_Screen_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/Search_Screen_List_View_Screenshot.png" width="180" height="400"/>
+	<img src="./Preview/Search_Screen_Icons_View_Screenshot.png" width="180" height="400"/>
 </p>
 
-<p align="left">
-	<img src="./Preview/ProfileScreen_Followers_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/ProfileScreen_Replies_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/ProfileScreen_EditProfile_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/PostDetails_Replies_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/ReplyPost_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/NewPost_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/Settings_Screen_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/Activity_Screen_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/Profile_Screen_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/Search_Screen_List_View_Screenshot_Darkmode.png" width="100" height="200"/>
-	<img src="./Preview/Search_Screen_Icons_View_Screenshot_Darkmode.png" width="100" height="200"/>
-</p>
 
 <p align="left">
 	<img src="./Preview/ipad-preview.gif" width= "520" height="600"/>
