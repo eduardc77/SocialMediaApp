@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-#if canImport(UIKit)
+#if os(iOS)
 public struct HapticFeedbackModifier<T: Equatable>: ViewModifier {
     private let generator: UIImpactFeedbackGenerator
     private let intensity: CGFloat

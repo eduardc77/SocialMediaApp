@@ -44,7 +44,7 @@ public struct AsyncImageView<Content: View>: View where Content: View {
     }
     
     public var body: some View {
-        CacheAsyncImage(
+        CachedAsyncImage(
             url: url
         ) { phase in
             switch phase {
