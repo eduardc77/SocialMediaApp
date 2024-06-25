@@ -8,6 +8,8 @@ public class UserService: UserServiceable {
     public static let shared = UserService()
     private static let userCache = NSCache<NSString, NSData>()
     
+    private init() {}
+    
     @MainActor
     public func fetchCurrentUser() async throws {
         guard let uid = Auth.auth().currentUser?.uid else { return }

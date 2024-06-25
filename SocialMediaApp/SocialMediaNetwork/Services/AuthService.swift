@@ -7,7 +7,7 @@ public class AuthService: AuthServiceable {
     
     public static let shared = AuthService()
     
-    public init() {
+    private init() {
         self.loading = true
         Task {
             try await UserService.shared.fetchCurrentUser()
