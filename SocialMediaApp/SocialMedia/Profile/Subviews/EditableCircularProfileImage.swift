@@ -8,8 +8,8 @@ import PhotosUI
 import SocialMediaUI
 
 struct EditableCircularProfileImage: View {
-    @ObservedObject var model: CurrentUserProfileHeaderModel
-    @ObservedObject var imageData: ImageData
+    @State var model: CurrentUserProfileHeaderModel
+    @State var imageData: ImageData
     var size: ImageSize = .xLarge
     
     var body: some View {

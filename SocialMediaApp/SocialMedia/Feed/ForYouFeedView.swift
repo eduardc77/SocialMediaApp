@@ -5,9 +5,10 @@
 
 import SwiftUI
 
+@MainActor
 struct ForYouFeedView: View {
-    @StateObject private var model = ForYouFeedViewModel()
-    @EnvironmentObject private var router: FeedViewRouter
+    @State private var model = ForYouFeedViewModel()
+    @Environment(ViewRouter.self) private var router
     
     var body: some View {
         ScrollView {
@@ -19,22 +20,19 @@ struct ForYouFeedView: View {
                      loadNewPage: model.loadMorePosts)
         }
         .refreshable {
-            Task {
-                try await model.refresh()
-            }
+            await model.refresh()
         }
-        .onAppear {
-            Task {
-                if model.posts.isEmpty {
-                    try await model.loadMorePosts()
-                }
-                model.addListenerForPostUpdates()
+        .task {
+            if model.posts.isEmpty {
+                await model.loadMorePosts()
             }
+            model.addListenerForPostUpdates()
         }
     }
 }
 
 #Preview {
     ForYouFeedView()
-        .environmentObject(FeedViewRouter())
+        .environment(ModalScreenRouter())
+        .environment(ViewRouter())
 }

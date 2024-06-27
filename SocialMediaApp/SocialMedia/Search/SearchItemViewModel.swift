@@ -4,12 +4,13 @@
 //
 
 import Foundation
+import Observation
 import SocialMediaNetwork
 
-final class SearchItemViewModel: ObservableObject {
-    @Published var user: User
+@Observable final class SearchItemViewModel {
+    var user: User
     let thumbnailSize: CGFloat
-    @Published var loading: Bool = false
+    var loading: Bool = false
     
     var isFollowed: Bool {
         user.isFollowed

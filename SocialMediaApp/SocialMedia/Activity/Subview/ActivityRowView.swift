@@ -8,10 +8,10 @@ import SocialMediaUI
 import SocialMediaNetwork
 
 struct ActivityRowView: View {
-    private var router: any Router
-    @ObservedObject private var model: ActivityRowViewModel
+    private var router: Router
+    @Bindable private var model: ActivityRowViewModel
     
-    init(router: any Router, activity: Activity) {
+    init(router: Router, activity: Activity) {
         self.router = router
         model = ActivityRowViewModel(activity: activity)
     }
@@ -65,5 +65,5 @@ struct ActivityRowView: View {
 }
 
 #Preview {
-    ActivityRowView(router: ActivityViewRouter(), activity: Preview.activityModel)
+    ActivityRowView(router: ViewRouter(), activity: Preview.activityModel)
 }

@@ -4,10 +4,11 @@
 //
 
 import SwiftUI
+import Combine
 import SocialMediaNetwork
 
 struct FeedCoordinator: View {
-    @StateObject private var router = FeedViewRouter()
+    @State private var router = ViewRouter()
     @EnvironmentObject private var tabRouter: AppScreenRouter
     
     var body: some View {
@@ -29,12 +30,13 @@ struct FeedCoordinator: View {
                     guard tabReselected, tabRouter.selection == .home, !router.path.isEmpty else { return }
                     router.popToRoot()
                 }
-                .environmentObject(router)
+                .environment(router)
         }
     }
 }
 
 #Preview {
     FeedCoordinator()
+        .environment(ModalScreenRouter())
         .environmentObject(AppScreenRouter())
 }

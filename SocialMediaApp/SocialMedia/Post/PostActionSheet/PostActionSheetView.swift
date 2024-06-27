@@ -64,12 +64,10 @@ struct PostActionSheetView: View {
                     .foregroundStyle(.red)
             }
         }
-        .onAppear {
-            Task {
-                if let user = post.user {
-                    let isFollowed = await UserService.checkIfUserIsFollowed(user)
-                    self.isFollowed = isFollowed
-                }
+        .task {
+            if let user = post.user {
+                let isFollowed = await UserService.checkIfUserIsFollowed(user)
+                self.isFollowed = isFollowed
             }
         }
     }

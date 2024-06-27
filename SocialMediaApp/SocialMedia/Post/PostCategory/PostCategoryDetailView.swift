@@ -7,13 +7,14 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
+@MainActor
 struct PostCategoryDetailView: View {
-    var router: any Router
-    @StateObject var model: PostCategoryViewModel
+    private var router: Router
+    @State private var model: PostCategoryViewModel
     
-    init(router: any Router, category: PostCategory) {
+    init(router: Router, category: PostCategory) {
         self.router = router
-        _model = StateObject(wrappedValue: PostCategoryViewModel(category: category))
+        model = PostCategoryViewModel(category: category)
     }
     
     var body: some View {
@@ -24,6 +25,7 @@ struct PostCategoryDetailView: View {
             postsTabView
         }
         .navigationTitle("\(model.category.icon) \(model.category.rawValue.capitalized)")
+        .navigationBarTitleDisplayMode(.inline)
         .background(Color.groupedBackground)
     }
 }
@@ -43,18 +45,15 @@ private extension PostCategoryDetailView {
             }
             .tag(CategoryFilter.hot)
             .refreshable {
-                Task {
-                    try await model.refresh()
-                }
+                await model.refresh()
             }
-            .onAppear {
-                Task {
-                    if model.posts.isEmpty {
-                        try await model.loadMorePosts()
-                    }
-                    model.addListenerForPostUpdates()
+            .task {
+                if model.posts.isEmpty {
+                    await model.loadMorePosts()
                 }
+                model.addListenerForPostUpdates()
             }
+            
             ScrollView {
                 PostGrid(router: router,
                          postGridType: .posts(model.posts),
@@ -64,17 +63,13 @@ private extension PostCategoryDetailView {
             }
             .tag(CategoryFilter.new)
             .refreshable {
-                Task {
-                    try await model.refresh()
-                }
+                await model.refresh()
             }
-            .onAppear {
-                Task {
-                    if model.posts.isEmpty {
-                        try await model.loadMorePosts()
-                    }
-                    model.addListenerForPostUpdates()
+            .task {
+                if model.posts.isEmpty {
+                    await model.loadMorePosts()
                 }
+                model.addListenerForPostUpdates()
             }
         }
 #if os(iOS)
@@ -86,6 +81,7 @@ private extension PostCategoryDetailView {
 
 #Preview {
     NavigationView {
-        PostCategoryDetailView(router: FeedViewRouter(), category: .affirmations)
+        PostCategoryDetailView(router: ViewRouter(), category: .affirmations)
+            .environment(ModalScreenRouter())
     }
 }

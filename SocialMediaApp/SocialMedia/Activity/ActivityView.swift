@@ -7,9 +7,10 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
+@MainActor
 struct ActivityView: View {
-    @StateObject private var model = ActivityViewModel()
-    @EnvironmentObject private var router: ActivityViewRouter
+    @State private var model = ActivityViewModel()
+    @Environment(ViewRouter.self) private var router
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -63,20 +64,16 @@ struct ActivityView: View {
             }
         }
         .task {
-            do {
-                try await model.refresh()
-            } catch {
-                print("DEBUG: Failed to fetch notifications in Activity View.")
-            }
+            await model.refresh()
         }
         .refreshable {
-            Task {
-                try await model.refresh()
-            }
+            await model.refresh()
         }
     }
 }
 
 #Preview {
     ActivityView()
+        .environment(ModalScreenRouter())
+        .environment(ViewRouter())
 }

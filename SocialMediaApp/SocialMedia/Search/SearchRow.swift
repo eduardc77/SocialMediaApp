@@ -7,7 +7,7 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct SearchRow: View {
-    @ObservedObject private var model: SearchItemViewModel
+    @Bindable private var model: SearchItemViewModel
     
     init(user: User, thumbnailSize: CGFloat) {
         model = SearchItemViewModel(user: user, thumbnailSize: thumbnailSize)

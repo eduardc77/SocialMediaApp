@@ -3,18 +3,18 @@
 //  SocialMedia
 //
 
+import Observation
 import Combine
 import PhotosUI
 import Firebase
 import SocialMediaUI
 import SocialMediaNetwork
 
-@MainActor
-final class CurrentUserProfileHeaderModel: ObservableObject {
-    @Published var currentUser: SocialMediaNetwork.User?
+@Observable public class CurrentUserProfileHeaderModel {
+    var currentUser: SocialMediaNetwork.User?
     
-    @Published var profileInputData = ProfileInputData()
-    @Published var updatingProfile: Bool = false
+    var profileInputData = ProfileInputData()
+    var updatingProfile: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -28,8 +28,8 @@ final class CurrentUserProfileHeaderModel: ObservableObject {
     }
     
     // Profile Image Properties
-    @Published var imageState: ImageData.ImageState = .empty
-    @Published var newImageSet: Bool = false
+    var imageState: ImageData.ImageState = .empty
+    var newImageSet: Bool = false
     
     init() {
         setupSubscribers()
@@ -90,7 +90,6 @@ extension CurrentUserProfileHeaderModel {
 
 extension CurrentUserProfileHeaderModel {
     
-    @MainActor
     private func setupSubscribers() {
         UserService.shared.$currentUser.sink { [weak self] user in
             self?.currentUser = user

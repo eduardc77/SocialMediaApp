@@ -3,10 +3,11 @@
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 import SocialMediaNetwork
 
-final class PostButtonGroupViewModel: ObservableObject {
+@Observable
+final class PostButtonGroupViewModel {
     var postType: PostType
     
     var numberOfLikes: Int {

@@ -11,20 +11,20 @@ final class FollowingFeedViewModel: FeedViewModel {
     
     var contentUnavailableText = "Follow more accounts to see posts."
     
-    func loadMorePosts() async throws {
+    func loadMorePosts() async {
         guard !noMoreItemsToFetch else { return }
         loading = true
-        
-        let (newPostIDs, lastDocument) = try await PostService.fetchUserFollowingPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
-        
-        guard !newPostIDs.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastPostDocument = nil
-            return
-        }
-        
+
         do {
+            let (newPostIDs, lastDocument) = try await PostService.fetchUserFollowingPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
+            
+            guard !newPostIDs.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastPostDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else { return }
                 var followingPosts = [Post]()
@@ -55,8 +55,8 @@ final class FollowingFeedViewModel: FeedViewModel {
         }
     }
     
-    func refresh() async throws {
+    func refresh() async {
         reset()
-        try await loadMorePosts()
+        await loadMorePosts()
     }
 }

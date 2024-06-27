@@ -7,7 +7,7 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct ContentView: View {
-    @StateObject private var model = ContentViewModel()
+    @State private var model = ContentViewModel()
     @EnvironmentObject private var appRouter: AppScreenRouter
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
@@ -22,7 +22,7 @@ struct ContentView: View {
                 AppTabView()
             } else {
                 NavigationSplitView {
-                    AppSidebarList(selection: $appRouter.selection)
+                    AppSidebarList()
                 } detail: {
                     AppDetailColumn(screen: appRouter.selection)
                 }

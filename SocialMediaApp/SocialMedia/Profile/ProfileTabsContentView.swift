@@ -3,6 +3,7 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
@@ -11,10 +12,11 @@ final class RefreshedFilterModel: ObservableObject {
     @Published var refreshedFilter: ProfilePostFilter = .posts
 }
 
+@MainActor
 struct ProfileTabsContentView<Content: View>: View {
-    @StateObject private var model: ProfileTabsViewModel
+    @State private var model: ProfileTabsViewModel
     @StateObject private var refreshedFilterModel = RefreshedFilterModel()
-    var router: any Router
+    var router: Router
     var contentUnavailable: Bool = false
     
     private let tab: ProfilePostFilter
@@ -39,15 +41,15 @@ struct ProfileTabsContentView<Content: View>: View {
 #endif
     }
     
-    init(router: any Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false, @ViewBuilder info: @escaping () -> Content) {
-        self._model = StateObject(wrappedValue: ProfileTabsViewModel(user: user))
+    init(router: Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false, @ViewBuilder info: @escaping () -> Content) {
+        model = ProfileTabsViewModel(user: user)
         self.router = router
         self.tab = tab
         self.contentUnavailable = contentUnavailable
         self.info = info
     }
     
-    init(router: any Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false) where Content == EmptyView {
+    init(router: Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false) where Content == EmptyView {
         self.init(router: router, user: user, tab: tab, contentUnavailable: contentUnavailable, info: { EmptyView() })
     }
     
@@ -94,4 +96,9 @@ struct ProfileTabsContentView<Content: View>: View {
     func onRefresh() {
         refreshedFilterModel.refreshedFilter = tab
     }
+}
+
+#Preview {
+    ProfileTabsContentView(router: ViewRouter(), user: Preview.user, tab: .posts)
+        .environment(ModalScreenRouter())
 }

@@ -3,12 +3,11 @@
 //  SocialMedia
 //
 
-import Combine
+import Observation
 import SocialMediaNetwork
-import Firebase
 
 @MainActor
-final class ProfileTabsViewModel: ObservableObject {
+@Observable final class ProfileTabsViewModel {
     let user: SocialMediaNetwork.User
     
     init(user: SocialMediaNetwork.User) {

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Observation
 
 public final class AnyIdentifiable: Identifiable {
     public let destination: any Identifiable
@@ -13,13 +14,13 @@ public final class AnyIdentifiable: Identifiable {
     }
 }
 
-final class ModalScreenRouter: ObservableObject {
-    @Published var presentedSheet: AnyIdentifiable?
-    @Published var presentedFullScreenCover: AnyIdentifiable?
-    @Published var presentedPopover: Popover = Popover()
+@Observable final class ModalScreenRouter {
+    var presentedSheet: AnyIdentifiable?
+    var presentedFullScreenCover: AnyIdentifiable?
+    var presentedPopover: Popover = Popover()
     
-    @Published var alert: AlertModel?
-    @Published var confirmationDialog: AlertModel?
+    var alert: AlertModel?
+    var confirmationDialog: AlertModel?
     
     init() {}
     

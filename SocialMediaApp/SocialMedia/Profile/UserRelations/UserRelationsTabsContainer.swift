@@ -7,17 +7,18 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
+@MainActor
 struct UserRelationsTabsContainer: View {
-    var router: any Router
-    @StateObject private var model: UserRelationsViewModel
+    private var router: Router
+    @State private var model: UserRelationsViewModel
     @State private var selection = Set<User.ID>()
     @State private var layout = BrowserLayout.grid
     
     @Environment(\.dismiss) private var dismiss
     
-    init(router: any Router, user: User) {
+    init(router: Router, user: User) {
         self.router = router
-        self._model = StateObject(wrappedValue: UserRelationsViewModel(user: user))
+        model = UserRelationsViewModel(user: user)
     }
     
     var body: some View {
@@ -60,11 +61,7 @@ struct UserRelationsTabsContainer: View {
             }
         }
         .task {
-            do {
-                try await model.loadUserRelations()
-            } catch {
-                print("DEBUG: Failed to fetch user relations.")
-            }
+            await model.loadUserRelations()
         }
         .searchable(text: $model.searchText)
         .searchSuggestions {
@@ -73,9 +70,7 @@ struct UserRelationsTabsContainer: View {
             }
         }
         .refreshable {
-            Task {
-                try await model.loadUserRelations()
-            }
+            await model.loadUserRelations()
         }
     }
 }
@@ -106,6 +101,7 @@ private extension UserRelationsTabsContainer {
 
 #Preview {
     NavigationView {
-        PostCategoryDetailView(router: FeedViewRouter(), category: .affirmations)
+        PostCategoryDetailView(router: ViewRouter(), category: .affirmations)
+            .environment(ModalScreenRouter())
     }
 }

@@ -7,9 +7,10 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
+@MainActor
 struct UserRelationsView: View {
-    var router: any Router
-    @ObservedObject var model: UserRelationsViewModel
+    var router: Router
+    @Bindable var model: UserRelationsViewModel
     
     @Binding var selection: Set<User.ID>
     @Binding var layout: BrowserLayout
@@ -77,7 +78,8 @@ struct UserRelationsView: View {
         @State private var layout = BrowserLayout.grid
         
         var body: some View {
-            UserRelationsView(router: ProfileViewRouter(), model: UserRelationsViewModel(user: Preview.user), selection: $selection, layout: $layout)
+            UserRelationsView(router: ViewRouter(), model: UserRelationsViewModel(user: Preview.user), selection: $selection, layout: $layout)
+            
         }
     }
     return Example()

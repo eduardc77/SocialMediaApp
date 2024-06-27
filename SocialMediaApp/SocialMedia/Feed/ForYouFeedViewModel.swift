@@ -3,29 +3,29 @@
 //  SocialMedia
 //
 
-import SwiftUI
+import Observation
 import SocialMediaNetwork
 import Firebase
 
-final class ForYouFeedViewModel: FeedViewModel {
+@Observable final class ForYouFeedViewModel: FeedViewModel {
     var contentUnavailableText = "Be the first to add a post or check back later."
     
-    func loadMorePosts() async throws {
+    func loadMorePosts() async {
         guard !noMoreItemsToFetch else {
             return
         }
         loading = true
-        
-        let (newPosts, lastPostDocument) = try await PostService.fetchForYouPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
-        
-        guard !newPosts.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastPostDocument = nil
-            return
-        }
-        
+
         do {
+            let (newPosts, lastPostDocument) = try await PostService.fetchForYouPosts(countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
+            
+            guard !newPosts.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastPostDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
                     self?.loading = false
@@ -56,8 +56,8 @@ final class ForYouFeedViewModel: FeedViewModel {
         }
     }
     
-    func refresh() async throws {
+    func refresh() async {
         reset()
-        try await loadMorePosts()
+        await loadMorePosts()
     }
 }

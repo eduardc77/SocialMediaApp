@@ -6,10 +6,10 @@
 import SwiftUI
 
 struct AppSidebarList: View {
-    @Binding var selection: AppScreen?
+    @EnvironmentObject private var appRouter: AppScreenRouter
     
     var body: some View {
-        List(AppScreen.allCases, selection: $selection) { screen in
+        List(AppScreen.allCases, selection: $appRouter.selection) { screen in
             NavigationLink(value: screen) {
                 screen.label
             }
@@ -20,8 +20,10 @@ struct AppSidebarList: View {
 
 #Preview {
     NavigationSplitView {
-        AppSidebarList(selection: .constant(.home))
+        AppSidebarList()
     } detail: {
         Text(verbatim: "Check out that sidebar!")
     }
+    .environment(ModalScreenRouter())
+    .environmentObject(AppScreenRouter())
 }

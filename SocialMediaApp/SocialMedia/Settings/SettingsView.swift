@@ -10,7 +10,7 @@ import SocialMediaNetwork
 
 struct SettingsView: View {
     @EnvironmentObject private var settings: AppSettings
-    @EnvironmentObject private var router: ProfileViewRouter
+    @Environment(ViewRouter.self) private var router
     @Environment(\.requestReview) var requestReview
     
     var body: some View {
@@ -176,4 +176,5 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(AppSettings())
+        .environment(ViewRouter())
 }

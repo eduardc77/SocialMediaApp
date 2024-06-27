@@ -5,7 +5,7 @@
 
 import FirebaseAuth
 
-protocol AuthServiceable: ObservableObject {
+protocol AuthServiceable {
     var userSession: FirebaseAuth.User? { get }
     
     func login(withUser user: UserInputData) async throws

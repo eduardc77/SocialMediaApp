@@ -3,12 +3,12 @@
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 import SocialMediaNetwork
 
-final class ActivityRowViewModel: ObservableObject {
-    @Published var activity: Activity
-    @Published var loading: Bool = false
+@Observable final class ActivityRowViewModel {
+    var activity: Activity
+    var loading: Bool = false
     
     var isFollowed: Bool {
         activity.user?.isFollowed ?? false

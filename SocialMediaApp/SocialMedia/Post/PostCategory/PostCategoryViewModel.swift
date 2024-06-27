@@ -3,6 +3,7 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import Combine
 import SocialMediaNetwork
@@ -10,12 +11,12 @@ import SocialMediaUI
 import Firebase
 
 @MainActor
-final class PostCategoryViewModel: ObservableObject {
+@Observable final class PostCategoryViewModel {
     let category: PostCategory
     
-    @Published var posts = [Post]()
-    @Published var currentFilter: CategoryFilter = .hot
-    @Published var loading = false
+    var posts = [Post]()
+    var currentFilter: CategoryFilter = .hot
+    var loading = false
     
     var itemsPerPage: Int = 10
     var noMoreItemsToFetch: Bool = false
@@ -53,22 +54,21 @@ final class PostCategoryViewModel: ObservableObject {
     }
     
     @MainActor
-    func loadMorePosts() async throws {
+    func loadMorePosts() async {
         guard !noMoreItemsToFetch else {
             return
         }
         loading = true
-        
-        
-        let (newPosts, lastPostDocument) = try await PostService.fetchPosts(by: category, countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
-        guard !newPosts.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastPostDocument = nil
-            return
-        }
-        
+
         do {
+            let (newPosts, lastPostDocument) = try await PostService.fetchPosts(by: category, countLimit: itemsPerPage, descending: true, lastDocument: lastPostDocument)
+            guard !newPosts.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastPostDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
                     self?.loading = false
@@ -99,11 +99,11 @@ final class PostCategoryViewModel: ObservableObject {
         }
     }
     
-    func refresh() async throws {
+    func refresh() async {
         posts.removeAll()
         noMoreItemsToFetch = false
         lastPostDocument = nil
-        try await loadMorePosts()
+        await loadMorePosts()
     }
     
     func sortPosts() {

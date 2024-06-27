@@ -5,9 +5,10 @@
 
 import SwiftUI
 
+@MainActor
 struct FollowingFeedView: View {
-    @StateObject private var model = FollowingFeedViewModel()
-    @EnvironmentObject private var router: FeedViewRouter
+    @State private var model = FollowingFeedViewModel()
+    @Environment(ViewRouter.self) private var router
     
     @State private var firstAppear: Bool = true
     
@@ -21,22 +22,20 @@ struct FollowingFeedView: View {
                      loadNewPage: model.loadMorePosts)
         }
         .refreshable {
-            Task {
-                try await model.refresh()
-            }
+            await model.refresh()
         }
-        .onAppear {
-            Task {
-                if model.posts.isEmpty {
-                    try await model.loadMorePosts()
-                }
-                model.addListenerForPostUpdates()
+        .task {
+            if model.posts.isEmpty {
+                await model.loadMorePosts()
             }
+            model.addListenerForPostUpdates()
         }
     }
 }
 
 #Preview {
     FollowingFeedView()
-        .environmentObject(FeedViewRouter())
+        .environment(ModalScreenRouter())
+        .environment(ViewRouter())
+    
 }

@@ -4,12 +4,14 @@
 //
 
 import SwiftUI
+import Combine
 import PhotosUI
 import SocialMediaUI
 
+@MainActor
 struct PostEditorView: View {
-    @StateObject private var model = PostEditorViewModel()
-    @StateObject private var imageData = ImageData()
+    @State private var model = PostEditorViewModel()
+    @State private var imageData = ImageData()
     
     @EnvironmentObject private var tabRouter: AppScreenRouter
     @EnvironmentObject private var settings: AppSettings
@@ -101,7 +103,7 @@ struct PostEditorView: View {
 #endif
             .navigationTitle("New Post")
         }
-        .onReceive(imageData.$imageState) { newValue in
+        .onReceive(Just(imageData.imageState)) { newValue in
             model.imageState = newValue
         }
     }

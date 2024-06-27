@@ -7,13 +7,13 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct ReplyView: View {
-    @StateObject private var model: ReplyViewModel
+    @State private var model: ReplyViewModel
     @Environment(\.dismiss) private var dismiss
     
     private var rowSpacing: CGFloat = 16
     
     init(postType: PostType) {
-        _model = StateObject(wrappedValue: ReplyViewModel(postType: postType))
+        model = ReplyViewModel(postType: postType)
     }
     
     var body: some View {
@@ -118,8 +118,5 @@ struct ReplyView: View {
 }
 
 #Preview {
-    VStack {
-        ReplyView(postType: .post(Preview.post))
-        ReplyView(postType: .reply(Preview.reply))
-    }
+    ReplyView(postType: .post(Preview.post))
 }

@@ -27,6 +27,6 @@ struct AppTabView: View {
 
 #Preview {
     AppTabView()
+        .environment(ModalScreenRouter())
         .environmentObject(AppScreenRouter())
-        .environmentObject(ModalScreenRouter())
 }

@@ -3,18 +3,19 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import Combine
 import SocialMediaNetwork
 import Firebase
 
 @MainActor
-final class UserRepliesViewModel: ObservableObject {
+@Observable final class UserRepliesViewModel {
     var user: SocialMediaNetwork.User
     
-    @Published var replies = [Reply]()
-    @Published var loading = false
-    @Published var refreshed: ProfilePostFilter = .replies
+    var replies = [Reply]()
+    var loading = false
+    var refreshed: ProfilePostFilter = .replies
     
     var itemsPerPage: Int = 10
     var noMoreItemsToFetch: Bool = false
@@ -53,22 +54,22 @@ final class UserRepliesViewModel: ObservableObject {
     //            .store(in: &cancellables)
     //    }
     
-    func loadMoreReplies() async throws {
+    func loadMoreReplies() async {
         guard !noMoreItemsToFetch, let userID = user.id, !userID.isEmpty else {
             return
         }
         loading = true
-        
-        let (newReplies, lastPostDocument) = try await ReplyService.fetchPostReplies(forUser: user, countLimit: itemsPerPage, descending: true, lastDocument:  self.lastPostDocument)
-        
-        guard !newReplies.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastPostDocument = nil
-            return
-        }
-        
+
         do {
+            let (newReplies, lastPostDocument) = try await ReplyService.fetchPostReplies(forUser: user, countLimit: itemsPerPage, descending: true, lastDocument:  self.lastPostDocument)
+            
+            guard !newReplies.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastPostDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Reply.self) { [weak self] group in
                 guard let self = self else {
                     self?.loading = false
@@ -103,15 +104,15 @@ final class UserRepliesViewModel: ObservableObject {
                 self.loading = false
             }
         } catch {
-            print("Error fetching user posts: \(error)")
+            print("Error fetching user replies: \(error)")
         }
     }
     
-    func refresh() async throws {
+    func refresh() async {
         replies.removeAll()
         noMoreItemsToFetch = false
         lastPostDocument = nil
-        try await loadMoreReplies()
+        await loadMoreReplies()
     }
 }
 

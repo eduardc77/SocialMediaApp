@@ -6,13 +6,13 @@
 import SwiftUI
 import SocialMediaNetwork
 
-class TempPost: ObservableObject {
+final class TempPost: ObservableObject {
     @Published var didLike: Bool = false
     @Published var didSave: Bool = false
 }
 
 struct PostButtonGroupView: View {
-    var model: PostButtonGroupViewModel
+    @State var model: PostButtonGroupViewModel
     var onReplyTapped: (PostType) -> Void
     
     @State private var loading: Bool = false

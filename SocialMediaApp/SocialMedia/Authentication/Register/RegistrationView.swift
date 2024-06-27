@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @StateObject private var model = RegistrationViewModel()
+    @State private var model = RegistrationViewModel()
     @FocusState private var focusedField: RegisterField?
     @Environment(\.dismiss) private var dismiss
     

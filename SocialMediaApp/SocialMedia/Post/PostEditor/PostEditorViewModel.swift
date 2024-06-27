@@ -3,19 +3,19 @@
 //  SocialMedia
 //
 
-import SwiftUI
+import Observation
 import PhotosUI
 import SocialMediaUI
 import SocialMediaNetwork
 import Firebase
 
-final class PostEditorViewModel: ObservableObject {
-    @Published var caption = ""
-    @Published var categorySelected: Bool = false
+@Observable final class PostEditorViewModel {
+    var caption = ""
+    var categorySelected: Bool = false
     
     var postCategories = PostCategory.allCases
     
-    @Published var category: PostCategory = .affirmations {
+    var category: PostCategory = .affirmations {
         didSet {
             categorySelected = true
         }
@@ -29,7 +29,7 @@ final class PostEditorViewModel: ObservableObject {
         !categorySelected ? "Category" : category.icon + " " + category.rawValue.capitalized
     }
     
-    @Published var imageState: ImageData.ImageState = .empty
+    var imageState: ImageData.ImageState = .empty
     
     func uploadPost() async throws {
         guard let userID = user?.id else { return }

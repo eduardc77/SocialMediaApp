@@ -6,13 +6,15 @@
 import SwiftUI
 import SocialMediaNetwork
 
+@MainActor
 struct UserProfileHeader: View {
-    @StateObject private var model: UserProfileHeaderModel
-    @EnvironmentObject private var router: ProfileViewRouter
-    @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @State private var model: UserProfileHeaderModel
+    var router: Router
+    @Environment(ModalScreenRouter.self) private var modalRouter
     
-    init(user: User) {
-        self._model = StateObject(wrappedValue: UserProfileHeaderModel(user: user))
+    init(router: Router, user: User) {
+        self.router = router
+        model = UserProfileHeaderModel(user: user)
     }
     
     var body: some View {
@@ -73,7 +75,8 @@ struct UserProfileHeader: View {
 
 #Preview {
     VStack {
-        UserProfileHeader(user: Preview.user).padding()
+        UserProfileHeader(router: ViewRouter(), user: Preview.user).padding()
         Spacer()
     }
+    .environment(ModalScreenRouter())
 }

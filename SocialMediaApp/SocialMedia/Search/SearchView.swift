@@ -7,12 +7,13 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
+@MainActor
 struct SearchView: View {
-    @StateObject private var model = SearchViewModel()
+    @State private var model = SearchViewModel()
     @State private var selection = Set<User.ID>()
     @State private var layout = BrowserLayout.grid
     
-    @EnvironmentObject private var router: SearchViewRouter
+    @Environment(ViewRouter.self) private var router
     
     var tableImageSize: Double {
 #if os(macOS)
@@ -57,11 +58,7 @@ struct SearchView: View {
             }
         }
         .task {
-            do {
-                try await model.fetchUsers()
-            } catch {
-                print("DEBUG: Failed to fetch users in Search View.")
-            }
+            await model.fetchUsers()
         }
         .searchable(text: $model.searchText)
         .searchSuggestions {
@@ -70,9 +67,7 @@ struct SearchView: View {
             }
         }
         .refreshable {
-            Task {
-                try await model.refresh()
-            }
+            await model.refresh()
         }
     }
     

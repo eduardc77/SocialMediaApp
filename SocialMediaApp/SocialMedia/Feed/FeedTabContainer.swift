@@ -9,7 +9,7 @@ import SocialMediaNetwork
 
 struct FeedTabContainer: View {
     @State var currentFilter: FeedFilter = .forYou
-    @EnvironmentObject private var router: FeedViewRouter
+    @Environment(ViewRouter.self) private var router
     
     var body: some View {
         VStack(spacing: 0) {
@@ -26,7 +26,7 @@ struct FeedTabContainer: View {
 // MARK: - Subviews
 
 private extension FeedTabContainer {
-    
+    @MainActor
     var feedTabView: some View {
         TabView(selection: $currentFilter) {
             ForYouFeedView()
@@ -44,5 +44,6 @@ private extension FeedTabContainer {
 
 #Preview {
     FeedTabContainer()
-        .environmentObject(FeedViewRouter())
+        .environment(ViewRouter())
+        .environment(ModalScreenRouter())
 }

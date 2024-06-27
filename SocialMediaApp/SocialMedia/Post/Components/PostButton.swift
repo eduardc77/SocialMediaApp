@@ -49,7 +49,6 @@ struct PostButton: View {
             withAnimation {
                 tempCount = newValue
             }
-            
         }
         .onFirstAppear {
             guard tempCount != count else { return }

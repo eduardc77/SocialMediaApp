@@ -8,7 +8,7 @@ import SocialMediaNetwork
 
 struct UserRelationsCoordinator: View {
     var user: User
-    @StateObject private var router = ProfileViewRouter()
+    @State private var router = ViewRouter()
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -27,8 +27,4 @@ struct UserRelationsCoordinator: View {
                 }
         }
     }
-}
-
-#Preview {
-    ProfileCoordinator()
 }

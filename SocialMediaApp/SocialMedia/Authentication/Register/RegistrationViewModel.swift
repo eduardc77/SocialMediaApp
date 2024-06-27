@@ -3,17 +3,18 @@
 //  SocialMedia
 //
 
+import Observation
 import FirebaseAuth
 import SocialMediaNetwork
 
-final class RegistrationViewModel: ObservableObject {
-    @Published var user = UserInputData()
-    @Published var loading = false
-    @Published var showAlert = false
-    @Published var authError: AuthError?
+@Observable final class RegistrationViewModel {
+    var user = UserInputData()
+    var loading = false
+    var showAlert = false
+    var authError: AuthError?
     
-    @Published var isAgreementChecked: Bool = false
-    @Published var showAgreementAlert: Bool = false
+    var isAgreementChecked: Bool = false
+    var showAgreementAlert: Bool = false
     
     var agreementText: String {
         "I agree to [Terms & Conditions](https://www.apple.com) and [Privacy Policy](https://www.apple.com)."

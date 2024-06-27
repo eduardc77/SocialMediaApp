@@ -3,18 +3,19 @@
 //  SocialMedia
 //
 
+import Observation
 import FirebaseAuth
 import SocialMediaNetwork
 
 @MainActor
-final class ResetPasswordViewModel: ObservableObject {
-    @Published var email = ""
-    @Published var loading: Bool = false
+@Observable final class ResetPasswordViewModel {
+    var email = ""
+    var loading: Bool = false
     
-    @Published var showEmailSentAlert: Bool = false
-    @Published var showErrorAlert: Bool = false
+    var showEmailSentAlert: Bool = false
+    var showErrorAlert: Bool = false
     
-    @Published var authError: AuthError?
+    var authError: AuthError?
     
     var validForm: Bool {
         !email.isEmpty

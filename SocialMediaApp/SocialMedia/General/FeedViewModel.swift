@@ -3,15 +3,16 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import Combine
 import SocialMediaNetwork
 import Firebase
 
 @MainActor
-class FeedViewModel: ObservableObject {
-    @Published var posts = [Post]()
-    @Published var loading = false
+@Observable class FeedViewModel {
+    var posts = [Post]()
+    var loading = false
     var itemsPerPage: Int = 10
     
     var listenForAddUpdates: Bool = true

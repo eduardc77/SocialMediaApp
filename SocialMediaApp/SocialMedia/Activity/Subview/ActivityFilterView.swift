@@ -47,6 +47,7 @@ struct ActivityFilterView: View {
                 .background(filter == currentFilter ? Color.primary : Color.secondaryGroupedBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }
+        .contentShape(.rect)
     }
     
 }

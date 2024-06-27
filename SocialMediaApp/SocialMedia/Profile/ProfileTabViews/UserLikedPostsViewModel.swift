@@ -60,22 +60,22 @@ final class UserLikedPostsViewModel: FeedViewModel {
         addListenerForLikedPosts()
     }
     
-    func loadMorePosts() async throws {
+    func loadMorePosts() async {
         guard !noMoreItemsToFetch, let userID = user.id else {
             return
         }
         loading = true
-        
-        let (newPostIDs, lastPostDocument) = try await PostService.fetchUserLikedPosts(userID: userID, countLimit: itemsPerPage, lastDocument: self.lastPostDocument)
-        
-        guard !newPostIDs.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastPostDocument = nil
-            return
-        }
-        
+ 
         do {
+            let (newPostIDs, lastPostDocument) = try await PostService.fetchUserLikedPosts(userID: userID, countLimit: itemsPerPage, lastDocument: self.lastPostDocument)
+            
+            guard !newPostIDs.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastPostDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
                     self?.loading = false
@@ -106,8 +106,8 @@ final class UserLikedPostsViewModel: FeedViewModel {
         }
     }
     
-    func refresh() async throws {
+    func refresh() async {
         reset()
-        try await loadMorePosts()
+        await loadMorePosts()
     }
 }

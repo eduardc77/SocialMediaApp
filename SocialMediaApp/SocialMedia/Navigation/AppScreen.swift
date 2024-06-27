@@ -45,6 +45,7 @@ extension AppScreen {
         Label(title, systemImage: icon)
     }
     
+    @MainActor
     @ViewBuilder
     var destination: some View {
         switch self {
@@ -53,7 +54,7 @@ extension AppScreen {
         case .search:
             SearchCoordinator()
         case .newPost:
-            NewPostCoordinator()
+            PostEditorCoordinator()
         case .activity:
             ActivityCoordinator()
         case .profile:

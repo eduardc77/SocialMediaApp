@@ -8,7 +8,7 @@ import SocialMediaUI
 import SocialMediaNetwork
 
 struct SearchGrid: View {
-    var router: any Router
+    var router: Router
     var users: [User]
     var width: Double
     
@@ -73,5 +73,5 @@ struct SearchGrid: View {
 }
 
 #Preview {
-    SearchGrid(router: SearchViewRouter(), users: [Preview.user, Preview.user2], width: 390)
+    SearchGrid(router: ViewRouter(), users: [Preview.user, Preview.user2], width: 390)
 }

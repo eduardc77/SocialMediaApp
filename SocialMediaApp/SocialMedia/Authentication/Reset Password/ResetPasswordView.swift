@@ -6,8 +6,9 @@
 import SwiftUI
 import SocialMediaUI
 
+@MainActor
 struct ResetPasswordView: View {
-    @StateObject private var model = ResetPasswordViewModel()
+    @State private var model = ResetPasswordViewModel()
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Bool
     

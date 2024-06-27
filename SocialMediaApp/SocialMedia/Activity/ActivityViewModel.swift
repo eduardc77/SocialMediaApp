@@ -3,26 +3,27 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import SocialMediaNetwork
 
 @MainActor
-class ActivityViewModel: ObservableObject {
+@Observable class ActivityViewModel {
     var notifications = [Activity]()
-    @Published var filteredNotifications = [Activity]()
-    @Published var loading = false
+    var filteredNotifications = [Activity]()
+    var loading = false
     
     var contentUnavailableText: String {
         selectedFilter == .all ? "No activities yet." : "No \(selectedFilter.rawValue) activities yet."
     }
     
-    @Published var selectedFilter: ActivityFilter = .all
+    var selectedFilter: ActivityFilter = .all
     
     init() {}
     
-    func refresh() async throws {
+    func refresh() async {
         self.loading = true
-        try await updateNotifications()
+        await updateNotifications()
         self.loading = false
         filteredNotifications = notifications
         setupFilteredNotifications()
@@ -41,14 +42,18 @@ class ActivityViewModel: ObservableObject {
         }
     }
     
-    private func updateNotifications() async throws {
-        self.notifications = try await ActivityService.fetchUserActivity()
-        
-        await withThrowingTaskGroup(of: Void.self, body: { group in
-            for notification in notifications {
-                group.addTask { try await self.updateNotificationMetadata(notification: notification) }
-            }
-        })
+    private func updateNotifications() async {
+        do {
+            self.notifications = try await ActivityService.fetchUserActivity()
+            
+            await withThrowingTaskGroup(of: Void.self, body: { group in
+                for notification in notifications {
+                    group.addTask { try await self.updateNotificationMetadata(notification: notification) }
+                }
+            })
+        } catch {
+            print("DEBUG: Failed to fetch notifications in Activity View.")
+        }
     }
     
     private func updateNotificationMetadata(notification: Activity) async throws {

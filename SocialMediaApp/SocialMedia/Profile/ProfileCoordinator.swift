@@ -7,7 +7,7 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct ProfileCoordinator: View {
-    @StateObject private var router = ProfileViewRouter()
+    @State private var router = ViewRouter()
     private var didNavigate: Bool = false
     @EnvironmentObject private var tabRouter: AppScreenRouter
     
@@ -39,15 +39,15 @@ struct ProfileCoordinator: View {
             guard tabReselected, tabRouter.selection == .profile, !router.path.isEmpty else { return }
             router.popToRoot()
         }
-        .environmentObject(router)
+        .environment(router)
     }
     
-    @ViewBuilder
-    private func settings(destination: SettingsDestination) -> some View {
+    @MainActor
+    @ViewBuilder private func settings(destination: SettingsDestination) -> some View {
         switch destination {
         case .settings:
             SettingsView()
-                .environmentObject(router)
+                .environment(router)
         case .termsOfUse:
             PlaceholderText(title: .termsOfUse)
         case .privacyPolicy:
@@ -67,8 +67,4 @@ enum SettingsDestination: Hashable {
     case about
     case feedback
     
-}
-
-#Preview {
-    ProfileCoordinator()
 }

@@ -4,12 +4,14 @@
 //
 
 import SwiftUI
+import Combine
 import SocialMediaUI
 import SocialMediaNetwork
 
+
 struct ContentCoordinator: View {
-    @StateObject private var appRouter = AppScreenRouter()
-    @StateObject private var modalRouter = ModalScreenRouter()
+    @State private var appRouter = AppScreenRouter()
+    @State private var modalRouter = ModalScreenRouter()
     
     @Environment(\.openURL) private var openURL
     
@@ -22,25 +24,26 @@ struct ContentCoordinator: View {
                 openURL(url)
             }
             .environmentObject(appRouter)
-            .environmentObject(modalRouter)
+            .environment(modalRouter)
     }
-}
-
-@ViewBuilder
-private func sheetContent(_ content: AnyIdentifiable) -> some View {
-    if let destination = content.destination as? PostSheetDestination {
-        switch destination {
-        case .newPost:
-            PostEditorView()
-        case .reply(let postType):
-            ReplyView(postType: postType)
-        }
-    } else if let destination = content.destination as? ProfileSheetDestination {
-        switch destination {
-        case .editProfile(let model, let imageData):
-            EditProfileView(model: model, imageData: imageData)
-        case .userRelations(let user):
-            UserRelationsCoordinator(user: user)
+    
+    @MainActor
+    @ViewBuilder
+    private func sheetContent(_ content: AnyIdentifiable) -> some View {
+        if let destination = content.destination as? PostSheetDestination {
+            switch destination {
+            case .newPost:
+                PostEditorView()
+            case .reply(let postType):
+                ReplyView(postType: postType)
+            }
+        } else if let destination = content.destination as? ProfileSheetDestination {
+            switch destination {
+            case .editProfile(let model, let imageData):
+                EditProfileView(model: model, imageData: imageData)
+            case .userRelations(let user):
+                UserRelationsCoordinator(user: user)
+            }
         }
     }
 }

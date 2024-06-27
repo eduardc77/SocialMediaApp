@@ -8,7 +8,7 @@ import SocialMediaNetwork
 import SocialMediaUI
 
 struct ReplyGridItem: View {
-    let router: any Router
+    let router: Router
     let reply: Reply
     let hasConnectionLine: Bool = true
     let onReplyTapped: (PostType) -> Void
@@ -79,5 +79,5 @@ struct ReplyGridItem: View {
 }
 
 #Preview {
-    ReplyGridItem(router: ProfileViewRouter(), reply: Preview.reply, onReplyTapped: {_ in })
+    ReplyGridItem(router: ViewRouter(), reply: Preview.reply, onReplyTapped: {_ in })
 }

@@ -3,15 +3,15 @@
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 import SocialMediaNetwork
 
 @MainActor
-final class SearchViewModel: ObservableObject {
-    @Published private var users = [User]()
+@Observable final class SearchViewModel {
+    private var users = [User]()
     
-    @Published var searchText = ""
-    @Published var loading = false
+    var searchText = ""
+    var loading = false
     
     var contentUnavailableTitle: String {
         "No results for '\(searchText)'"
@@ -21,7 +21,7 @@ final class SearchViewModel: ObservableObject {
         "Check the spelling or try a new search"
     }
     
-    @Published var sort = UserSortOrder.name
+    var sort = UserSortOrder.name
     
     var filteredUsers: [User] {
         users(sortedBy: sort).filter { $0.matches(searchText: searchText) }
@@ -44,24 +44,29 @@ final class SearchViewModel: ObservableObject {
         }
     }
     
-    func fetchUsers() async throws {
+    func fetchUsers() async {
         self.loading = true
-        let users = try await UserService.fetchUsers()
         
-        try await withThrowingTaskGroup(of: User.self, body: { group in
-            var result = [User]()
+        do {
+            let users = try await UserService.fetchUsers()
             
-            for i in 0 ..< users.count {
-                group.addTask { return await self.checkIfUserIsFollowed(user: users[i]) }
-            }
+            try await withThrowingTaskGroup(of: User.self, body: { group in
+                var result = [User]()
+                
+                for i in 0 ..< users.count {
+                    group.addTask { return await self.checkIfUserIsFollowed(user: users[i]) }
+                }
+                
+                for try await user in group {
+                    result.append(user)
+                }
+                
+                self.loading = false
+                self.users = result
+            })
+        } catch {
             
-            for try await user in group {
-                result.append(user)
-            }
-            
-            self.loading = false
-            self.users = result
-        })
+        }
     }
     
     func checkIfUserIsFollowed(user: User) async -> User {
@@ -70,9 +75,9 @@ final class SearchViewModel: ObservableObject {
         return result
     }
     
-    func refresh() async throws {
+    func refresh() async {
         users.removeAll()
-        try await fetchUsers()
+        await fetchUsers()
     }
 }
 

@@ -3,13 +3,14 @@
 //  SocialMedia
 //
 
+import Observation
 import Combine
 import FirebaseAuth
 import SocialMediaNetwork
 
-final class ContentViewModel: ObservableObject {
-    @Published var userSession: FirebaseAuth.User?
-    @Published var loading: Bool = false
+@Observable final class ContentViewModel {
+    var userSession: FirebaseAuth.User?
+    var loading: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     

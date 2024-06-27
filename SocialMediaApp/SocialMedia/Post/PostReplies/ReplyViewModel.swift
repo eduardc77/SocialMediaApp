@@ -3,11 +3,11 @@
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 import SocialMediaNetwork
 
-final class ReplyViewModel: ObservableObject {
-    @Published var replyText = ""
+@Observable final class ReplyViewModel {
+    var replyText = ""
     
     var postType: PostType
     

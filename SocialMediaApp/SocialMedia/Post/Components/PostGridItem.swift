@@ -13,7 +13,7 @@ enum PostType: Hashable {
 }
 
 struct PostGridItem: View {
-    var router: any Router
+    var router: Router
     let postType: PostType
     var profileImageSize: ImageSize = .small
     
@@ -174,5 +174,5 @@ private extension PostGridItem {
 
 
 #Preview {
-    PostGridItem(router: FeedViewRouter(), postType: .post(Preview.post), onReplyTapped: {_ in })
+    PostGridItem(router: ViewRouter(), postType: .post(Preview.post), onReplyTapped: {_ in })
 }

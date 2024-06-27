@@ -5,8 +5,9 @@
 
 import SwiftUI
 
+@MainActor
 struct LoginView: View {
-    @StateObject private var model = LoginViewModel()
+    @State private var model = LoginViewModel()
     @FocusState private var focusedField: LoginField?
     
     var body: some View {

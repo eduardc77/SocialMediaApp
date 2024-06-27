@@ -7,7 +7,7 @@ import SwiftUI
 import SocialMediaNetwork
 
 struct SearchGridItem: View {
-    @ObservedObject private var model: SearchItemViewModel
+    @State private var model: SearchItemViewModel
     
     init(user: User, thumbnailSize: CGFloat) {
         self.model = SearchItemViewModel(user: user, thumbnailSize: thumbnailSize)

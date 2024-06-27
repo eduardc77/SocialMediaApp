@@ -6,13 +6,12 @@
 import SwiftUI
 import PhotosUI
 
-@MainActor
-public class ImageData: ObservableObject {
-    @Published var image: Image?
-    @Published public var imageState: ImageState = .empty
-    @Published public var newImageSet: Bool = false
+@Observable public class ImageData {
+    var image: Image?
+    public var imageState: ImageState = .empty
+    public var newImageSet: Bool = false
     
-    @Published public var imageSelection: PhotosPickerItem? = nil {
+    public var imageSelection: PhotosPickerItem? = nil {
         didSet {
             if let imageSelection {
                 Task {

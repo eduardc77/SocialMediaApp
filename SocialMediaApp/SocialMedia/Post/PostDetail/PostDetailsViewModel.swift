@@ -3,21 +3,22 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import Combine
 import Firebase
 import SocialMediaNetwork
 
 @MainActor
-final class PostDetailsViewModel: ObservableObject {
-    @Published var post: Post?
-    @Published var reply: Reply?
+@Observable final class PostDetailsViewModel {
+    var post: Post?
+    var reply: Reply?
     
     var postType: PostType
     var contentUnavailableText = "Be the first to reply."
     
-    @Published var replies = [Reply]()
-    @Published var loading = false
+    var replies = [Reply]()
+    var loading = false
     
     var itemsPerPage: Int = 10
     var noMoreItemsToFetch: Bool = false
@@ -75,30 +76,31 @@ final class PostDetailsViewModel: ObservableObject {
         }
     }
     
-    func loadMoreReplies() async throws {
+    func loadMoreReplies() async {
         guard !noMoreItemsToFetch else { return }
         
         loading = true
-        var (newReplies, lastReplyDocument): ([Reply], DocumentSnapshot?)
-        
-        switch postType {
-        case .post:
-            guard let post = post else { return }
-            (newReplies, lastReplyDocument) = try await ReplyService.fetchPostReplies(forPost: post, countLimit: itemsPerPage, lastDocument: lastDocument)
-            
-        case .reply:
-            guard let reply = reply else { return }
-            (newReplies, lastReplyDocument) = try await ReplyService.fetchReplyReplies(forReply: reply, countLimit: itemsPerPage, lastDocument: lastDocument)
-        }
-        
-        guard !newReplies.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastDocument = nil
-            return
-        }
         
         do {
+            var (newReplies, lastReplyDocument): ([Reply], DocumentSnapshot?)
+            
+            switch postType {
+            case .post:
+                guard let post = post else { return }
+                (newReplies, lastReplyDocument) = try await ReplyService.fetchPostReplies(forPost: post, countLimit: itemsPerPage, lastDocument: lastDocument)
+                
+            case .reply:
+                guard let reply = reply else { return }
+                (newReplies, lastReplyDocument) = try await ReplyService.fetchReplyReplies(forReply: reply, countLimit: itemsPerPage, lastDocument: lastDocument)
+            }
+            
+            guard !newReplies.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Reply.self) { [weak self] group in
                 guard let self = self else {
                     self?.loading = false
@@ -174,11 +176,11 @@ final class PostDetailsViewModel: ObservableObject {
     }
     
     
-    func refresh() async throws {
+    func refresh() async {
         replies.removeAll()
         noMoreItemsToFetch = false
         lastDocument = nil
-        try await loadMoreReplies()
+        await loadMoreReplies()
     }
 }
 

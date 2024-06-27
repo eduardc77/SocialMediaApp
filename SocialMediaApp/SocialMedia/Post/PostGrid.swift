@@ -13,7 +13,7 @@ enum PostGridType {
 }
 
 struct PostGrid: View {
-    var router: any Router
+    var router: Router
     let postGridType: PostGridType
     @Binding var loading: Bool
     var endReached: Bool
@@ -21,7 +21,7 @@ struct PostGrid: View {
     var contentUnavailableText: String = ""
     var loadNewPage: (() async throws -> Void)? = nil
     
-    @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @Environment(ModalScreenRouter.self) private var modalRouter
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
@@ -65,7 +65,7 @@ struct PostGrid: View {
                     )
                 } else {
                     LazyVGrid(columns: gridItems) {
-                        ForEach(posts) { post in
+                        ForEach(posts, id: \.self) { post in
                             ZStack(alignment: .top) {
                                 NavigationButton {
                                     router.push(PostType.post(post))
@@ -142,8 +142,8 @@ struct PostGrid: View {
     @State var loading: Bool = false
     
     return ScrollView {
-        PostGrid(router: FeedViewRouter(), postGridType: .posts([Preview.post, Preview.post2]), loading: $loading, endReached: false, itemsPerPage: 10)
-            .environmentObject(FeedViewRouter())
-            .environmentObject(ModalScreenRouter())
+        PostGrid(router: ViewRouter(), postGridType: .posts([Preview.post, Preview.post2]), loading: $loading, endReached: false, itemsPerPage: 10)
+            .environment(ViewRouter())
+            .environment(ModalScreenRouter())
     }
 }

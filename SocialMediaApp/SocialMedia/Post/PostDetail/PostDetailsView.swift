@@ -7,15 +7,16 @@ import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
 
+@MainActor
 struct PostDetailsView: View {
-    var router: any Router
-    @StateObject var model: PostDetailsViewModel
+    private var router: Router
+    @State private var model: PostDetailsViewModel
     
-    @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @Environment(ModalScreenRouter.self) private var modalRouter
     
-    init(router: any Router, postType: PostType) {
+    init(router: Router, postType: PostType) {
         self.router = router
-        _model = StateObject(wrappedValue: PostDetailsViewModel(postType: postType))
+        model = PostDetailsViewModel(postType: postType)
     }
     
     var body: some View {
@@ -100,24 +101,21 @@ struct PostDetailsView: View {
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
-        .onAppear {
-            Task {
-                try await model.loadMoreReplies()
-                if model.post != nil {
-                    model.addListenerForReplyUpdates()
-                } else if let reply = model.reply {
-                    model.addListenerForReplyUpdates(depthLevel: reply.depthLevel + 1)
-                }
+        .task {
+            await model.loadMoreReplies()
+            if model.post != nil {
+                model.addListenerForReplyUpdates()
+            } else if let reply = model.reply {
+                model.addListenerForReplyUpdates(depthLevel: reply.depthLevel + 1)
             }
         }
         .refreshable {
-            Task {
-                try await model.refresh()
-            }
+            await model.refresh()
         }
     }
 }
 
 #Preview {
-    PostDetailsView(router: FeedViewRouter(), postType: PostType.post(Preview.post))
+    PostDetailsView(router: ViewRouter(), postType: PostType.post(Preview.post))
+        .environment(ModalScreenRouter())
 }

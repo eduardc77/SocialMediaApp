@@ -5,7 +5,7 @@
 
 import Foundation
 
-public protocol Router: ObservableObject {
+public protocol Router {
     var path: [AnyHashable] { get }
     
     func push(_ screen: AnyHashable)

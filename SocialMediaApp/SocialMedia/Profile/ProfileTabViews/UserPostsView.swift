@@ -4,17 +4,19 @@
 //
 
 import SwiftUI
+import Combine
 import SocialMediaNetwork
 
+@MainActor
 struct UserPostsView: View {
-    @StateObject var model: UserPostsViewModel
-    var router: any Router
+    @State var model: UserPostsViewModel
+    var router: Router
     let contentUnavailableText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
     
-    init(router: any Router, user: User, contentUnavailableText: String) {
+    init(router: Router, user: User, contentUnavailableText: String) {
         self.router = router
-        self._model = StateObject(wrappedValue: UserPostsViewModel(user: user))
+        model = UserPostsViewModel(user: user)
         self.contentUnavailableText = contentUnavailableText
     }
     
@@ -26,17 +28,15 @@ struct UserPostsView: View {
                  itemsPerPage: model.itemsPerPage,
                  contentUnavailableText: contentUnavailableText,
                  loadNewPage: model.loadMorePosts)
-        .onAppear {
-            Task {
-                if model.posts.isEmpty {
-                    try await model.loadMorePosts()
-                }
-                model.addListenerForPostUpdates()
+        .task {
+            if model.posts.isEmpty {
+                await model.loadMorePosts()
             }
+            model.addListenerForPostUpdates()
         }
         .onReceive(refreshedFilter.$refreshedFilter) { refreshedFilter in
             if refreshedFilter == .posts, !model.posts.isEmpty {
-                Task { try await model.refresh() }
+                Task { await model.refresh() }
             }
         }
     }

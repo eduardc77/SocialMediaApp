@@ -4,12 +4,14 @@
 //
 
 import SwiftUI
+import Combine
 import PhotosUI
 import SocialMediaUI
 
 struct EditProfileView: View {
-    @ObservedObject var model: CurrentUserProfileHeaderModel
-    @ObservedObject var imageData: ImageData
+    @State var model: CurrentUserProfileHeaderModel
+    @State var imageData: ImageData
+    
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -80,7 +82,7 @@ struct EditProfileView: View {
                     }
                 }
             }
-            .onReceive(imageData.$newImageSet) { newValue in
+            .onReceive(Just(imageData.newImageSet)) { newValue in
                 model.newImageSet = newValue
             }
         }

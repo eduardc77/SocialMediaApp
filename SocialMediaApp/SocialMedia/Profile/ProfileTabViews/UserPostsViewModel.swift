@@ -3,18 +3,19 @@
 //  SocialMedia
 //
 
+import Observation
 import SwiftUI
 import Combine
 import SocialMediaNetwork
 import Firebase
 
 @MainActor
-final class UserPostsViewModel: ObservableObject {
+@Observable final class UserPostsViewModel {
     var user: SocialMediaNetwork.User
     
-    @Published var posts = [Post]()
-    @Published var loading = false
-    @Published var refreshed: ProfilePostFilter = .posts
+    var posts = [Post]()
+    var loading = false
+    var refreshed: ProfilePostFilter = .posts
     
     var itemsPerPage: Int = 10
     var noMoreItemsToFetch: Bool = false
@@ -53,22 +54,22 @@ final class UserPostsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func loadMorePosts() async throws {
+    func loadMorePosts() async {
         guard !noMoreItemsToFetch, let userID = user.id else {
             return
         }
         loading = true
-        
-        let (newPosts, lastPostDocument) = try await PostService.fetchUserPosts(userID: userID, countLimit: itemsPerPage, descending: true, lastDocument: self.lastPostDocument)
-        
-        guard !newPosts.isEmpty else {
-            self.noMoreItemsToFetch = true
-            self.loading = false
-            self.lastPostDocument = nil
-            return
-        }
-        
+
         do {
+            let (newPosts, lastPostDocument) = try await PostService.fetchUserPosts(userID: userID, countLimit: itemsPerPage, descending: true, lastDocument: self.lastPostDocument)
+            
+            guard !newPosts.isEmpty else {
+                self.noMoreItemsToFetch = true
+                self.loading = false
+                self.lastPostDocument = nil
+                return
+            }
+            
             try await withThrowingTaskGroup(of: Post.self) { [weak self] group in
                 guard let self = self else {
                     self?.loading = false
@@ -99,11 +100,11 @@ final class UserPostsViewModel: ObservableObject {
         }
     }
     
-    func refresh() async throws {
+    func refresh() async {
         posts.removeAll()
         noMoreItemsToFetch = false
         lastPostDocument = nil
-        try await loadMorePosts()
+        await loadMorePosts()
     }
 }
 

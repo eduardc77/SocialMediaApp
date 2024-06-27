@@ -1,19 +1,19 @@
 //
-//  NewPostCoordinator.swift
+//  PostEditorCoordinator.swift
 //  SocialMedia
 //
 
 import SwiftUI
 
-struct NewPostCoordinator: View {
+struct PostEditorCoordinator: View {
     @EnvironmentObject private var tabRouter: AppScreenRouter
-    @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @Environment(ModalScreenRouter.self) private var modalRouter
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
-    
+
     var body: some View {
         if prefersTabNavigation {
             Color.clear
-                .onChange(of: tabRouter.selection) { oldValue, newValue in
+                .onChange(of: tabRouter.selection) { oldValue, _ in
                     if tabRouter.selection == .newPost {
                         modalRouter.presentSheet(destination: PostSheetDestination.newPost)
                         self.tabRouter.selection = oldValue

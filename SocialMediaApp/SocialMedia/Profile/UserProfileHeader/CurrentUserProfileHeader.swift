@@ -4,13 +4,15 @@
 //
 
 import SwiftUI
+import Combine
 import SocialMediaUI
 
 struct CurrentUserProfileHeader: View {
-    @StateObject private var model = CurrentUserProfileHeaderModel()
-    @StateObject private var imageData = ImageData()
-    @EnvironmentObject private var router: ProfileViewRouter
-    @EnvironmentObject private var modalRouter: ModalScreenRouter
+    @State private var imageData = ImageData()
+    @State private var model = CurrentUserProfileHeaderModel()
+    
+    var router: Router
+    @Environment(ModalScreenRouter.self) private var modalRouter
     
     var didNavigate: Bool = false
     
@@ -94,12 +96,14 @@ struct CurrentUserProfileHeader: View {
         .onFirstAppear {
             model.loadUserData()
         }
-        .onReceive(imageData.$imageState) { newValue in
+        .onReceive(Just(imageData.imageState)) { newValue in
             model.imageState = newValue
         }
     }
 }
 
 #Preview {
-    CurrentUserProfileHeader()
+    CurrentUserProfileHeader(router: ViewRouter())
+        .padding()
+        .environment(ModalScreenRouter())
 }

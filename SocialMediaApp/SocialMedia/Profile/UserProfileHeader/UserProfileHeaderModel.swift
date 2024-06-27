@@ -3,17 +3,17 @@
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 import SocialMediaNetwork
 
 @MainActor
-final class UserProfileHeaderModel: ObservableObject {
-    @Published var user: User
-    @Published var loading: Bool = false
+@Observable final class UserProfileHeaderModel {
+    var user: User
+    var loading: Bool = false
     
-    @Published var selectedPostFilter: ProfilePostFilter = .posts
-    @Published var showEditProfile = false
-    @Published var showUserRelationSheet = false
+    var selectedPostFilter: ProfilePostFilter = .posts
+    var showEditProfile = false
+    var showUserRelationSheet = false
     
     var isFollowed: Bool { user.isFollowed }
     

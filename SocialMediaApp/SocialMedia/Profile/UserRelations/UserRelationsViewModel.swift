@@ -3,15 +3,15 @@
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 import SocialMediaNetwork
 
 @MainActor
-final class UserRelationsViewModel: ObservableObject {
+@Observable final class UserRelationsViewModel {
     private let user: User
-    @Published var currentStatString: String = ""
-    @Published var searchText = ""
-    @Published var loading = false
+    var currentStatString: String = ""
+    var searchText = ""
+    var loading = false
     
     var contentUnavailableTitle: String {
         "No results for '\(searchText)'"
@@ -21,10 +21,9 @@ final class UserRelationsViewModel: ObservableObject {
         "Check the spelling or try a new search"
     }
     
-    @Published var sort = UserSortOrder.name
-    
-    
-    @Published private var users = [User]()
+    var sort = UserSortOrder.name
+
+    private var users = [User]()
     private var followers = [User]()
     private var following = [User]()
     
@@ -32,7 +31,7 @@ final class UserRelationsViewModel: ObservableObject {
         users(sortedBy: sort).filter { $0.matches(searchText: searchText) }
     }
     
-    @Published var filterSelection: UserRelationType = .followers {
+    var filterSelection: UserRelationType = .followers {
         didSet { updateRelationData() }
     }
     
@@ -44,10 +43,14 @@ final class UserRelationsViewModel: ObservableObject {
         self.user = user
     }
     
-    func loadUserRelations() async throws {
+    func loadUserRelations() async {
         loading = true
-        try await fetchUserFollowers()
-        try await fetchUserFollowing()
+        do {
+            try await fetchUserFollowers()
+            try await fetchUserFollowing()
+        } catch {
+            print("DEBUG: Failed to fetch user relations.")
+        }
         loading = false
     }
 }

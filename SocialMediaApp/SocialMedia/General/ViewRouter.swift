@@ -1,12 +1,12 @@
 //
-//  ActivityViewRouter.swift
+//  ViewRouter.swift
 //  SocialMedia
 //
 
-import Foundation
+import Observation
 
-final class ActivityViewRouter: Router {
-    @Published var path = [AnyHashable]()
+@Observable final class ViewRouter: Router {
+    var path = [AnyHashable]()
     
     init() {}
     

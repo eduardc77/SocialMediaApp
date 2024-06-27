@@ -8,7 +8,7 @@ import SocialMediaUI
 import SocialMediaNetwork
 
 struct ProfileTabsContainer: View {
-    var router: any Router
+    var router: Router
     var user: User
     var didNavigate: Bool
     
@@ -30,9 +30,9 @@ struct ProfileTabsContainer: View {
             headerTitle: { context in
                 VStack(alignment: .leading, spacing: 16) {
                     if user.isCurrentUser {
-                        CurrentUserProfileHeader(didNavigate: didNavigate)
+                        CurrentUserProfileHeader(router: router, didNavigate: didNavigate)
                     } else {
-                        UserProfileHeader(user: user)
+                        UserProfileHeader(router: router, user: user)
                     }
                 }
                 .padding([.horizontal, .bottom])
@@ -69,5 +69,8 @@ struct ProfileTabsContainer: View {
 }
 
 #Preview {
-    CurrentUserProfileHeader()
+    CurrentUserProfileHeader(router: ViewRouter())
+        .padding()
+        .environment(ModalScreenRouter())
+        .environment(ViewRouter())
 }

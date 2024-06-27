@@ -5,9 +5,10 @@
 
 import SwiftUI
 import SocialMediaNetwork
+import Combine
 
 struct SearchCoordinator: View {
-    @StateObject private var router = SearchViewRouter()
+    @State private var router = ViewRouter()
     @EnvironmentObject private var tabRouter: AppScreenRouter
     
     var body: some View {
@@ -28,12 +29,13 @@ struct SearchCoordinator: View {
                     guard tabReselected, tabRouter.selection == .search, !router.path.isEmpty else { return }
                     router.popToRoot()
                 }
-                .environmentObject(router)
+                .environment(router)
         }
     }
 }
 
 #Preview {
     SearchCoordinator()
-        .environmentObject(SearchViewRouter())
+        .environmentObject(AppScreenRouter())
+        .environment(ViewRouter())
 }

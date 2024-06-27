@@ -3,14 +3,15 @@
 //  SocialMedia
 //
 
+import Observation
 import FirebaseAuth
 import SocialMediaNetwork
 
-final class LoginViewModel: ObservableObject {
-    @Published var user = UserInputData()
-    @Published var loading = false
-    @Published var showAlert = false
-    @Published var authError: AuthError?
+@Observable final class LoginViewModel {
+    var user = UserInputData()
+    var loading = false
+    var showAlert = false
+    var authError: AuthError?
     
     var validForm: Bool {
         !user.email.isEmpty

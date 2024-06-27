@@ -75,6 +75,20 @@ class Preview {
         post: post,
         user: user)
     
+    static var reply2 = Reply(
+        caption: "Design is a funny word. Some people think design means how it looks. But of course, if you dig deeper, it's really how it works.",
+        ownerUID: UUID().uuidString,
+        replyID: UUID().uuidString,
+        timestamp: Timestamp(),
+        postID: UUID().uuidString,
+        postOwnerUID: UUID().uuidString,
+        likes: 18,
+        reposts: 5,
+        replies: 7,
+        imageUrl:  "https://docs-assets.developer.apple.com/published/9c4143a9a48a080f153278c9732c03e7/Image-1~dark@2x.png",
+        post: post2,
+        user: user)
+    
     static var activityModel = Activity(
         type: ActivityType.like,
         senderUID: UUID().uuidString,
