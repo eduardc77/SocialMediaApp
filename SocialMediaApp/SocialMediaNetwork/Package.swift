@@ -27,7 +27,7 @@ let package = Package(
         .target(
             name: "SocialMediaNetwork",
             dependencies: [
-                .product(name: "SocialMediaUI", package: "SocialMediaUI", condition: nil),
+                .product(name: "SocialMediaUI", package: "SocialMediaUI"),
                 .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseFirestoreSwift", package: "firebase-ios-sdk"),

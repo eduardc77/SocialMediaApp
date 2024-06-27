@@ -44,7 +44,7 @@ struct PostGrid: View {
     private var itemSize: Double {
 #if os(iOS)
         isCompact ? 400 : 300
-#elseif os(macOS)
+#else
         600
 #endif
     }
