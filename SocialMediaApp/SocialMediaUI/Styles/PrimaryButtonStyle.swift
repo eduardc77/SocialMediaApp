@@ -32,7 +32,17 @@ public struct PrimaryButtonStyle: ButtonStyle {
 public extension ButtonStyle where Self == PrimaryButtonStyle {
     static var primary: PrimaryButtonStyle { PrimaryButtonStyle(loading: false) }
     
-    static func primary(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 40, foregroundColor: Color = Color.white, backgroundColor: Color = Color.accentColor, loading: Bool) -> PrimaryButtonStyle {
+    static func primary(buttonWidth: CGFloat = .infinity, buttonHeight: CGFloat = 40, foregroundColor: Color = Color.white, backgroundColor: Color = Color.accentColor, loading: Bool = false) -> PrimaryButtonStyle {
         PrimaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, backgroundColor: backgroundColor, loading: loading)
     }
+}
+
+#Preview {
+    VStack {
+        Button("Done") {}
+            .buttonStyle(.primary)
+        Button("Cancel") {}
+            .buttonStyle(.primary(backgroundColor: .red))
+    }
+    .padding()
 }

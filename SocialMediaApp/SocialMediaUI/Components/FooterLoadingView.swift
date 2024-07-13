@@ -27,3 +27,7 @@ public struct FooterLoadingView: View {
         }
     }
 }
+
+#Preview {
+    FooterLoadingView(hidden: false) {}
+}

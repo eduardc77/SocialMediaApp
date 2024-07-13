@@ -9,8 +9,6 @@ public struct SecondaryButtonStyle: ButtonStyle {
     var buttonWidth: CGFloat? = .infinity
     var buttonHeight: CGFloat = 32
     var foregroundColor: Color = Color.primary
-    var activeBackgroundColor: Color = .tertiaryGroupedBackground
-    var inactiveBackgroundColor: Color = Color.secondary
     var loading: Bool = false
     var isActive: Bool = false
     
@@ -37,7 +35,18 @@ public struct SecondaryButtonStyle: ButtonStyle {
 public extension ButtonStyle where Self == SecondaryButtonStyle {
     static var secondary: SecondaryButtonStyle { SecondaryButtonStyle(loading: false, isActive: false) }
     
-    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, activeBackgroundColor: Color = .tertiaryGroupedBackground, inactiveBackgroundColor: Color = Color.secondary, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
-        SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, activeBackgroundColor: activeBackgroundColor, inactiveBackgroundColor: inactiveBackgroundColor, loading: loading, isActive: isActive)
+    static func secondary(buttonWidth: CGFloat? = .infinity, buttonHeight: CGFloat = 32, foregroundColor: Color = Color.primary, loading: Bool = false, isActive: Bool = true) -> SecondaryButtonStyle {
+        SecondaryButtonStyle(buttonWidth: buttonWidth, buttonHeight: buttonHeight, foregroundColor: foregroundColor, loading: loading, isActive: isActive)
     }
+}
+
+#Preview {
+    VStack {
+        Button("Done") {}
+            .buttonStyle(.secondary)
+        Button("Cancel") {}
+            .buttonStyle(.secondary(foregroundColor: .red))
+            
+    }
+    .padding()
 }

@@ -23,6 +23,8 @@
 		8848263F2BABB559000D3E95 /* PostEditorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8848263E2BABB559000D3E95 /* PostEditorCoordinator.swift */; };
 		8866A6782C43361400F0DEF4 /* UserBrowserLayoutMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866A6772C43361400F0DEF4 /* UserBrowserLayoutMenu.swift */; };
 		8866A67B2C43391000F0DEF4 /* EditableCircularProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866A67A2C43391000F0DEF4 /* EditableCircularProfileImage.swift */; };
+		8866A67E2C433E4700F0DEF4 /* SocialMediaNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = 8866A67D2C433E4700F0DEF4 /* SocialMediaNetwork */; };
+		8866A6802C433E4F00F0DEF4 /* SocialMediaUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8866A67F2C433E4F00F0DEF4 /* SocialMediaUI */; };
 		88721E932BBC85FD001B609A /* FeedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88721E922BBC85FD001B609A /* FeedCoordinator.swift */; };
 		88721E982BBC89DA001B609A /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88721E972BBC89DA001B609A /* Router.swift */; };
 		88721E9A2BBC89EA001B609A /* Array+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88721E992BBC89EA001B609A /* Array+Utilities.swift */; };
@@ -114,10 +116,6 @@
 		88E804772BBDF78600729A3D /* CurrentUserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E804762BBDF78600729A3D /* CurrentUserProfileHeader.swift */; };
 		88FA979D2BBB5943005E940E /* SearchGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA979B2BBB5943005E940E /* SearchGrid.swift */; };
 		88FA97A12BBB82CD005E940E /* SearchGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA97A02BBB82CD005E940E /* SearchGridItem.swift */; };
-		DD8C2E4F2BCBCFB1001123AF /* SocialMediaUI in Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */; };
-		DD8C2E502BCBCFB1001123AF /* SocialMediaUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		DD8C2E522BCBD225001123AF /* SocialMediaNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E512BCBD225001123AF /* SocialMediaNetwork */; };
-		DD8C2E532BCBD225001123AF /* SocialMediaNetwork in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DD8C2E512BCBD225001123AF /* SocialMediaNetwork */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,8 +142,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				DD8C2E502BCBCFB1001123AF /* SocialMediaUI in Embed Frameworks */,
-				DD8C2E532BCBD225001123AF /* SocialMediaNetwork in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,8 +270,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD8C2E4F2BCBCFB1001123AF /* SocialMediaUI in Frameworks */,
-				DD8C2E522BCBD225001123AF /* SocialMediaNetwork in Frameworks */,
+				8866A6802C433E4F00F0DEF4 /* SocialMediaUI in Frameworks */,
+				8866A67E2C433E4700F0DEF4 /* SocialMediaNetwork in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,8 +726,8 @@
 			);
 			name = SocialMedia;
 			packageProductDependencies = (
-				DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */,
-				DD8C2E512BCBD225001123AF /* SocialMediaNetwork */,
+				8866A67D2C433E4700F0DEF4 /* SocialMediaNetwork */,
+				8866A67F2C433E4F00F0DEF4 /* SocialMediaUI */,
 			);
 			productName = SocialMedia;
 			productReference = 8895C4DB2BA5F10000F7C28A /* SocialMedia.app */;
@@ -1037,7 +1033,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1094,7 +1090,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1316,13 +1312,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DD8C2E4E2BCBCFB1001123AF /* SocialMediaUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SocialMediaUI;
-		};
-		DD8C2E512BCBD225001123AF /* SocialMediaNetwork */ = {
+		8866A67D2C433E4700F0DEF4 /* SocialMediaNetwork */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocialMediaNetwork;
+		};
+		8866A67F2C433E4F00F0DEF4 /* SocialMediaUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SocialMediaUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

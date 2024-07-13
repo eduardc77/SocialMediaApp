@@ -11,8 +11,8 @@ public struct Shimmer: ViewModifier {
     
     /// Initializes his modifier with a custom animation,
     /// - Parameters:
-    ///   - animation: A custom animation. Defaults to ``Shimmer/defaultAnimation``.
-    ///   - gradient: A custom gradient. Defaults to ``Shimmer/defaultGradient``.
+    ///   - animation: A custom animation. Defaults to `Shimmer.defaultAnimation`.
+    ///   - gradient: A custom gradient. Defaults to `Shimmer.defaultGradient`.
     ///   - bandSize: The size of the animated mask's "band". Defaults to 0.3 unit points, which corresponds to
     /// 30% of the extent of the gradient.
     public init(
@@ -69,8 +69,8 @@ public extension View {
     /// Adds an animated shimmering effect to any view, typically to show that an operation is in progress.
     /// - Parameters:
     ///   - active: Convenience parameter to conditionally enable the effect. Defaults to `true`.
-    ///   - animation: A custom animation. Defaults to ``Shimmer/defaultAnimation``.
-    ///   - gradient: A custom gradient. Defaults to ``Shimmer/defaultGradient``.
+    ///   - animation: A custom animation. Defaults to `Shimmer.defaultAnimation`.
+    ///   - gradient: A custom gradient. Defaults to `Shimmer.defaultGradient`.
     ///   - bandSize: The size of the animated mask's "band". Defaults to 0.3 unit points, which corresponds to
     /// 20% of the extent of the gradient.
     @ViewBuilder func shimmering(
