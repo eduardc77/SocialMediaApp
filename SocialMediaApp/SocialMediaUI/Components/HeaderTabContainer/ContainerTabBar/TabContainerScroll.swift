@@ -6,11 +6,11 @@
 import SwiftUI
 
 /// A lightweight scroll view wrapper that required for sticky header scroll effects. For most intents and purposes, you should use
-/// `ContainerTabsScroll` as you would a vertically-oriented `ScrollView`, with typical content being a `VStack` or `LazyVStack`.
+/// `TabContainerScroll` as you would a vertically-oriented `ScrollView`, with typical content being a `VStack` or `LazyVStack`.
 ///
-/// `ContainerTabs` adjusts the scroll position when switching tabs to ensure continuity when switching tabs after collapsing or expanding the header.
-/// However, joint manipulation of scroll position is supported, provided that you supply the scroll item and unit point bindings. However, when
-/// using joint manipulation, you must supply a `reservedItem` identifier for `ContainerTabs` to use internally on its own hidden view. This approach was
+/// `TabsContainer` adjusts the scroll position when switching tabs to ensure continuity when switching tabs after collapsing or expanding the header.
+/// However, joint maniuplation of scroll position is supported, provided that you supply the scroll item and unit point bindings. However, when
+/// using joint manipulation, you must supply a `reservedItem` identifier for `TabsContainer` to use internally on its own hidden view. This approach was
 /// adopted because precise manipulation of scroll position requires knowing the height the view associated with the scroll item and using our own internal
 /// view for that seemed the easiest solution.
 ///
@@ -29,7 +29,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
     public init(
         tab: Tab,
         refreshableAction: (() async throws -> Void)? = nil,
-        @ViewBuilder content: @escaping (_ context: ContainerTabsScrollContext<Tab>) -> Content
+        @ViewBuilder content: @escaping (_ context: TabsScrollContext<Tab>) -> Content
     ) where Item == ScrollItem {
         self.init(
             tab: tab,
@@ -50,9 +50,9 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
     ///   - scrollUnitPoint: The binding to the scroll unit point.
     ///   - content: The scroll content view builder, typically a `VStack` or `LazyVStack`.
     ///
-    ////// `ContainerTabs` adjusts the scroll position when switching tabs to ensure continuity when switching tabs after collapsing or expanding the header.
+    ////// `TabsContainer` adjusts the scroll position when switching tabs to ensure continuity when switching tabs after collapsing or expanding the header.
     /// However, joint manipulation of scroll position is supported, provided that you supply the scroll item and unit point bindings. However, when
-    /// using joint manipulation, you must supply a `reservedItem` identifier for `ContainerTabs` to use internally on its own hidden view. This approach was
+    /// using joint manipulation, you must supply a `reservedItem` identifier for `TabsContainer` to use internally on its own hidden view. This approach was
     /// adopted because precise manipulation of scroll position requires knowing the height the view associated with the scroll item and using our own internal
     /// view for that seemed the easiest solution.
     
@@ -64,7 +64,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
         scrollItem: Binding<Item?>,
         scrollUnitPoint: Binding<UnitPoint>,
         refreshableAction: (() async throws -> Void)? = nil,
-        @ViewBuilder content: @escaping (_ context: ContainerTabsScrollContext<Tab>) -> Content
+        @ViewBuilder content: @escaping (_ context: TabsScrollContext<Tab>) -> Content
     ) {
         self.tab = tab
         self.reservedItem = reservedItem
@@ -86,7 +86,7 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
     @Binding private var scrollItem: Item?
     @Binding private var scrollUnitPoint: UnitPoint
     @StateObject private var scrollModel: ScrollModel<Item, Tab>
-    @ViewBuilder private var content: (_ context: ContainerTabsScrollContext<Tab>) -> Content
+    @ViewBuilder private var content: (_ context: TabsScrollContext<Tab>) -> Content
     @EnvironmentObject private var headerModel: HeaderModel<Tab>
     
     var refreshableAction: (() async throws -> Void)? = nil
@@ -111,18 +111,23 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
                     }
                 ZStack(alignment: .top) {
                     Color.clear
-                        .frame(height: 0.1)
+                        .frame(height: 1)
                         .id(reservedItem)
                     content(
-                        ContainerTabsScrollContext<Tab>(
+                        TabsScrollContext<Tab>(
                             headerContext: headerModel.state.headerContext,
                             safeHeight: headerModel.state.safeHeight
                         )
                     )
+                    .background {
+                        GeometryReader(content: { proxy in
+                            Color.clear.preference(key: ScrollViewContentSizeKey.self, value: proxy.size)
+                        })
+                    }
                 }
+                Color.clear.frame(height: scrollModel.bottomMargin)
             }
         }
-      
         .refreshable {
             Task {
                 try await refreshableAction?()
@@ -130,11 +135,14 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
         }
         .coordinateSpace(name: coordinateSpaceName)
         .scrollPosition(id: $scrollModel.scrollItem, anchor: scrollModel.scrollUnitPoint)
-        .transaction(value: scrollModel.scrollItem) { transaction in
+        .transaction(value: scrollModel.scrollItem) { transation in
             // Sometimes this happens in an animation context, but this prevents animation
-            transaction.animation = nil
+            transation.animation = nil
         }
-        .onFirstAppear {
+        .onPreferenceChange(ScrollViewContentSizeKey.self) { size in
+            scrollModel.contentSizeChanged(size)
+        }
+        .onAppear {
             // It is important not to attempt to adjust the scroll position until after the view has appeared
             // and this task seems to accomplish that.
             Task {
@@ -156,10 +164,19 @@ public struct TabContainerScroll<Content, Tab, Item>: View where Content: View, 
         .onChange(of: headerModel.state.headerContext.safeArea.top) {
             scrollModel.headerHeightChanged()
         }
+        .onChange(of: headerModel.state) {
+            scrollModel.headerStateChanged()
+        }
         .onDisappear() {
             scrollModel.disappeared()
         }
     }
+}
+
+private struct ScrollViewContentSizeKey: PreferenceKey {
+    typealias Value = CGSize
+    static var defaultValue: CGSize = .zero
+    public static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 public enum ScrollItem: Hashable {

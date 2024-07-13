@@ -15,7 +15,6 @@ import Firebase
     
     var replies = [Reply]()
     var loading = false
-    var refreshed: ProfilePostFilter = .replies
     
     var itemsPerPage: Int = 10
     var noMoreItemsToFetch: Bool = false

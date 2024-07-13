@@ -20,6 +20,7 @@ struct ActivityFilterView: View {
                 }
                 .padding(.horizontal)
             }
+            .background()
         }
     }
     

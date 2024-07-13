@@ -15,7 +15,6 @@ import Firebase
     
     var posts = [Post]()
     var loading = false
-    var refreshed: ProfilePostFilter = .posts
     
     var itemsPerPage: Int = 10
     var noMoreItemsToFetch: Bool = false

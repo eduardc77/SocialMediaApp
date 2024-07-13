@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// While these views may be constructed directly, typically, they are only directly referenced in the `containerTabItem()` view modifier configuration
+/// While these views may be constructed directly, typically, they are only directly referenced in the `tabItem()` view modifier configuration
 /// parameters and subsequently constructed by the system.
 public struct SecondaryTab<Tab>: View where Tab: Hashable {
     
@@ -24,7 +24,7 @@ public struct SecondaryTab<Tab>: View where Tab: Hashable {
             underlineStyle: (any ShapeStyle)? = nil,
             underlineThickness: CGFloat = 2,
             backgroundStyle: (any ShapeStyle)? = nil,
-            padding: EdgeInsets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            padding: EdgeInsets = EdgeInsets(top: 12, leading: 10, bottom: 10, trailing: 10)
         ) {
             self.font = font
             self.titleStyle = titleStyle
@@ -37,7 +37,7 @@ public struct SecondaryTab<Tab>: View where Tab: Hashable {
     
     public init(
         tab: Tab,
-        context: ContainerTabsHeaderContext<Tab>,
+        context: TabsHeaderContext<Tab>,
         tapped: @escaping () -> Void,
         title: String,
         config: Config,
@@ -53,7 +53,7 @@ public struct SecondaryTab<Tab>: View where Tab: Hashable {
 
     @Environment(\.font) private var font
     private let tab: Tab
-    private let context: ContainerTabsHeaderContext<Tab>
+    private let context: TabsHeaderContext<Tab>
     private let tapped: () -> Void
     private let title: String
     private let config: Config
@@ -73,9 +73,9 @@ public struct SecondaryTab<Tab>: View where Tab: Hashable {
     
     private var underlineStyle: AnyShapeStyle {
         activeConfig.underlineStyle.map { AnyShapeStyle($0) }
-        ?? (tab == context.selectedTab ? titleStyle : AnyShapeStyle(Color.clear))
+            ?? (tab == context.selectedTab ? titleStyle : AnyShapeStyle(Color.clear))
     }
-    
+
     private var deselectedUnderlineStyle: AnyShapeStyle {
         deselectedConfig.underlineStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(Color.clear)
     }
@@ -95,7 +95,6 @@ public struct SecondaryTab<Tab>: View where Tab: Hashable {
             }
             .contentShape(Rectangle())
         }
-        .buttonStyle(.borderless)
         .background(alignment: .bottom) {
             ZStack {
                 Rectangle()
@@ -152,9 +151,9 @@ public extension SecondaryTab.Config {
         underlineThickness: 10,
         backgroundStyle: Gradient(colors: [.yellow, .orange])
     )
-    
-    let context = ContainerTabsHeaderContext<Int>(selectedTab: 0)
-    
+
+    let context = TabsHeaderContext<Int>(selectedTab: 0)
+
     return VStack() {
         SecondaryTab(
             tab: 0,

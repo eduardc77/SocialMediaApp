@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public typealias ContainerTabsHeaderContext = HeaderContext
+public typealias TabsContainerHeaderContext = HeaderContext
 
 /// A scrollable tab bar implementation. The tab bar can be configured to size tab selectors
 /// equally or proportionally. Tab selectors are configured by applying the `containerTabItem()` view modifier to the top-level tab content views.
@@ -48,7 +48,7 @@ public struct ContainerTabBar<Tab>: View where Tab: Hashable {
     /// intrinsic height across all labels.
     public typealias CustomLabel = (
         _ tab: Tab,
-        _ context: ContainerTabsHeaderContext<Tab>,
+        _ context: TabsHeaderContext<Tab>,
         _ tapped: @escaping () -> Void
     ) -> AnyView
     
@@ -56,17 +56,27 @@ public struct ContainerTabBar<Tab>: View where Tab: Hashable {
     /// - Parameters:
     ///   - selectedTab: The external tab selection binding.
     ///   - sizing: The tab selector sizing option.
+    ///   - spacing: The amount of horizontal spacing to use between tab labels. Primary and Secondary tabs should use the default spacing of 0 to
+    ///     form a continuous line across the bottom of the tab bar.
+    ///   - fillAvailableSpace: Applicable when tab labels don't inherently fill the width of the tab bar. When `true` (the default), the label widths are
+    ///     expanded proportinally to fill the tab bar. When `false`, the labels are not expanded and centered horizontally within the tab bar.
     ///   - context: The current context value.
     public init(
         selectedTab: Binding<Tab>,
         sizing: Sizing = .proportionalWidth,
-        context: ContainerTabsHeaderContext<Tab>
+        spacing: CGFloat = 0,
+        fillAvailableSpace: Bool = true,
+        context: TabsHeaderContext<Tab>
     ) {
         _selectedTab = selectedTab
         _selectedTabScroll = State(initialValue: selectedTab.wrappedValue)
         self.sizing = sizing
         self.context = context
+        self.spacing = spacing
+        self.fillAvailableSpace = fillAvailableSpace
     }
+
+    // MARK: - Variables
 
     @Binding private var selectedTab: Tab
     @State private var selectedTabScroll: Tab?
@@ -74,14 +84,21 @@ public struct ContainerTabBar<Tab>: View where Tab: Hashable {
     @EnvironmentObject private var tabBarModel: TabBarModel<Tab>
     @EnvironmentObject private var headerModel: HeaderModel<Tab>
     @State private var height: CGFloat = 0
-    private let context: ContainerTabsHeaderContext<Tab>
-    
+    private let context: TabsHeaderContext<Tab>
+    private let spacing: CGFloat
+    private let fillAvailableSpace: Bool
+
     // MARK: - Body
-    
+
     public var body: some View {
         GeometryReader { proxy in
             ScrollView(.horizontal) {
-                TabBarLayout(fittingWidth: proxy.size.width, sizing: sizing) {
+                TabBarLayout(
+                    fittingWidth: proxy.size.width,
+                    sizing: sizing,
+                    spacing: spacing,
+                    fillAvailableSpace: fillAvailableSpace
+                ) {
                     ForEach(tabBarModel.tabs, id: \.self) { tab in
                         tabBarModel.labels[tab]?(
                             tab,
@@ -90,12 +107,6 @@ public struct ContainerTabBar<Tab>: View where Tab: Hashable {
                                 headerModel.selected(tab: tab)
                             }
                         )
-                        .background {
-                            GeometryReader { proxy in
-                                Color.clear
-                                    .preference(key: WidthPreferenceKey.self, value: proxy.size.width)
-                            }
-                        }
                         .id(tab)
                     }
                 }
@@ -110,13 +121,11 @@ public struct ContainerTabBar<Tab>: View where Tab: Hashable {
             }
             .scrollPosition(id: $selectedTabScroll, anchor: .center)
             .scrollIndicators(.never)
-            .scrollBounceBehavior(.always)
+            .scrollBounceBehavior(.basedOnSize)
         }
         .frame(height: height)
         .onPreferenceChange(TabBarHeightPreferenceKey.self) { height in
-            DispatchQueue.main.async {
-                self.height = height
-            }
+            self.height = height
         }
         .onChange(of: selectedTab) {
             selectedTabScroll = selectedTab
@@ -148,7 +157,7 @@ struct ContainerTabBarPreviewView: View {
             content: {
                 ForEach(Array(tabs.enumerated()), id: \.offset) { (offset, tab) in
                     Text("Content for tab \(offset)")
-                        .containerTabItem(tab: offset, label: tab)
+                        .tabItem(tab: offset, label: tab)
                 }
             }
         )

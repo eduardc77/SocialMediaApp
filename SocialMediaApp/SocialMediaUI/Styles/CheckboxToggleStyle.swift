@@ -10,7 +10,7 @@ public struct CheckboxToggleStyle: ToggleStyle {
         Button(action: {
             configuration.isOn.toggle()
         }, label: {
-            HStack(alignment: .firstTextBaseline) {
+            HStack(alignment: .center) {
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                     .font(.body)
                     .foregroundStyle(.tint)

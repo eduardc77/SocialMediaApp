@@ -10,7 +10,7 @@ import SocialMediaNetwork
 @MainActor
 struct UserRepliesView: View {
     @State private var model: UserRepliesViewModel
-    private var router: Router
+    private let router: Router
     private let contentUnavailableText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
     

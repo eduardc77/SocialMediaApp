@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// While these views may be constructed directly, typically, they are only directly referenced in the `containerTabItem()` view modifier configuration
+/// While these views may be constructed directly, typically, they are only directly referenced in the `tabItem()` view modifier configuration
 /// parameters and subsequently constructed by the system.
 public struct PrimaryTab<Tab>: View where Tab: Hashable {
     
@@ -16,37 +16,43 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         public var underlineStyle: (any ShapeStyle)?
         public var underlineThickness: CGFloat
         public var underlineShape: (any View & Shape)?
+        public var bottomRuleStyle: (any ShapeStyle)?
+        public var bottomRuleThickness: CGFloat
         public var backgroundStyle: (any ShapeStyle)?
         public var padding: EdgeInsets
         public var contentPadding: EdgeInsets
         public var contentSpacing: CGFloat
-        
+
         public init(
-            font: Font? = .system(size: 14, weight: .semibold),
+            font: Font? =  .system(size: 14, weight: .bold),
             titleStyle: (any ShapeStyle)? = nil,
             underlineStyle: (any ShapeStyle)? = nil,
-            underlineThickness: CGFloat = 1.5,
-            underlineShape: (any View & Shape)? = Rectangle(),
+            underlineThickness: CGFloat = 3,
+            underlineShape: (any View & Shape)? = Capsule(),
+            bottomRuleStyle: (any ShapeStyle)? = nil,
+            bottomRuleThickness: CGFloat = 1,
             backgroundStyle: (any ShapeStyle)? = nil,
-            padding: EdgeInsets = EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10),
-            contentPadding: EdgeInsets = EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0),
-            contentSpacing: CGFloat = 0
+            padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0),
+            contentPadding: EdgeInsets = EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0),
+            contentSpacing: CGFloat = 3
         ) {
             self.font = font
             self.titleStyle = titleStyle
             self.underlineStyle = underlineStyle
             self.underlineThickness = underlineThickness
             self.underlineShape = underlineShape
+            self.bottomRuleStyle = bottomRuleStyle
+            self.bottomRuleThickness = bottomRuleThickness
             self.backgroundStyle = backgroundStyle
             self.padding = padding
             self.contentPadding = contentPadding
             self.contentSpacing = contentSpacing
         }
     }
-    
+
     public init<Icon>(
         tab: Tab,
-        context: ContainerTabsHeaderContext<Tab>,
+        context: TabsHeaderContext<Tab>,
         tapped: @escaping () -> Void,
         title: String? = nil,
         icon: Icon,
@@ -61,10 +67,10 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         self.config = config
         self.deselectedConfig = deselectedConfig ?? config.makeDeselectedConfig()
     }
-    
+
     public init(
         tab: Tab,
-        context: ContainerTabsHeaderContext<Tab>,
+        context: TabsHeaderContext<Tab>,
         tapped: @escaping () -> Void,
         title: String? = nil,
         config: Config,
@@ -79,9 +85,11 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         self.deselectedConfig = deselectedConfig ?? config.makeDeselectedConfig()
     }
 
+    // MARK: - Variables
+
     @Environment(\.font) private var font: Font?
     private let tab: Tab
-    private let context: ContainerTabsHeaderContext<Tab>
+    private let context: TabsHeaderContext<Tab>
     private let tapped: () -> Void
     private let title: String?
     private let icon: AnyView?
@@ -96,14 +104,18 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         }
     }
 
+    private var bottomRuleStyle: AnyShapeStyle {
+        activeConfig.bottomRuleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint.opacity(0.35))
+    }
+
     private var titleStyle: AnyShapeStyle {
-        activeConfig.titleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.primary)
+        activeConfig.titleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint)
     }
-    
+
     private var underlineStyle: AnyShapeStyle {
-        activeConfig.underlineStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint)
+        activeConfig.underlineStyle.map { AnyShapeStyle($0) } ?? titleStyle
     }
-    
+
     private var underlineShape: AnyShape? {
         activeConfig.underlineShape.map { AnyShape($0) }
     }
@@ -128,13 +140,11 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
                     .padding(activeConfig.contentPadding)
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(.borderless)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(alignment: .bottom) {
                     if let underlineShape {
                         underlineShape
                             .fill(underlineStyle)
-                            .frame(maxWidth: .infinity, maxHeight: activeConfig.underlineThickness * 2)
+                            .frame(height: activeConfig.underlineThickness * 2)
                             .offset(y: activeConfig.underlineThickness)
                             .clipped()
                             .transition(.noTransition)
@@ -146,8 +156,8 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
                 }
             }
             .padding(activeConfig.padding)
-            Divider()
-                .padding(.horizontal, -500)
+            Rectangle().fill(bottomRuleStyle)
+                .frame(height: activeConfig.bottomRuleThickness)
         }
         .transaction(value: context.selectedTab) { transform in
             transform.animation = .snappy(duration: 0.35, extraBounce: 0.07)
@@ -169,15 +179,9 @@ public extension PrimaryTab.Config {
     }
 }
 
-extension AnyTransition {
-    static var noTransition: AnyTransition {
-        .asymmetric(insertion: .scale(scale: 1), removal: .scale(scale: 0.999999))
-    }
-}
-
 #Preview {
-    let context = ContainerTabsHeaderContext(selectedTab: 0)
-    
+    let context = TabsHeaderContext(selectedTab: 0)
+
     return VStack() {
         PrimaryTab<Int>(
             tab: 0,

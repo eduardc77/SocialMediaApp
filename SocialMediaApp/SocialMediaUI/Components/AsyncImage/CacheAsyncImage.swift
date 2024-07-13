@@ -12,7 +12,9 @@ struct CachedAsyncImage<Content>: View where Content: View {
     
     var body: some View {
         content(phase)
-            .task(id: urlRequest, load)
+            .task(id: urlRequest, {
+                await load()
+            })
     }
 
     /// Loads and displays a modifiable image from the specified URL in phases.
@@ -47,7 +49,6 @@ struct CachedAsyncImage<Content>: View where Content: View {
         }
     }
 
-    @Sendable
     private func load() async {
         do {
             if let urlRequest = urlRequest {

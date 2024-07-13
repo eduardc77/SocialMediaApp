@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public typealias StickyHeaderScrollContext = ContainerTabsScrollContext<NoTab>
+public typealias StickyHeaderScrollContext = TabsScrollContext<NoTab>
 
 /// A lightweight scroll view wrapper required for sticky header scroll effects. For most intents and purposes, you should use `StickyHeaderScroll` as you
 /// would a vertically-oriented `ScrollView`, with typical content being a `VStack` or `LazyVStack`. The main task that `StickyHeaderScroll`
@@ -54,10 +54,8 @@ public struct StickyHeaderScroll<Content, Item>: View where Content: View, Item:
                         }
                     }
                     .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                        DispatchQueue.main.async {
-                            headerModel.scrolled(tab: .none, offset: -offset, deltaOffset: -(offset - contentOffset))
-                            contentOffset = -offset
-                        }
+                        headerModel.scrolled(tab: .none, offset: -offset, deltaOffset: -(offset - contentOffset))
+                        contentOffset = -offset
                     }
                 content(
                     StickyHeaderScrollContext(

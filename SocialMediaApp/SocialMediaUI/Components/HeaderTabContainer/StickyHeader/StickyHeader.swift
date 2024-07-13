@@ -5,7 +5,9 @@
 
 import SwiftUI
 
-/// `StickyHeader` is a stripped down version of `ContainerTabs` without tabs when you just want a scroll view with
+public typealias StickyHeaderContext = HeaderContext<NoTab>
+
+/// `StickyHeader` is a stripped down version of `TabsContainer` without tabs when you just want a scroll view with
 /// a fancy sticky header.
 ///
 /// `StickyHeader` is the primary container view, consisting of a top header area and a bottom area for scrollable content.
@@ -15,7 +17,7 @@ import SwiftUI
 /// Header elements consist of a title view and an optional background view spanning the header and top safe area.
 /// When content is scrolled, the library automatically offsets the header to track scrolling, but sticks at the top when the tab bar reaches the top safe area.
 /// The header elements are collectively referred to as the "sticky header" throughout the library, regardless of whether you're using `StickyHeader`
-/// or `ContainerTabs`.
+/// or `TabsContainer`.
 ///
 /// The `headerStyle()` view modifier can be applied to one or more sticky header elements to achieve sophisticated scroll effects, such
 /// as fade, shrink and parallax. The effects are driven by a variety of dynamic metrics, through the stream of `StickyHeaderContext` values
@@ -103,5 +105,3 @@ where HeaderTitle: View, HeaderBackground: View, Content: View {
 public enum NoTab: Hashable {
     case none
 }
-
-public typealias StickyHeaderContext = HeaderContext<NoTab>

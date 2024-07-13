@@ -9,9 +9,9 @@ import SocialMediaNetwork
 
 @MainActor
 struct UserPostsView: View {
-    @State var model: UserPostsViewModel
-    var router: Router
-    let contentUnavailableText: String
+    @State private var model: UserPostsViewModel
+    private let router: Router
+    private let contentUnavailableText: String
     @EnvironmentObject private var refreshedFilter: RefreshedFilterModel
     
     init(router: Router, user: User, contentUnavailableText: String) {

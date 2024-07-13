@@ -17,7 +17,7 @@ struct PostButtonGroupView: View {
     
     @State private var loading: Bool = false
     
-    @StateObject var post = TempPost()
+    @StateObject private var post = TempPost()
     
     var body: some View {
         HStack(spacing: 0) {

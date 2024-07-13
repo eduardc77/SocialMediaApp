@@ -57,7 +57,7 @@ struct ProfileTabsContainer: View {
                         tab: tab,
                         contentUnavailable: user.privateProfile && !(user.isFollowed)
                     )
-                    .containerTabItem(tab: tab, label: .primary(tab.title))
+                    .tabItem(tab: tab, label: .primary(tab.title))
                 }
             }
         )

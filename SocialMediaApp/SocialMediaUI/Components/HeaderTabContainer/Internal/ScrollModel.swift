@@ -11,7 +11,8 @@ class ScrollModel<Item, Tab>: ObservableObject where Item: Hashable, Tab: Hashab
     @Published var scrollItem: Item?
     @Published var scrollUnitPoint: UnitPoint = .top
     @Published private(set) var appeared = false
-    
+    @Published private(set) var bottomMargin: CGFloat = 0
+
     func contentOffsetChanged(_ offset: CGFloat) {
         let oldContentOffset = contentOffset
         contentOffset = -offset
@@ -27,29 +28,39 @@ class ScrollModel<Item, Tab>: ObservableObject where Item: Hashable, Tab: Hashab
         self.headerModel = headerModel
         selectedTab = headerModel?.state.headerContext.selectedTab
         syncContentOffsetWithHeader()
+        configureBottomMargin()
     }
-    
+
     func disappeared() {
         appeared = false
     }
-    
+
     func selectedTabChanged() {
         guard let headerModel else { return }
         selectedTab = headerModel.state.headerContext.selectedTab
     }
-    
+
     func scrollItemChanged(_ item: Item?) {
         scrollItem = item
     }
-    
+
     func scrollUnitPointChanged(_ unitPoint: UnitPoint) {
         scrollUnitPoint = unitPoint
     }
-    
+
+    func contentSizeChanged(_ contentSize: CGSize) {
+        self.contentSize = contentSize
+        configureBottomMargin()
+    }
+
     func headerHeightChanged() {
         syncContentOffsetWithHeader()
     }
-    
+
+    func headerStateChanged() {
+        configureBottomMargin()
+    }
+
     init(
         tab: Tab,
         reservedItem: Item?
@@ -63,7 +74,8 @@ class ScrollModel<Item, Tab>: ObservableObject where Item: Hashable, Tab: Hashab
     private var cachedTabsState: HeaderModel<Tab>.State?
     private weak var headerModel: HeaderModel<Tab>?
     private var expectingContentOffset: CGFloat?
-    
+    private var contentSize: CGSize?
+
     private var selectedTab: Tab? {
         didSet {
             guard let headerModel else { return }
@@ -82,7 +94,14 @@ class ScrollModel<Item, Tab>: ObservableObject where Item: Hashable, Tab: Hashab
     }
     
     private var contentOffset: CGFloat = 0
-    
+
+    // MARK: Configuring the bottom margin
+
+    private func configureBottomMargin() {
+        guard let headerModel, let contentSize else { return }
+        bottomMargin = max(0, headerModel.state.height - contentSize.height - headerModel.state.headerContext.minTotalHeight)
+    }
+
     // MARK: Adjusting scroll and header state
     
     /// Scrolls to the desired content offset to maintain continuity when switching tabs after a header height change.
@@ -94,8 +113,8 @@ class ScrollModel<Item, Tab>: ObservableObject where Item: Hashable, Tab: Hashab
     /// ````
     func syncContentOffsetWithHeader() {
         guard appeared, let headerModel,
-              tab == headerModel.state.headerContext.selectedTab,
-              headerModel.state.tabsRegistered else { return }
+                tab == headerModel.state.headerContext.selectedTab,
+                headerModel.state.tabsRegistered else { return }
         let deltaHeaderOffset: CGFloat
         if let cachedTabsState {
             deltaHeaderOffset = headerModel.state.headerContext.offset - cachedTabsState.headerContext.offset
