@@ -8,7 +8,6 @@ import Combine
 import SocialMediaUI
 
 struct CurrentUserProfileHeader: View {
-    @State private var imageData = ImageData()
     @State private var model = CurrentUserProfileHeaderModel()
     
     var router: Router
@@ -67,8 +66,7 @@ struct CurrentUserProfileHeader: View {
                         destination:
                             ProfileSheetDestination
                             .editProfile(
-                                model: model,
-                                imageData: imageData))
+                                model: model))
                 } label: {
                     Text("Edit Profile")
                 }
@@ -95,9 +93,6 @@ struct CurrentUserProfileHeader: View {
         }
         .onFirstAppear {
             model.loadUserData()
-        }
-        .onReceive(Just(imageData.imageState)) { newValue in
-            model.imageState = newValue
         }
     }
 }

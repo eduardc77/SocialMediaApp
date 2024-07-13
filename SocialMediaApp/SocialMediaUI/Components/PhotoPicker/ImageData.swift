@@ -6,7 +6,7 @@
 import SwiftUI
 import PhotosUI
 
-@Observable public class ImageData {
+@Observable public final class ImageData {
     var image: Image?
     public var imageState: ImageState = .empty
     public var newImageSet: Bool = false

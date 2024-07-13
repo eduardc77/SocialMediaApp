@@ -11,7 +11,6 @@ import SocialMediaUI
 @MainActor
 struct PostEditorView: View {
     @State private var model = PostEditorViewModel()
-    @State private var imageData = ImageData()
     
     @EnvironmentObject private var tabRouter: AppScreenRouter
     @EnvironmentObject private var settings: AppSettings
@@ -39,13 +38,14 @@ struct PostEditorView: View {
                     TextField("Write a post...", text: $model.caption, axis: .vertical)
                         .font(.footnote)
                     
-                    SelectedPhotoPickerImage(imageState: imageData.imageState, size: .none)
+                    SelectedPhotoPickerImage(imageState: model.imageData.imageState, size: .none)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(alignment: .topTrailing) {
                             Button {
                                 withAnimation {
-                                    imageData.imageState = .empty
+                                    model.imageData.imageState = .empty
                                 }
+                                model.imageData.imageSelection = nil
                             } label: {
                                 Image(systemName: "xmark")
                                     .font(.title3)
@@ -55,7 +55,7 @@ struct PostEditorView: View {
                         }
                     
                     HStack {
-                        PhotosPicker(selection: $imageData.imageSelection, matching: .images) {
+                        PhotosPicker(selection: $model.imageData.imageSelection, matching: .images) {
                             Image(systemName: "photo.badge.plus")
                                 .font(.title3)
                         }
@@ -102,9 +102,6 @@ struct PostEditorView: View {
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .navigationTitle("New Post")
-        }
-        .onReceive(Just(imageData.imageState)) { newValue in
-            model.imageState = newValue
         }
     }
 }

@@ -10,15 +10,14 @@ import SocialMediaUI
 
 struct EditProfileView: View {
     @State var model: CurrentUserProfileHeaderModel
-    @State var imageData: ImageData
-    
+
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
             Form {
                 VStack {
-                    EditableCircularProfileImage(model: model, imageData: imageData)
+                    EditableCircularProfileImage(model: model)
                     if let user = model.currentUser {
                         Text(user.fullName)
                             .font(.headline.bold())
@@ -82,13 +81,10 @@ struct EditProfileView: View {
                     }
                 }
             }
-            .onReceive(Just(imageData.newImageSet)) { newValue in
-                model.newImageSet = newValue
-            }
         }
     }
 }
 
 #Preview {
-    EditProfileView(model: CurrentUserProfileHeaderModel(), imageData: ImageData())
+    EditProfileView(model: CurrentUserProfileHeaderModel())
 }

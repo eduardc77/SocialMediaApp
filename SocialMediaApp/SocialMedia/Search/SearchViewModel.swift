@@ -30,9 +30,7 @@ import SocialMediaNetwork
     var mostPopularUsers: [User] {
         users.lazy.sorted { $0.stats.followersCount > $1.stats.followersCount }
     }
-    
-    init() {}
-    
+
     func users(sortedBy sort: UserSortOrder = .popularity) -> [User] {
         switch sort {
         case .popularity:
@@ -79,12 +77,6 @@ import SocialMediaNetwork
         users.removeAll()
         await fetchUsers()
     }
-}
-
-public enum UserSortOrder: Hashable {
-    case name
-    case popularity
-    case engagement
 }
 
 //MARK: - Private Methods

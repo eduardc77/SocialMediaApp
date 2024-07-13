@@ -29,7 +29,7 @@ import Firebase
         !categorySelected ? "Category" : category.icon + " " + category.rawValue.capitalized
     }
     
-    var imageState: ImageData.ImageState = .empty
+    var imageData = ImageData()
     
     func uploadPost() async throws {
         guard let userID = user?.id else { return }
@@ -43,7 +43,7 @@ import Firebase
             replies: 0,
             replyDepthLevel: 0
         )
-        if case let .success(postImageData) = imageState {
+        if case let .success(postImageData) = imageData.imageState {
             post.imageUrl = try await StorageService.uploadImage(imageData: postImageData, type: .post(userID: userID, postID: post.id ?? UUID().uuidString))
         }
         try await PostService.uploadPost(post)

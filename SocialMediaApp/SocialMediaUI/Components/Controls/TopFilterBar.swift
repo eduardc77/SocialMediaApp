@@ -51,7 +51,7 @@ public struct TopFilterBar<T: TopFilter>: View {
                         Rectangle()
                             .fill(.primary)
                             .frame(height: 1.5)
-                            .matchedGeometryEffect(id: "FeedFilter", in: animation)
+                            .matchedGeometryEffect(id: "TopFilterBar", in: animation)
                             .padding(.horizontal)
                         
                     }

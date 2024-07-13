@@ -39,8 +39,8 @@ struct ContentCoordinator: View {
             }
         } else if let destination = content.destination as? ProfileSheetDestination {
             switch destination {
-            case .editProfile(let model, let imageData):
-                EditProfileView(model: model, imageData: imageData)
+            case .editProfile(let model):
+                EditProfileView(model: model)
             case .userRelations(let user):
                 UserRelationsCoordinator(user: user)
             }
@@ -56,7 +56,7 @@ enum PostSheetDestination: Identifiable {
 }
 
 enum ProfileSheetDestination: Identifiable {
-    case editProfile(model: CurrentUserProfileHeaderModel, imageData: ImageData)
+    case editProfile(model: CurrentUserProfileHeaderModel)
     case userRelations(user: User)
     
     var id: String { UUID().uuidString }

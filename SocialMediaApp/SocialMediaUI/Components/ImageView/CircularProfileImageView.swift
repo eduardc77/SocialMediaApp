@@ -4,14 +4,19 @@
 //
 
 import SwiftUI
-import SocialMediaUI
 
-struct CircularProfileImageView: View {
-    var profileImageURL: String?
-    var size: ImageSize = .small
-    var contentMode: ContentMode = .fill
+public struct CircularProfileImageView: View {
+    private let profileImageURL: String?
+    private let size: ImageSize
+    private let contentMode: ContentMode
     
-    var body: some View {
+    public init(profileImageURL: String?, size: ImageSize = .small, contentMode: ContentMode = .fill) {
+        self.profileImageURL = profileImageURL
+        self.size = size
+        self.contentMode = contentMode
+    }
+    
+    public var body: some View {
         Group {
             if let profileURLString = profileImageURL, let profileUrl = URL(string: profileURLString) {
                 AsyncImageView(url: profileUrl, size: size)
@@ -28,5 +33,5 @@ struct CircularProfileImageView: View {
 }
 
 #Preview {
-    CircularProfileImageView()
+    CircularProfileImageView(profileImageURL: "https://docs-assets.developer.apple.com/published/9c4143a9a48a080f153278c9732c03e7/Image-1~dark@2x.png")
 }

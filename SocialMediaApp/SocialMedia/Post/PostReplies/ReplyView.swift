@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SocialMediaNetwork
+import SocialMediaUI
 
 struct ReplyView: View {
     @State private var model: ReplyViewModel

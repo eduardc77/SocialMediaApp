@@ -10,7 +10,7 @@ import Firebase
 import SocialMediaUI
 import SocialMediaNetwork
 
-@Observable public class CurrentUserProfileHeaderModel {
+@Observable public final class CurrentUserProfileHeaderModel {
     var currentUser: SocialMediaNetwork.User?
     
     var profileInputData = ProfileInputData()
@@ -20,16 +20,15 @@ import SocialMediaNetwork
     
     var isProfileEdited: Bool {
         guard let user = currentUser else { return false }
-        return profileInputData.fullName != user.fullName && !profileInputData.fullName.isEmpty ||
+        return (profileInputData.fullName != user.fullName && !profileInputData.fullName.isEmpty) ||
         profileInputData.aboutMe != user.aboutMe ||
         profileInputData.link != user.link ||
         profileInputData.privateProfile != user.privateProfile ||
-        (profileInputData.profileImageURL != user.profileImageURL || newImageSet)
+        (profileInputData.profileImageURL != user.profileImageURL ||
+         imageData.newImageSet)
     }
     
-    // Profile Image Properties
-    var imageState: ImageData.ImageState = .empty
-    var newImageSet: Bool = false
+    var imageData = ImageData()
     
     init() {
         setupSubscribers()
@@ -78,12 +77,12 @@ extension CurrentUserProfileHeaderModel {
             data["privateProfile"] = profileInputData.privateProfile
         }
         
-        if profileInputData.profileImageURL != user.profileImageURL || newImageSet, case let .success(profileImageData) = imageState {
+        if profileInputData.profileImageURL != user.profileImageURL || imageData.newImageSet, case let .success(profileImageData) = imageData.imageState {
             try await updateProfileImage(profileImageData)
             data["profileImageURL"] = currentUser?.profileImageURL
         }
         try await FirestoreConstants.users.document(userID).updateData(data)
-        newImageSet = false
+
         updatingProfile = false
     }
 }

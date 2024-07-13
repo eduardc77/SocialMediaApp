@@ -9,16 +9,16 @@ import SocialMediaUI
 
 struct EditableCircularProfileImage: View {
     @State var model: CurrentUserProfileHeaderModel
-    @State var imageData: ImageData
+
     var size: ImageSize = .xLarge
     
     var body: some View {
-        PhotosPicker(selection: $imageData.imageSelection,
+        PhotosPicker(selection: $model.imageData.imageSelection,
                      matching: .images,
                      photoLibrary: .shared()) {
             Group {
-                if imageData.imageSelection != nil {
-                    SelectedPhotoPickerImage(imageState: imageData.imageState, size: size, contentMode: .fill)
+                if model.imageData.imageSelection != nil {
+                    SelectedPhotoPickerImage(imageState: model.imageData.imageState, size: size, contentMode: .fill)
                         .clipShape(Circle())
                 } else {
                     CircularProfileImageView(profileImageURL: model.currentUser?.profileImageURL, size: size)
@@ -33,8 +33,7 @@ struct EditableCircularProfileImage: View {
         }
         .buttonStyle(.borderless)
         .onDisappear {
-           imageData.imageSelection = nil
-           imageData.newImageSet = false
+            model.imageData.imageSelection = nil
         }
     }
 }

@@ -36,28 +36,7 @@ struct UserRelationsTabsContainer: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Menu {
-                    Picker("Layout", selection: $layout) {
-                        ForEach(BrowserLayout.allCases) { option in
-                            Label(option.title, systemImage: option.imageName)
-                                .tag(option)
-                        }
-                    }
-                    .pickerStyle(.inline)
-                    
-                    Picker("Sort", selection: $model.sort) {
-                        Label("Name", systemImage: "textformat")
-                            .tag(UserSortOrder.name)
-                        Label("Popularity", systemImage: "trophy")
-                            .tag(UserSortOrder.popularity)
-                        Label("Engagement", systemImage: "fork.knife")
-                            .tag(UserSortOrder.engagement)
-                    }
-                    .pickerStyle(.inline)
-                } label: {
-                    Label("Layout Options", systemImage: layout.imageName)
-                        .labelStyle(.iconOnly)
-                }
+                UserBrowserLayoutMenu(layout: $layout, sort: $model.sort)
             }
         }
         .task {

@@ -4,12 +4,9 @@
 //
 
 import Observation
-import SwiftUI
 import SocialMediaNetwork
 
-@MainActor
-@Observable class ActivityViewModel {
-    var notifications = [Activity]()
+@Observable final class ActivityViewModel {
     var filteredNotifications = [Activity]()
     var loading = false
     
@@ -19,7 +16,7 @@ import SocialMediaNetwork
     
     var selectedFilter: ActivityFilter = .all
     
-    init() {}
+    private var notifications = [Activity]()
     
     func refresh() async {
         self.loading = true
@@ -56,6 +53,7 @@ import SocialMediaNetwork
         }
     }
     
+    @MainActor
     private func updateNotificationMetadata(notification: Activity) async throws {
         guard let indexOfNotification = notifications.firstIndex(where: { $0.id == notification.id }) else { return }
         
