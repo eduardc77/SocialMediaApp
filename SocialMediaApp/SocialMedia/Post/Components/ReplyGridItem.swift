@@ -18,7 +18,7 @@ struct ReplyGridItem: View {
             if let post = reply.post, let user = reply.post?.user {
                 HStack(alignment: .top) {
                     NavigationButton {
-                        router.push(user)
+                        router.push(UserDestination.profile(user: user))
                     } label: {
                         VStack {
                             CircularProfileImageView(profileImageURL: reply.post?.user?.profileImageURL)
@@ -53,7 +53,7 @@ struct ReplyGridItem: View {
             if let user = reply.user {
                 HStack(alignment: .top) {
                     NavigationButton {
-                        router.push(user)
+                        router.push(UserDestination.profile(user: user))
                     } label: {
                         CircularProfileImageView(profileImageURL: reply.user?.profileImageURL)
                     }

@@ -12,14 +12,15 @@ struct FeedTabContainer: View {
     @Environment(ViewRouter.self) private var router
     
     var body: some View {
-        VStack(spacing: 0) {
-            TopFilterBar(currentFilter: $currentFilter).background(.bar)
-            feedTabView
-        }
+        feedTabView
 #if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
 #endif
-        .background(Color.groupedBackground)
+            .safeAreaInset(edge: .top, content: {
+                TopFilterBar(currentFilter: $currentFilter)
+                    .background(.bar)
+            })
+            .background(Color.groupedBackground)
     }
 }
 

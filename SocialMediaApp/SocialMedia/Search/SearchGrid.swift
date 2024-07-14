@@ -61,7 +61,7 @@ struct SearchGrid: View {
             ForEach(users, id: \.self) { user in
                 VStack {
                     NavigationButton {
-                        router.push(user)
+                        router.push(UserDestination.profile(user: user))
                     } label: {
                         SearchGridItem(user: user, thumbnailSize: thumbnailSize)
                     }

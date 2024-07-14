@@ -26,15 +26,28 @@ enum BrowserLayout: String, Identifiable, CaseIterable {
     }
 }
 
-enum UserSortOrder: Hashable {
+enum UserSort: String {
     case name
     case popularity
     case engagement
+    
+    var title: String { rawValue.capitalized }
+    
+    var imageName: String {
+        switch self {
+        case .name:
+            return "textformat"
+        case .popularity:
+            return "arrow.up.and.person.rectangle.portrait"
+        case .engagement:
+            return "person.crop.circle.badge.checkmark"
+        }
+    }
 }
 
 struct UserBrowserLayoutMenu: View {
     @Binding var layout: BrowserLayout
-    @Binding var sort: UserSortOrder
+    @Binding var sort: UserSort
     
     public var body: some View {
         Menu {
@@ -47,16 +60,16 @@ struct UserBrowserLayoutMenu: View {
             .pickerStyle(.inline)
             
             Picker("Sort", selection: $sort) {
-                Label("Name", systemImage: "textformat")
-                    .tag(UserSortOrder.name)
-                Label("Popularity", systemImage: "trophy")
-                    .tag(UserSortOrder.popularity)
-                Label("Engagement", systemImage: "person.crop.circle.badge.checkmark")
-                    .tag(UserSortOrder.engagement)
+                Label(UserSort.name.title, systemImage: UserSort.name.imageName)
+                    .tag(UserSort.name)
+                Label(UserSort.popularity.title, systemImage: UserSort.popularity.imageName)
+                    .tag(UserSort.popularity)
+                Label(UserSort.engagement.title, systemImage: UserSort.engagement.imageName)
+                    .tag(UserSort.engagement)
             }
             .pickerStyle(.inline)
         } label: {
-            Label("Layout Options", systemImage: layout.imageName)
+            Label("Layout and Sorting Options", systemImage: layout.imageName)
                 .labelStyle(.iconOnly)
         }
     }

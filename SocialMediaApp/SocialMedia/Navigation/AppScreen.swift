@@ -58,7 +58,7 @@ extension AppScreen {
         case .activity:
             ActivityCoordinator()
         case .profile:
-            ProfileCoordinator()
+            ProfileCoordinator(didNavigate: false)
         }
     }
 }

@@ -24,11 +24,11 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
         public var contentSpacing: CGFloat
 
         public init(
-            font: Font? =  .system(size: 14, weight: .bold),
+            font: Font? = .footnote.weight(.semibold),
             titleStyle: (any ShapeStyle)? = nil,
             underlineStyle: (any ShapeStyle)? = nil,
-            underlineThickness: CGFloat = 3,
-            underlineShape: (any View & Shape)? = Capsule(),
+            underlineThickness: CGFloat = 1,
+            underlineShape: (any View & Shape)? = Rectangle(),
             bottomRuleStyle: (any ShapeStyle)? = nil,
             bottomRuleThickness: CGFloat = 1,
             backgroundStyle: (any ShapeStyle)? = nil,
@@ -105,7 +105,7 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
     }
 
     private var bottomRuleStyle: AnyShapeStyle {
-        activeConfig.bottomRuleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.tint.opacity(0.35))
+        activeConfig.bottomRuleStyle.map { AnyShapeStyle($0) } ?? AnyShapeStyle(.secondary.opacity(0.35))
     }
 
     private var titleStyle: AnyShapeStyle {
@@ -135,18 +135,18 @@ public struct PrimaryTab<Tab>: View where Tab: Hashable {
                             Text(title)
                                 .font(activeConfig.font ?? font)
                                 .foregroundStyle(titleStyle)
+                                .frame(maxWidth: .infinity)
                         }
                     }
                     .padding(activeConfig.contentPadding)
                     .contentShape(Rectangle())
                 }
+                .buttonStyle(.borderless)
                 .background(alignment: .bottom) {
                     if let underlineShape {
                         underlineShape
                             .fill(underlineStyle)
-                            .frame(height: activeConfig.underlineThickness * 2)
-                            .offset(y: activeConfig.underlineThickness)
-                            .clipped()
+                            .frame(height: activeConfig.underlineThickness)
                             .transition(.noTransition)
                             .matchedGeometryEffect(
                                 id: "underline",

@@ -9,6 +9,7 @@ import Firebase
 
 @Observable final class ForYouFeedViewModel: FeedViewModel {
     var contentUnavailableText = "Be the first to add a post or check back later."
+    var loadingHidden: Bool = false
     
     func loadMorePosts() async {
         guard !noMoreItemsToFetch else {

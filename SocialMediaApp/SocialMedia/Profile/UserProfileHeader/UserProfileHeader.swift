@@ -10,6 +10,7 @@ import SocialMediaNetwork
 @MainActor
 struct UserProfileHeader: View {
     @State private var model: UserProfileHeaderModel
+    
     var router: Router
     @Environment(ModalScreenRouter.self) private var modalRouter
     
@@ -42,13 +43,16 @@ struct UserProfileHeader: View {
                 Text(model.user.aboutMe)
                     .font(.subheadline)
             }
-            Button {
-                modalRouter.presentSheet(destination: ProfileSheetDestination.userRelations(user: model.user))
+            
+            NavigationButton {
+                router.push(UserDestination.relations(user: model.user))
             } label: {
                 Text("\(model.user.stats.followersCount) followers")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .fontWeight(.medium)
+                    .foregroundStyle(Color.accentColor)
             }
+            .buttonStyle(.borderless)
             
             Button {
                 handleFollowTapped()

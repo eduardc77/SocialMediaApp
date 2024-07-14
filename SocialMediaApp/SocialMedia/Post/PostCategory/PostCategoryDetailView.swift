@@ -18,14 +18,25 @@ struct PostCategoryDetailView: View {
     }
     
     var body: some View {
-        VStack {
-            TopFilterBar(currentFilter: $model.currentFilter, onSelection: {
-                model.sortPosts()
-            })
-            postsTabView
+        TabView(selection: $model.currentFilter) {
+            ForEach(CategoryFilter.allCases) { filter in
+                tabPage(filter: filter)
+            }
         }
+        .ignoresSafeArea(edges: .vertical)
         .navigationTitle("\(model.category.icon) \(model.category.rawValue.capitalized)")
+#if !os(macOS)
+        .tabViewStyle(.page(indexDisplayMode: .never))
         .navigationBarTitleDisplayMode(.inline)
+#endif
+        .safeAreaInset(edge: .top, content: {
+            TopFilterBar(currentFilter: $model.currentFilter, onSelection: {
+                withAnimation {
+                    model.sortPosts()
+                }
+            })
+            .background(.bar)
+        })
         .background(Color.groupedBackground)
     }
 }
@@ -34,49 +45,27 @@ struct PostCategoryDetailView: View {
 
 private extension PostCategoryDetailView {
     
-    var postsTabView: some View {
-        TabView(selection: $model.currentFilter) {
-            ScrollView {
-                PostGrid(router: router,
-                         postGridType: .posts(model.posts),
-                         loading: $model.loading,
-                         endReached: model.noMoreItemsToFetch,
-                         loadNewPage: model.loadMorePosts)
-            }
-            .tag(CategoryFilter.hot)
-            .refreshable {
-                await model.refresh()
-            }
-            .task {
-                if model.posts.isEmpty {
-                    await model.loadMorePosts()
-                }
-                model.addListenerForPostUpdates()
-            }
-            
-            ScrollView {
-                PostGrid(router: router,
-                         postGridType: .posts(model.posts),
-                         loading: $model.loading,
-                         endReached: model.noMoreItemsToFetch,
-                         loadNewPage: model.loadMorePosts)
-            }
-            .tag(CategoryFilter.new)
-            .refreshable {
-                await model.refresh()
-            }
-            .task {
-                if model.posts.isEmpty {
-                    await model.loadMorePosts()
-                }
-                model.addListenerForPostUpdates()
-            }
+    func tabPage(filter: CategoryFilter) -> some View {
+        ScrollView {
+            PostGrid(router: router,
+                     postGridType: .posts(model.posts),
+                     loading: $model.loading,
+                     endReached: model.noMoreItemsToFetch,
+                     loadNewPage: model.loadMorePosts)
         }
-#if os(iOS)
-        .tabViewStyle(.page(indexDisplayMode: .never))
-#endif
+        .tag(filter)
+        .contentMargins(.top, 30, for: .scrollContent)
+        .refreshable {
+            await model.refresh()
+        }
+        .task {
+            if model.posts.isEmpty {
+                await model.loadMorePosts()
+            }
+            model.addListenerForPostUpdates()
+        }
+        
     }
-    
 }
 
 #Preview {

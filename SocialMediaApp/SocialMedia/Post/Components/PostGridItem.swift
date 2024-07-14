@@ -99,7 +99,9 @@ struct PostGridItem: View {
 private extension PostGridItem {
     func profileView(user: User?) -> some View {
         NavigationButton {
-            router.push(user)
+            if let user = user {
+                router.push(UserDestination.profile(user: user))
+            }
         } label: {
             HStack(alignment: .top) {
                 CircularProfileImageView(profileImageURL: user?.profileImageURL, size: profileImageSize)

@@ -16,6 +16,7 @@ struct PostGrid: View {
     var router: Router
     let postGridType: PostGridType
     @Binding var loading: Bool
+    var loadingIndicatorHidden: Bool = false
     var endReached: Bool
     var itemsPerPage: Int = 20
     var contentUnavailableText: String = ""
@@ -64,33 +65,7 @@ struct PostGrid: View {
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    LazyVGrid(columns: gridItems) {
-                        ForEach(posts, id: \.self) { post in
-                            ZStack(alignment: .top) {
-                                NavigationButton {
-                                    router.push(PostType.post(post))
-                                } label: {
-                                    Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                                }
-                                
-                                PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize, onReplyTapped: { postType in
-                                    modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
-                                })
-                            }
-                            .fixedSize(horizontal: false, vertical: true)
-                            .contentShape(.containerRelative)
-                            .containerShape(.rect(cornerRadius: 8))
-                        }
-                        if let loadNewPage = loadNewPage, !loading {
-                            FooterLoadingView(hidden: !posts.isEmpty && endReached, loading: loading) {
-                                loading = true
-                                Task {
-                                    try await loadNewPage()
-                                    loading = false
-                                }
-                            }
-                        }
-                    }
+                    postGridStack(posts)
                 }
                 
             case .replies(let replies):
@@ -101,39 +76,75 @@ struct PostGrid: View {
                         description: Text(contentUnavailableText)
                     )
                 } else {
-                    LazyVGrid(columns: gridItems) {
-                        ForEach(replies) { reply in
-                            ZStack(alignment: .top) {
-                                NavigationButton {
-                                    router.push(PostType.reply(reply))
-                                } label: {
-                                    Color.secondaryGroupedBackground.clipShape(.containerRelative)
-                                }
-                                
-                                PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize, onReplyTapped: { postType in
-                                    modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
-                                })
-                            }
-                            .fixedSize(horizontal: false, vertical: true)
-                            .contentShape(.containerRelative)
-                            .containerShape(.rect(cornerRadius: 8))
-                        }
-                        if let loadNewPage = loadNewPage, !loading {
-                            FooterLoadingView(hidden: !replies.isEmpty && endReached, loading: loading) {
-                                loading = true
-                                Task {
-                                    try await loadNewPage()
-                                    loading = false
-                                }
-                            }
-                        }
-                    }
+                    replyGridStack(replies)
                 }
             }
         }
         .padding(10)
         .overlay(alignment: .bottom) {
             if loading { ProgressView() }
+        }
+    }
+}
+
+private extension PostGrid {
+    func postGridStack(_ posts: [Post]) -> some View {
+        LazyVGrid(columns: gridItems) {
+            ForEach(posts, id: \.self) { post in
+                ZStack(alignment: .top) {
+                    NavigationButton {
+                        router.push(PostType.post(post))
+                    } label: {
+                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                    }
+                    
+                    PostGridItem(router: router, postType: .post(post), profileImageSize: profileImageSize, onReplyTapped: { postType in
+                        modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                    })
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .contentShape(.containerRelative)
+                .containerShape(.rect(cornerRadius: 8))
+            }
+            if let loadNewPage = loadNewPage, !loading {
+                FooterLoadingView(hidden: !posts.isEmpty && endReached, loading: loading) {
+                    loading = true
+                    Task {
+                        try await loadNewPage()
+                        loading = false
+                    }
+                }
+            }
+        }
+    }
+    
+    func replyGridStack(_ replies: [Reply]) -> some View {
+        LazyVGrid(columns: gridItems) {
+            ForEach(replies) { reply in
+                ZStack(alignment: .top) {
+                    NavigationButton {
+                        router.push(PostType.reply(reply))
+                    } label: {
+                        Color.secondaryGroupedBackground.clipShape(.containerRelative)
+                    }
+                    
+                    PostGridItem(router: router, postType: .reply(reply), profileImageSize: profileImageSize, onReplyTapped: { postType in
+                        modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
+                    })
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .contentShape(.containerRelative)
+                .containerShape(.rect(cornerRadius: 8))
+            }
+            if let loadNewPage = loadNewPage, !loading {
+                FooterLoadingView(hidden: !replies.isEmpty && endReached, loading: loading) {
+                    loading = true
+                    Task {
+                        try await loadNewPage()
+                        loading = false
+                    }
+                }
+            }
         }
     }
 }

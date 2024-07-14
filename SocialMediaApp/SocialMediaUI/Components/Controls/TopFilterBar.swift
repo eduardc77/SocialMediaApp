@@ -36,13 +36,14 @@ public struct TopFilterBar<T: TopFilter>: View {
     public func feedFilterItem(for filter: any TopFilter) -> some View {
         Button {
             guard let filter = filter as? T else { return }
-            withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.8, blendDuration: 0.8)) {
-                onSelection?()
+            onSelection?()
+            withAnimation {
                 currentFilter = filter
             }
         } label: {
             Text(filter.title)
                 .font(.footnote.weight(.semibold))
+                .padding(.top, 2)
                 .padding(.bottom, 8)
                 .foregroundStyle(currentFilter.hashValue == filter.hashValue ? Color.primary : Color.secondary)
                 .frame(maxWidth: .infinity)
@@ -50,14 +51,13 @@ public struct TopFilterBar<T: TopFilter>: View {
                     if currentFilter.hashValue == filter.hashValue {
                         Rectangle()
                             .fill(.primary)
-                            .frame(height: 1.5)
-                            .matchedGeometryEffect(id: "TopFilterBar", in: animation)
-                            .padding(.horizontal)
-                        
+                            .frame(height: 1)
+                            .matchedGeometryEffect(id: "TopFilterBar", in: animation) 
                     }
                 }
                 .animation(.default, value: currentFilter)
         }
+        .buttonStyle(.borderless)
     }
 }
 

@@ -4,6 +4,7 @@
 //
 
 import Observation
+import SocialMediaUI
 import SocialMediaNetwork
 
 @MainActor
@@ -21,24 +22,46 @@ import SocialMediaNetwork
         "Check the spelling or try a new search"
     }
     
-    var sort = UserSortOrder.name
+    var filterSelection: UserSearchFilter = .all
+    var sortSelection = UserSort.name
     
-    var filteredUsers: [User] {
-        users(sortedBy: sort).filter { $0.matches(searchText: searchText) }
+    var sortedAndFilteredUsers: [User] {
+        users(sortedBy: sortSelection)
+            .filter { $0.matches(searchText: searchText) }
+            .filter { filter(user: $0, by: filterSelection) }
+    }
+    
+    var nameSortedUsers: [User] {
+        users.sorted { $0.fullName.localizedCompare($1.fullName) == .orderedAscending }
     }
     
     var mostPopularUsers: [User] {
         users.lazy.sorted { $0.stats.followersCount > $1.stats.followersCount }
     }
+    
+    var mostEngagedUsers: [User] {
+        users.lazy.sorted { $0.stats.followersCount > $1.stats.followersCount }
+    }
 
-    func users(sortedBy sort: UserSortOrder = .popularity) -> [User] {
+    func users(sortedBy sort: UserSort = .popularity) -> [User] {
         switch sort {
         case .popularity:
-            return users.sorted { $0.stats.followersCount > $1.stats.followersCount }
+            return mostPopularUsers
         case .name:
-            return users.sorted { $0.fullName.localizedCompare($1.fullName) == .orderedAscending }
+            return nameSortedUsers
         case .engagement:
-            return users.sorted { $0.stats.postsCount > $1.stats.postsCount }
+            return mostEngagedUsers
+        }
+    }
+    
+    func filter(user: User, by filter: UserSearchFilter = .all) -> Bool {
+        switch filter {
+        case .all:
+            return true
+        case .followed:
+            return user.isFollowed
+        case .notFollowed:
+            return !user.isFollowed
         }
     }
     
@@ -103,3 +126,19 @@ private extension SearchViewModel {
     }
 }
 
+enum UserSearchFilter: String, TopFilter {
+    case all
+    case followed
+    case notFollowed
+    
+    var id: UserSearchFilter { self }
+    
+    var title: String {
+        switch self {
+        case .notFollowed:
+            return "Not Followed"
+        default:
+            return rawValue.capitalized
+        }
+    }
+}

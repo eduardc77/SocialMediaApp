@@ -16,8 +16,8 @@ struct ActivityCoordinator: View {
             ActivityView()
                 .navigationDestination(for: AnyHashable.self) { destination in
                     switch destination {
-                    case let user as User:
-                        ProfileTabsContainer(router: router, user: user, didNavigate: true)
+                    case let userDestination as UserDestination:
+                        self.user(destination: userDestination)
                     case let postType as PostType:
                         PostDetailsView(router: router, postType: postType)
                     case let category as PostCategory:
@@ -31,6 +31,16 @@ struct ActivityCoordinator: View {
                     router.popToRoot()
                 }
                 .environment(router)
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder private func user(destination: UserDestination) -> some View {
+        switch destination {
+        case .profile(let user):
+            ProfileTabsContainer(router: router, user: user)
+        case .relations(let user):
+            UserRelationsView(router: router, user: user)
         }
     }
 }

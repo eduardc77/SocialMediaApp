@@ -28,13 +28,13 @@ struct SearchView: View {
             if model.loading {
                 ProgressView()
                 
-            } else if model.filteredUsers.isEmpty, !model.searchText.isEmpty {
+            } else if model.sortedAndFilteredUsers.isEmpty, !model.searchText.isEmpty {
                 ContentUnavailableView(
                     model.contentUnavailableTitle,
                     systemImage: "magnifyingglass",
                     description: Text(model.contentUnavailableText)
                 )
-            } else if model.filteredUsers.isEmpty, model.searchText.isEmpty {
+            } else if model.sortedAndFilteredUsers.isEmpty, model.searchText.isEmpty {
                 ContentUnavailableView(
                     "No Content",
                     systemImage: "person.fill.questionmark.rtl",
@@ -51,46 +51,62 @@ struct SearchView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .navigationTitle(AppScreen.search.title)
+#if !os(macOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
         .toolbar {
             ToolbarItemGroup {
-                UserBrowserLayoutMenu(layout: $layout, sort: $model.sort)
+                UserBrowserLayoutMenu(layout: $layout, sort: $model.sortSelection)
             }
         }
         .task {
             await model.fetchUsers()
         }
-        .searchable(text: $model.searchText)
+#if !os(macOS)
+        .searchable(text: $model.searchText, placement: .navigationBarDrawer(displayMode: .always))
+#else
+        .searchable(text: $model.searchText, placement: .automatic)
+#endif
         .searchSuggestions {
             if model.searchText.isEmpty {
                 searchSuggestions
             }
         }
+        .safeAreaInset(edge: .top, content: {
+            TopFilterBar(currentFilter: $model.filterSelection)
+                .padding(.top, 8)
+                .background(.bar)
+        })
         .refreshable {
             await model.refresh()
         }
     }
+}
+
+private extension SearchView {
     
     var grid: some View {
         GeometryReader { geometryProxy in
             ScrollView {
-                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width)
+                SearchGrid(router: router, users: model.sortedAndFilteredUsers, width: geometryProxy.size.width)
             }
         }
     }
     
     var table: some View {
-        Table(model.filteredUsers, selection: $selection) {
+        Table(model.sortedAndFilteredUsers, selection: $selection) {
             TableColumn("Name") { user in
                 NavigationButton {
-                    router.push(user)
+                    router.push(UserDestination.profile(user: user))
                 } label: {
                     SearchRow(user: user, thumbnailSize: tableImageSize)
                 }
             }
         }
     }
-
+    
     var searchSuggestions: some View {
         ForEach(model.mostPopularUsers.prefix(10)) { user in
             Text("**\(user.fullName)**")

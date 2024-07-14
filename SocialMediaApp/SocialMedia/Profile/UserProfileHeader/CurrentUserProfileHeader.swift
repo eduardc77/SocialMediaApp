@@ -49,14 +49,19 @@ struct CurrentUserProfileHeader: View {
                     .font(.subheadline)
             }
             
-            Button {
+            NavigationButton {
                 if let user = model.currentUser {
-                    modalRouter.presentSheet(destination: ProfileSheetDestination.userRelations(user: user))
+                    router.push(UserDestination.relations(user: user))
                 }
             } label: {
-                Text("\(model.currentUser?.stats.followersCount ?? 0) followers")
-                    .font(.subheadline)
-                    .foregroundStyle(Color.accentColor)
+                if let followersCount = model.currentUser?.stats.followersCount {
+                    Text("\(followersCount) followers")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color.accentColor)
+                } else {
+                    ProgressView()
+                }
             }
             .buttonStyle(.borderless)
             
@@ -83,10 +88,11 @@ struct CurrentUserProfileHeader: View {
         .toolbar {
             if !didNavigate {
                 ToolbarItem(placement: .confirmationAction) {
-                    NavigationButton {
+                    Button {
                         router.push(SettingsDestination.settings)
                     } label: {
                         Image(systemName: "line.3.horizontal")
+
                     }
                 }
             }

@@ -69,6 +69,7 @@ struct PostEditorView: View {
                 
                 Spacer()
             }
+            .padding(.top)
             .padding(.horizontal, 10)
             .background(Color.groupedBackground)
             .toolbar {

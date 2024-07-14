@@ -10,7 +10,7 @@ import SocialMediaNetwork
 struct ProfileTabsContainer: View {
     var router: Router
     var user: User
-    var didNavigate: Bool
+    var didNavigate: Bool = true
     
     @State private var selectedTab: ProfilePostFilter = .posts
     
@@ -35,7 +35,7 @@ struct ProfileTabsContainer: View {
                         UserProfileHeader(router: router, user: user)
                     }
                 }
-                .padding([.horizontal, .bottom])
+                .padding()
                 .headerStyle(OffsetHeaderStyle<ProfilePostFilter>(fade: true), context: context)
                 .minTitleHeight(.content(scale: 0.01))
             },

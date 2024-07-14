@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8808ECE22BC46F24008A2123 /* UserRelationsTabsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808ECE12BC46F24008A2123 /* UserRelationsTabsContainer.swift */; };
-		8808ECE62BC47F4E008A2123 /* UserRelationsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808ECE52BC47F4E008A2123 /* UserRelationsCoordinator.swift */; };
 		880E59122BDC2F21004550F0 /* ReplyGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E59112BDC2F21004550F0 /* ReplyGrid.swift */; };
+		882635452C43BBB900895F1A /* SocialMediaNetwork in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 8866A67D2C433E4700F0DEF4 /* SocialMediaNetwork */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		882635462C43BBBB00895F1A /* SocialMediaUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 8866A67F2C433E4F00F0DEF4 /* SocialMediaUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		883D58972BD3126800BFEEF5 /* ActivityRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D58962BD3126800BFEEF5 /* ActivityRowViewModel.swift */; };
 		883F64162BB4E5C700C12811 /* UserLikedPostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F64152BB4E5C700C12811 /* UserLikedPostsView.swift */; };
 		883F64182BB4E5DB00C12811 /* UserLikedPostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F64172BB4E5DB00C12811 /* UserLikedPostsViewModel.swift */; };
@@ -142,6 +142,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				882635462C43BBBB00895F1A /* SocialMediaUI in Embed Frameworks */,
+				882635452C43BBB900895F1A /* SocialMediaNetwork in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,8 +151,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8808ECE12BC46F24008A2123 /* UserRelationsTabsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRelationsTabsContainer.swift; sourceTree = "<group>"; };
-		8808ECE52BC47F4E008A2123 /* UserRelationsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRelationsCoordinator.swift; sourceTree = "<group>"; };
 		880E59112BDC2F21004550F0 /* ReplyGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyGrid.swift; sourceTree = "<group>"; };
 		883D58962BD3126800BFEEF5 /* ActivityRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRowViewModel.swift; sourceTree = "<group>"; };
 		883F64152BB4E5C700C12811 /* UserLikedPostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLikedPostsView.swift; sourceTree = "<group>"; };
@@ -314,14 +314,6 @@
 			path = Subview;
 			sourceTree = "<group>";
 		};
-		884826352BABA491000D3E95 /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-				884826362BABA4B9000D3E95 /* FeedFilter.swift */,
-			);
-			path = Subviews;
-			sourceTree = "<group>";
-		};
 		88721E962BBC89C2001B609A /* Router */ = {
 			isa = PBXGroup;
 			children = (
@@ -445,8 +437,6 @@
 		8895C5762BA6091200F7C28A /* UserRelations */ = {
 			isa = PBXGroup;
 			children = (
-				8808ECE52BC47F4E008A2123 /* UserRelationsCoordinator.swift */,
-				8808ECE12BC46F24008A2123 /* UserRelationsTabsContainer.swift */,
 				8895C5732BA6091200F7C28A /* UserRelationsView.swift */,
 				8895C5742BA6091200F7C28A /* UserRelationsViewModel.swift */,
 				8895C5752BA6091200F7C28A /* UserRelationType.swift */,
@@ -643,7 +633,7 @@
 				8895C6012BA612A400F7C28A /* ForYouFeedViewModel.swift */,
 				8891EF442BBE736B0001A68C /* FollowingFeedView.swift */,
 				8891EF402BBE71980001A68C /* FollowingFeedViewModel.swift */,
-				884826352BABA491000D3E95 /* Subviews */,
+				884826362BABA4B9000D3E95 /* FeedFilter.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -870,7 +860,6 @@
 				8895C5892BA6091200F7C28A /* CurrentUserProfileHeaderModel.swift in Sources */,
 				8895C5B92BA60D5D00F7C28A /* PostGridItem.swift in Sources */,
 				8895C5EF2BA6121500F7C28A /* AuthTextField.swift in Sources */,
-				8808ECE62BC47F4E008A2123 /* UserRelationsCoordinator.swift in Sources */,
 				88721EA42BBC949C001B609A /* ActivityCoordinator.swift in Sources */,
 				8895C5822BA6091200F7C28A /* EditProfileView.swift in Sources */,
 				8895C5AD2BA60D5D00F7C28A /* SearchRow.swift in Sources */,
@@ -880,7 +869,6 @@
 				8895C6302BA6161600F7C28A /* ActivityView.swift in Sources */,
 				8895C5882BA6091200F7C28A /* UserRelationType.swift in Sources */,
 				884826392BABAA6C000D3E95 /* AppScreen.swift in Sources */,
-				8808ECE22BC46F24008A2123 /* UserRelationsTabsContainer.swift in Sources */,
 				8895C5D02BA60FB200F7C28A /* SearchView.swift in Sources */,
 				884826372BABA4B9000D3E95 /* FeedFilter.swift in Sources */,
 				8891DAB12BD559090028B19B /* UserRepliesViewModel.swift in Sources */,

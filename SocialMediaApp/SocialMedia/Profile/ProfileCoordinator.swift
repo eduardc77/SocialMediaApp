@@ -8,10 +8,10 @@ import SocialMediaNetwork
 
 struct ProfileCoordinator: View {
     @State private var router = ViewRouter()
-    private var didNavigate: Bool = false
+    private let didNavigate: Bool
     @EnvironmentObject private var tabRouter: AppScreenRouter
     
-    init(didNavigate: Bool = false) {
+    init(didNavigate: Bool = true) {
         self.didNavigate = didNavigate
     }
     
@@ -21,8 +21,8 @@ struct ProfileCoordinator: View {
                 ProfileTabsContainer(router: router, user: user, didNavigate: didNavigate)
                     .navigationDestination(for: AnyHashable.self) { destination in
                         switch destination {
-                        case let user as User:
-                            ProfileTabsContainer(router: router, user: user, didNavigate: true)
+                        case let userDestination as UserDestination:
+                            self.user(destination: userDestination)
                         case let postType as PostType:
                             PostDetailsView(router: router, postType: postType)
                         case let category as PostCategory:
@@ -40,6 +40,16 @@ struct ProfileCoordinator: View {
             router.popToRoot()
         }
         .environment(router)
+    }
+    
+    @MainActor
+    @ViewBuilder private func user(destination: UserDestination) -> some View {
+        switch destination {
+        case .profile(let user):
+            ProfileTabsContainer(router: router, user: user)
+        case .relations(let user):
+            UserRelationsView(router: router, user: user)
+        }
     }
     
     @MainActor
@@ -66,5 +76,11 @@ enum SettingsDestination: Hashable {
     case privacyPolicy
     case about
     case feedback
+}
+
+enum UserDestination: Hashable, Identifiable {
+    case profile(user: User)
+    case relations(user: User)
     
+    var id: String { UUID().uuidString }
 }

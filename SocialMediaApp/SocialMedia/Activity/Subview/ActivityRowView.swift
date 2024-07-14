@@ -19,7 +19,9 @@ struct ActivityRowView: View {
     var body: some View {
         HStack(spacing: 10) {
             NavigationButton {
-                router.push(model.activity.user)
+                if let user = model.activity.user {
+                    router.push(UserDestination.profile(user: user))
+                }
             } label: {
                 ZStack(alignment: .bottomTrailing) {
                     CircularProfileImageView(profileImageURL: model.activity.user?.profileImageURL)

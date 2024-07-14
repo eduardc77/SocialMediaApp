@@ -14,41 +14,41 @@ struct ActivityView: View {
     
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(pinnedViews: .sectionHeaders) {
-                Section(header: ActivityFilterView(currentFilter: $model.selectedFilter)) {
-                    if model.filteredNotifications.isEmpty, !model.loading {
-                        ContentUnavailableView(
-                            "No Content",
-                            systemImage: "doc.richtext",
-                            description: Text(model.contentUnavailableText)
-                        )
-                    } else {
-                        ForEach(model.filteredNotifications) { activityModel in
-                            switch activityModel.type {
-                            case .like, .follow:
-                                NavigationButton {
-                                    if let user = activityModel.user {
-                                        router.push(user)
-                                    }
-                                } label: {
-                                    ActivityRowView(router: router, activity: activityModel)
+            LazyVStack {
+                if model.loading {
+                    ProgressView()
+                } else if model.filteredNotifications.isEmpty, !model.loading {
+                    ContentUnavailableView(
+                        "No Content",
+                        systemImage: "doc.richtext",
+                        description: Text(model.contentUnavailableText)
+                    )
+                } else {
+                    ForEach(model.filteredNotifications) { activityModel in
+                        switch activityModel.type {
+                        case .like, .follow:
+                            NavigationButton {
+                                if let user = activityModel.user {
+                                    router.push(UserDestination.profile(user: user))
                                 }
-                                
-                            case .reply:
-                                NavigationButton {
-                                    if let post = activityModel.post {
-                                        router.push(PostType.post(post))
-                                    }
-                                } label: {
-                                    ActivityRowView(router: router, activity: activityModel)
-                                }
+                            } label: {
+                                ActivityRowView(router: router, activity: activityModel)
                             }
                             
-                            Divider()
-                                .padding(.leading)
-                                .padding(.leading, 10)
-                                .padding(.leading, ImageSize.small.value.width)
+                        case .reply:
+                            NavigationButton {
+                                if let post = activityModel.post {
+                                    router.push(PostType.post(post))
+                                }
+                            } label: {
+                                ActivityRowView(router: router, activity: activityModel)
+                            }
                         }
+                        
+                        Divider()
+                            .padding(.leading)
+                            .padding(.leading, 10)
+                            .padding(.leading, ImageSize.small.value.width)
                     }
                 }
             }
@@ -58,11 +58,12 @@ struct ActivityView: View {
             model.setupFilteredNotifications()
         }
         .navigationTitle("Activity")
-        .overlay {
-            if model.loading {
-                ProgressView()
-            }
-        }
+#if !os(macOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .safeAreaInset(edge: .top, content: {
+            ActivityFilterView(currentFilter: $model.selectedFilter)
+        })
         .task {
             await model.refresh()
         }

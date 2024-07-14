@@ -16,13 +16,17 @@ struct FollowingFeedView: View {
         ScrollView {
             PostGrid(router: router, postGridType: .posts(model.posts),
                      loading: $model.loading,
+                     loadingIndicatorHidden: model.loadingHidden,
                      endReached: model.noMoreItemsToFetch,
                      itemsPerPage: model.itemsPerPage,
                      contentUnavailableText: model.contentUnavailableText,
                      loadNewPage: model.loadMorePosts)
         }
+        .contentMargins(.top, 30, for: .scrollContent)
         .refreshable {
+            model.loadingHidden = true
             await model.refresh()
+            model.loadingHidden = false
         }
         .task {
             if model.posts.isEmpty {

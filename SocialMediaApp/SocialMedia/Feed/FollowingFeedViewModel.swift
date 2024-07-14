@@ -8,8 +8,8 @@ import SocialMediaNetwork
 import Firebase
 
 final class FollowingFeedViewModel: FeedViewModel {
-    
     var contentUnavailableText = "Follow more accounts to see posts."
+    var loadingHidden: Bool = false
     
     func loadMorePosts() async {
         guard !noMoreItemsToFetch else { return }

@@ -10,7 +10,7 @@ import SocialMediaUI
 
 struct EditProfileView: View {
     @State var model: CurrentUserProfileHeaderModel
-
+    
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {

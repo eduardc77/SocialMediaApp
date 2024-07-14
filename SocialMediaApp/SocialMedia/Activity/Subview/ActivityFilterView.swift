@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-
 struct ActivityFilterView: View {
     @Binding var currentFilter: ActivityFilter
     
@@ -18,39 +17,44 @@ struct ActivityFilterView: View {
                             .id(filter)
                     }
                 }
+                .padding(.vertical, 10)
                 .padding(.horizontal)
             }
-            .background()
+            .background(.bar)
         }
     }
     
     @ViewBuilder
-    func activityFilterItem(for filter: ActivityFilter, proxy: ScrollViewProxy) -> some View {
+    private func activityFilterItem(for filter: ActivityFilter, proxy: ScrollViewProxy) -> some View {
+        let selected = filter == currentFilter
         Button(action: {
-            withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.8, blendDuration: 0.8)) {
-                currentFilter = filter
-            }
+            currentFilter = filter
             withAnimation {
                 proxy.scrollTo(filter, anchor: .center)
             }
         }) {
             Text(filter.title)
-                .foregroundStyle(filter == currentFilter ? Color.secondaryGroupedBackground : Color.primary)
+                .foregroundStyle(selected ? Color.groupedBackground : Color.primary)
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .frame(width: 100)
-                .padding(.vertical, 8)
+                .padding(10)
+#if !os(macOS)
+                .background(
+                    (selected ? Color.primary : Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                )
+#else
+                .background(
+                    (selected ? Color.primary : Color.secondary)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                )
+#endif
             
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.secondary, lineWidth: 1)
-                }
-                .background(filter == currentFilter ? Color.primary : Color.secondaryGroupedBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .contentShape(.rect)
+        .buttonStyle(.borderless)
     }
-    
 }
 
 #Preview {

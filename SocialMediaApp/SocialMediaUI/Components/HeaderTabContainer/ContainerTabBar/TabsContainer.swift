@@ -163,7 +163,9 @@ public struct TabsContainer<HeaderTitle, HeaderTabBar, HeaderBackground, Content
                                 TabView {
                                     content()
                                 }
+#if !os(macOS)
                                 .tabViewStyle(.page(indexDisplayMode: .never))
+#endif
                                 .frame(height: 0)
                             }
                     }

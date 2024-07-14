@@ -10,10 +10,10 @@ import SocialMediaNetwork
 @MainActor
 struct UserRelationsView: View {
     var router: Router
-    @Bindable var model: UserRelationsViewModel
+    @State private var model: UserRelationsViewModel
     
-    @Binding var selection: Set<User.ID>
-    @Binding var layout: BrowserLayout
+    @State private var selection = Set<User.ID>()
+    @State private var layout = BrowserLayout.grid
     
     var tableImageSize: Double {
 #if os(macOS)
@@ -23,18 +23,23 @@ struct UserRelationsView: View {
 #endif
     }
     
+    init(router: Router, user: User) {
+        self.router = router
+        model = UserRelationsViewModel(user: user)
+    }
+    
     var body: some View {
         Group {
             if model.loading {
                 ProgressView()
                 
-            } else if model.filteredUsers.isEmpty, !model.searchText.isEmpty {
+            } else if model.sortedAndFilteredUsers.isEmpty, !model.searchText.isEmpty {
                 ContentUnavailableView(
                     model.contentUnavailableTitle,
                     systemImage: "magnifyingglass",
                     description: Text(model.contentUnavailableText)
                 )
-            } else if model.filteredUsers.isEmpty, model.searchText.isEmpty {
+            } else if model.sortedAndFilteredUsers.isEmpty, model.searchText.isEmpty {
                 ContentUnavailableView(
                     "No Content",
                     systemImage: "person.fill.questionmark.rtl",
@@ -49,38 +54,65 @@ struct UserRelationsView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+#if os(macOS)
+        .frame(minWidth: 440, maxWidth: .infinity, minHeight: 220, maxHeight: .infinity, alignment: .top)
+#endif
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                UserBrowserLayoutMenu(layout: $layout, sort: $model.sort)
+            }
+        }
+        .task {
+            await model.loadUserRelations()
+        }
+        .searchable(text: $model.searchText)
+        .searchSuggestions {
+            if model.searchText.isEmpty {
+                searchSuggestions
+            }
+        }
+        .safeAreaInset(edge: .top, content: {
+            TopFilterBar(currentFilter: $model.filterSelection)
+                .padding(.top, 8)
+                .background(.bar)
+        })
+        .refreshable {
+            await model.loadUserRelations()
+        }
     }
+}
+
+private extension UserRelationsView {
     
     var grid: some View {
         GeometryReader { geometryProxy in
             ScrollView {
-                SearchGrid(router: router, users: model.filteredUsers, width: geometryProxy.size.width)
+                SearchGrid(router: router, users: model.sortedAndFilteredUsers, width: geometryProxy.size.width)
             }
         }
     }
     
     var table: some View {
-        Table(model.filteredUsers, selection: $selection) {
+        Table(model.sortedAndFilteredUsers, selection: $selection) {
             TableColumn("Name") { user in
                 NavigationButton {
-                    router.push(user)
+                    router.push(UserDestination.profile(user: user))
                 } label: {
                     SearchRow(user: user, thumbnailSize: tableImageSize)
                 }
             }
         }
     }
+    
+    var searchSuggestions: some View {
+        ForEach(model.mostPopularUsers.prefix(10)) { user in
+            Text("**\(user.fullName)**")
+                .searchCompletion(user.fullName)
+        }
+    }
 }
 
 #Preview {
-    struct Example: View {
-        @State private var selection = Set<User.ID>()
-        @State private var layout = BrowserLayout.grid
-        
-        var body: some View {
-            UserRelationsView(router: ViewRouter(), model: UserRelationsViewModel(user: Preview.user), selection: $selection, layout: $layout)
-            
-        }
-    }
-    return Example()
+    UserRelationsView(router: ViewRouter(), user: Preview.user)
 }

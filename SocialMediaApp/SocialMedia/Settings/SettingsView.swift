@@ -31,12 +31,7 @@ struct SettingsView: View {
             }
             
             Section {
-                NavigationButton {
-                    router.push(SettingsDestination.feedback)
-                } label: {
-                    SettingsLabel(settingsOption: .feedback)
-                }
-                .tint(Color.primary)
+                feedbackRow
                 followLinkRow
             } header: {
                 Text("Developer")
@@ -116,11 +111,22 @@ struct SettingsView: View {
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             }
             .tint(.primary)
+            .buttonStyle(.borderless)
             
             externalArrowIcon
         }
     }
     
+    var feedbackRow: some View {
+        NavigationButton {
+            router.push(SettingsDestination.feedback)
+        } label: {
+            SettingsLabel(settingsOption: .feedback)
+        }
+        .tint(Color.primary)
+        .buttonStyle(.borderless)
+    }
+ 
     var followLinkRow: some View {
         HStack {
             Link(destination: URL(string: "https://github.com/eduardc77")!) {
@@ -150,15 +156,14 @@ struct SettingsView: View {
             } label: {
                 SettingsLabel(settingsOption: .termsOfUse)
             }
-            .tint(Color.primary)
-            
+
             NavigationButton {
                 router.push(SettingsDestination.privacyPolicy)
             } label: {
                 SettingsLabel(settingsOption: .privacyPolicy)
             }
-            .tint(Color.primary)
         }
+        .tint(Color.primary)
     }
     
     var logoutButton: some View {
