@@ -91,7 +91,7 @@ private extension PostGrid {
     func postGridStack(_ posts: [Post]) -> some View {
         LazyVGrid(columns: gridItems) {
             ForEach(posts, id: \.self) { post in
-                ZStack(alignment: .top) {
+                ZStack {
                     NavigationButton {
                         router.push(PostType.post(post))
                     } label: {
@@ -120,7 +120,7 @@ private extension PostGrid {
     
     func replyGridStack(_ replies: [Reply]) -> some View {
         LazyVGrid(columns: gridItems) {
-            ForEach(replies) { reply in
+            ForEach(replies, id: \.self) { reply in
                 ZStack(alignment: .top) {
                     NavigationButton {
                         router.push(PostType.reply(reply))

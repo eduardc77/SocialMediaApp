@@ -82,7 +82,7 @@ struct PostGridItem: View {
                 }
                 VStack(spacing: 2) {
                     Divider()
-                    PostButtonGroupView(model: PostButtonGroupViewModel(postType: postType), onReplyTapped: onReplyTapped)
+                    PostButtonGroupView(postType: postType, onReplyTapped: onReplyTapped)
                 }
             }
         }

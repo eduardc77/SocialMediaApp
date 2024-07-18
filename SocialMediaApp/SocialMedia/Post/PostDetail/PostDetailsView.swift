@@ -64,7 +64,7 @@ struct PostDetailsView: View {
                                     .allowsHitTesting(false)
                             }
                             
-                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)), onReplyTapped: { postType in
+                            PostButtonGroupView(postType: .post(post), onReplyTapped: { postType in
                                 modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
                             })
                         }
@@ -76,7 +76,7 @@ struct PostDetailsView: View {
                                     .allowsHitTesting(false)
                             }
                             
-                            PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)), onReplyTapped: { postType in
+                            PostButtonGroupView(postType: .reply(reply), onReplyTapped: { postType in
                                 modalRouter.presentSheet(destination: PostSheetDestination.reply(postType: postType))
                             })
                         }

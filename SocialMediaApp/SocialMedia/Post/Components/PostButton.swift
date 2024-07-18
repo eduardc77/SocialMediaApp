@@ -27,8 +27,11 @@ struct PostButton: View {
                     .contentTransition(tapped ? .symbolEffect(active ? .replace.upUp : .replace.downUp) : .identity)
                 
                 if tempCount > 0, buttonType != .save {
-                    Text("\(tempCount)")
+                    Text(tempCount, format: .number.notation(.compactName))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                         .contentTransition(.numericText(countsDown: countsDown))
+                        .monospacedDigit()
                 }
             }
             .font(.footnote)

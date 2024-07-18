@@ -43,7 +43,7 @@ struct ReplyGridItem: View {
                         }
                         .font(.footnote)
                         
-                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .post(post)), onReplyTapped: onReplyTapped)
+                        PostButtonGroupView(postType: .post(post), onReplyTapped: onReplyTapped)
                         
                         Divider()
                     }
@@ -66,7 +66,7 @@ struct ReplyGridItem: View {
                             Text(reply.caption)
                                 .lineLimit(10)
                         }
-                        PostButtonGroupView(model: PostButtonGroupViewModel(postType: .reply(reply)), onReplyTapped: onReplyTapped)
+                        PostButtonGroupView(postType: .reply(reply), onReplyTapped: onReplyTapped)
                         
                     }
                     .font(.footnote)
