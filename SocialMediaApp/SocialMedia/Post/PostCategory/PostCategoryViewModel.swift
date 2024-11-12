@@ -3,14 +3,12 @@
 //  SocialMedia
 //
 
-import Observation
 import SwiftUI
 import Combine
 import SocialMediaNetwork
 import SocialMediaUI
 import Firebase
 
-@MainActor
 @Observable final class PostCategoryViewModel {
     let category: PostCategory
     

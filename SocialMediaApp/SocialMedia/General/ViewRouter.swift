@@ -8,8 +8,6 @@ import Observation
 @Observable final class ViewRouter: Router {
     var path = [AnyHashable]()
     
-    init() {}
-    
     func push(_ screen: AnyHashable) {
         path.push(screen)
     }

@@ -3,7 +3,6 @@
 //  SocialMedia
 //
 
-import Observation
 import SwiftUI
 import Combine
 import SocialMediaNetwork

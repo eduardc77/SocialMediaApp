@@ -16,7 +16,7 @@ struct PostEditorCoordinator: View {
                 .onChange(of: tabRouter.selection) { oldValue, _ in
                     if tabRouter.selection == .newPost {
                         modalRouter.presentSheet(destination: PostSheetDestination.newPost)
-                        self.tabRouter.selection = oldValue
+                        tabRouter.selection = oldValue
                     }
                 }
         } else {

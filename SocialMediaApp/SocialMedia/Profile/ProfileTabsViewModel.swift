@@ -6,7 +6,6 @@
 import Observation
 import SocialMediaNetwork
 
-@MainActor
 @Observable final class ProfileTabsViewModel {
     let user: SocialMediaNetwork.User
     
