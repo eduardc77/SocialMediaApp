@@ -3,7 +3,6 @@
 //  SocialMedia
 //
 
-import Observation
 import SwiftUI
 import SocialMediaUI
 import SocialMediaNetwork
@@ -13,15 +12,14 @@ final class RefreshedFilterModel: ObservableObject {
 }
 
 @MainActor
-struct ProfileTabsContentView<Content: View>: View {
+struct ProfileTabsContentView: View {
     @State private var model: ProfileTabsViewModel
     @StateObject private var refreshedFilterModel = RefreshedFilterModel()
     var router: Router
     var contentUnavailable: Bool = false
     
-    private let tab: ProfilePostFilter
-    @ViewBuilder private let info: () -> Content
-    
+    private let selectedTab: ProfilePostFilter
+
     @Environment(\.horizontalSizeClass) private var sizeClass
     
     private var isCompact: Bool {
@@ -41,64 +39,41 @@ struct ProfileTabsContentView<Content: View>: View {
 #endif
     }
     
-    init(router: Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false, @ViewBuilder info: @escaping () -> Content) {
+    init(router: Router, user: User, selectedTab: ProfilePostFilter, contentUnavailable: Bool = false) {
         model = ProfileTabsViewModel(user: user)
         self.router = router
-        self.tab = tab
+        self.selectedTab = selectedTab
         self.contentUnavailable = contentUnavailable
-        self.info = info
-    }
-    
-    init(router: Router, user: User, tab: ProfilePostFilter, contentUnavailable: Bool = false) where Content == EmptyView {
-        self.init(router: router, user: user, tab: tab, contentUnavailable: contentUnavailable, info: { EmptyView() })
     }
     
     var body: some View {
-        TabContainerScroll(
-            tab: tab, refreshableAction: onRefresh) { _ in
-                LazyVStack(spacing: 0) {
-                    info()
-                        .padding([.leading, .trailing, .top], 20)
-                        .id(0)
+        Group {
+            if !contentUnavailable {
+                switch selectedTab {
+                case .posts:
+                    UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .posts))
                     
-                    if !contentUnavailable {
-                        switch tab {
-                        case .posts:
-                            UserPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .posts))
-                            
-                        case .replies:
-                            UserRepliesView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .replies))
-                            
-                        case .liked:
-                            UserLikedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .liked))
-                            
-                        case .saved:
-                            UserSavedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .saved))
-                        }
-                    } else {
-                        ContentUnavailableView(
-                            "Private Account",
-                            systemImage: "lock.fill",
-                            description: Text("Follow this account to see their content.")
-                        )
-                    }
+                case .replies:
+                    UserRepliesView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .replies))
+                    
+                case .liked:
+                    UserLikedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .liked))
+                    
+                case .saved:
+                    UserSavedPostsView(router: router, user: model.user, contentUnavailableText: model.contentUnavailableText(filter: .saved))
                 }
-                .padding(.vertical, 5)
-                .scrollTargetLayout()
+            } else {
+                ContentUnavailableView(
+                    "Private Account",
+                    systemImage: "lock.fill",
+                    description: Text("Follow this account to see their content.")
+                )
             }
-#if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
-            .background(Color.groupedBackground)
-            .environmentObject(refreshedFilterModel)
-    }
-    
-    func onRefresh() {
-        refreshedFilterModel.refreshedFilter = tab
+        }
     }
 }
 
 #Preview {
-    ProfileTabsContentView(router: ViewRouter(), user: Preview.user, tab: .posts)
+    ProfileTabsContentView(router: ViewRouter(), user: Preview.user, selectedTab: .posts)
         .environment(ModalScreenRouter())
 }

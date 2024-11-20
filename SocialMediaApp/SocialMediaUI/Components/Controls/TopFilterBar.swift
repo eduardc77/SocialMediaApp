@@ -43,8 +43,7 @@ public struct TopFilterBar<T: TopFilter>: View {
         } label: {
             Text(filter.title)
                 .font(.footnote.weight(.semibold))
-                .padding(.top, 2)
-                .padding(.bottom, 8)
+                .padding(.vertical, 8)
                 .foregroundStyle(currentFilter.hashValue == filter.hashValue ? Color.primary : Color.secondary)
                 .frame(maxWidth: .infinity)
                 .overlay(alignment: .bottom) {

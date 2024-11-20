@@ -13,6 +13,9 @@ struct ProfileTabsContainer: View {
     var didNavigate: Bool = true
     
     @State private var selectedTab: ProfilePostFilter = .posts
+    @State private var headerOffsets: (CGFloat,CGFloat) = (0,0)
+    
+    @StateObject private var refreshedFilterModel = RefreshedFilterModel()
     
     @Environment(\.horizontalSizeClass) private var sizeClass
     
@@ -25,46 +28,38 @@ struct ProfileTabsContainer: View {
     }
     
     var body: some View {
-        TabsContainer(
-            selectedTab: $selectedTab,
-            headerTitle: { context in
-                VStack(alignment: .leading, spacing: 16) {
-                    if user.isCurrentUser {
-                        CurrentUserProfileHeader(router: router, didNavigate: didNavigate)
-                    } else {
-                        UserProfileHeader(router: router, user: user)
-                    }
-                }
-                .padding()
-                .headerStyle(OffsetHeaderStyle<ProfilePostFilter>(fade: true), context: context)
-                .minTitleHeight(.content(scale: 0.01))
-            },
-            headerTabBar: { context in
-                ContainerTabBar<ProfilePostFilter>(selectedTab: $selectedTab, sizing: .equalWidth, context: context)
-                    .foregroundStyle(
-                        Color.primary,
-                        Color.primary.opacity(0.7)
-                    )
-            },
-            headerBackground: { context in
-                Color.clear.background(.bar)
-            },
-            content: {
-                ForEach(ProfilePostFilter.allCases) { tab in
-                    ProfileTabsContentView(
-                        router: router,
-                        user: user,
-                        tab: tab,
-                        contentUnavailable: user.privateProfile && !(user.isFollowed)
-                    )
-                    .tabItem(tab: tab, label: .primary(tab.title))
+        ScrollView(.vertical) {
+            Group {
+                if user.isCurrentUser {
+                    CurrentUserProfileHeader(router: router, didNavigate: didNavigate)
+                } else {
+                    UserProfileHeader(router: router, user: user)
                 }
             }
-        )
+            .padding(.horizontal)
+            
+            LazyVStack(pinnedViews: [.sectionHeaders]) {
+                Section {
+                    ProfileTabsContentView(router: router, user: user, selectedTab: selectedTab, contentUnavailable: user.privateProfile && !(user.isFollowed)
+                    )
+                } header: {
+                    TopFilterBar(currentFilter: $selectedTab)
+                        .background(Color.groupedBackground)
+                }
+            }
+        }
+        .refreshable {
+            onRefresh()
+        }
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
         .background(Color.groupedBackground)
+        .environmentObject(refreshedFilterModel)
+    }
+    
+    func onRefresh() {
+        refreshedFilterModel.refreshedFilter = selectedTab
     }
 }
 
@@ -74,3 +69,4 @@ struct ProfileTabsContainer: View {
         .environment(ModalScreenRouter())
         .environment(ViewRouter())
 }
+

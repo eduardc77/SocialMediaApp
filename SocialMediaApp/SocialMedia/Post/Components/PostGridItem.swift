@@ -71,9 +71,7 @@ struct PostGridItem: View {
                 .allowsHitTesting(false)
             
             if let imageURLString = post?.imageUrl, let postImageURL = URL(string: imageURLString) {
-                AsyncImage(url: postImageURL)
-                    .scaledToFit()
-                    .frame(maxWidth: , maxHeight: )
+                AsyncImageView(url: postImageURL, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .allowsHitTesting(false)
             }

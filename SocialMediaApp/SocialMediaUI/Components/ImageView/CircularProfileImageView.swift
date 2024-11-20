@@ -20,7 +20,6 @@ public struct CircularProfileImageView: View {
         Group {
             if let profileURLString = profileImageURL, let profileUrl = URL(string: profileURLString) {
                 AsyncImageView(url: profileUrl, contentMode: contentMode)
-                    .scaledToFit()
                     .frame(maxWidth: size.value.width, maxHeight: size.value.height)
             } else {
                 Image(systemName: "person.crop.circle.fill")

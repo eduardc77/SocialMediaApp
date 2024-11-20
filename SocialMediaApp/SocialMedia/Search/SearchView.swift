@@ -76,7 +76,6 @@ struct SearchView: View {
         }
         .safeAreaInset(edge: .top, content: {
             TopFilterBar(currentFilter: $model.filterSelection)
-                .padding(.top, 8)
                 .background(.bar)
         })
         .refreshable {
