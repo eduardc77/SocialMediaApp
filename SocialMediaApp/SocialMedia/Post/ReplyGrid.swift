@@ -96,7 +96,7 @@ struct RepliesGrid: View {
 }
 
 #Preview {
-    @State var loading: Bool = false
+    @Previewable @State var loading: Bool = false
     
     return ScrollView {
         RepliesGrid(router: ViewRouter(), replies: [Preview.reply, Preview.reply2], loading: $loading, endReached: false, itemsPerPage: 10)

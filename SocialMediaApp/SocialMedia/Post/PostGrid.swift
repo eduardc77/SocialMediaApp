@@ -150,7 +150,7 @@ private extension PostGrid {
 }
 
 #Preview {
-    @State var loading: Bool = false
+    @Previewable @State var loading: Bool = false
     
     return ScrollView {
         PostGrid(router: ViewRouter(), postGridType: .posts([Preview.post, Preview.post2]), loading: $loading, endReached: false, itemsPerPage: 10)

@@ -59,9 +59,8 @@ struct PostDetailsView: View {
                     case .post:
                         if let post = model.post {
                             if let imageURLString = post.imageUrl, let postImageURL = URL(string: imageURLString) {
-                                AsyncImage(url: postImageURL)
-                                    .aspectRatio(1, contentMode: .fit)
-                                   
+                                
+                                AsyncImageView(url: postImageURL, contentMode: .fit)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                     .allowsHitTesting(false)
                             }
@@ -73,8 +72,7 @@ struct PostDetailsView: View {
                     case .reply:
                         if let reply = model.reply {
                             if let imageURLString = model.reply?.imageUrl, let postImageURL = URL(string: imageURLString) {
-                                AsyncImage(url: postImageURL)
-                                    .aspectRatio(1, contentMode: .fit)
+                                AsyncImageView(url: postImageURL, contentMode: .fit)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                     .allowsHitTesting(false)
                             }
